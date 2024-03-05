@@ -30,4 +30,6 @@ Docker files for geant4 installation
 
 # Build base images:
 
-./create_dockerfile.py 
+```
+./create_dockerfile.py fedora36
+```
