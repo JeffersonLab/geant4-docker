@@ -8,21 +8,18 @@ import argparse
 
 def main():
 	desc_str = 'Naming for images, dockerfile, tags'
-	example = 'Example: -f fedora36'
+	example = 'Example: -i fedora36'
 	parser = argparse.ArgumentParser(description=desc_str, epilog=example)
 
-	parser.add_argument('-f', action='store', help='FROM container image based on what to build')
-
-	# optional -a argument
-	# parser.add_argument('-a', action='store', help='additional packages')
-
+	parser.add_argument('-i', action='store', help='FROM container image based on what to build')
 	parser.add_argument('-d', action='store', help='installation directory')
 
 	args = parser.parse_args()
 
-	# FROM
-	if args.f:
-		from_label = from_container_image(args.f)
+	image = args.i
+	install_dir = args.d
+	if image:
+		from_label = from_container_image(image, install_dir)
 		print(f'FROM Label: {from_label}')
 
 
@@ -55,6 +52,7 @@ def os_image_from_base_requested(requested_image):
 
 def base_image_from_sim_requested(requested_image, install_dir):
 	from_image = 'jeffersonlab/base:'
+	return from_image
 
 
 if __name__ == "__main__":

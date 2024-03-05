@@ -3,3 +3,6 @@ LABEL maintainer="Maurizio Ungaro <ungaro@jlab.org>"
 
 # run shell instead of sh
 SHELL ["/bin/bash", "-c"]
+
+# Update needed at beginning to use the right package repos
+RUN apt-get install -y ca-certificates

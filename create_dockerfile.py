@@ -2,6 +2,7 @@
 
 import argparse
 from image_name import from_container_image
+from header import container_header
 
 # Purposes:
 # Write a dockerfile
@@ -24,17 +25,25 @@ def main():
 
 	print(f'Creating Dockerfile: {dockerfile}')
 
-	write_dockerfile(dockerfile, from_image)
+	create_dockerfile(dockerfile, from_image, requested_image)
 
 
-def write_dockerfile(dockerfile, from_image):
-	# write the dockerfile
+def create_dockerfile(dockerfile, from_image, requested_image):
+	# create_dockerfile the dockerfile
 	with open(dockerfile, 'w') as f:
 		f.write(f'FROM {from_image} \n')
 		f.write('LABEL maintainer="Maurizio Ungaro <ungaro@jlab.org>"\n\n')
 		f.write('# run shell instead of sh\n')
 		f.write('SHELL ["/bin/bash", "-c"]\n')
 		f.close()
+	header = container_header(requested_image)
+	# add header to dockerfile
+	with open(dockerfile, 'a') as f:
+		f.write(header)
+		f.close()
+
+
+
 
 
 if __name__ == "__main__":

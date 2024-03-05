@@ -1,45 +1,43 @@
 #!/usr/bin/env python3
 
 import argparse
+from image_name import from_container_image
 
 # Purposes:
 # Return from_image, dockerfile, image name, tag
 
 
 def main():
-	# Provides the -h, --help message
-	desc_str = "   Header for dockerfile\n"
-	parser = argparse.ArgumentParser(description=desc_str)
+	desc_str = 'Header for dockerfile'
+	example = 'Example: -p fedora36'
+	parser = argparse.ArgumentParser(description=desc_str, epilog=example)
 
-	parser.add_argument('-f', action='store', help='Docker header based on what to build')
+	parser.add_argument('-i', action='store', help='Docker header based on image to build')
 
 	args = parser.parse_args()
+	image = args.i
+	from_container_image(image)
 
-	# FROM
-	if args.f:
-		from_image = from_container_image(args.f)
-		print(f'FROM: {from_container_image(args.f, args.d)}')
+	if image:
+		header = container_header(image)
+		print(header)
 
 
+def container_header(image):
 
-def from_container_image(requested_image, install_dir):
+	header = '\n'
+	if image == 'fedora36':
+		header += '# JLab certificate\n'
 
-	if requested_image.count('-') == 0:
-		from_image = os_image_from_base_requested(requested_image)
-	# sim image, requesting base image
-	elif requested_image.count('-') == 2:
-		if install_dir:
-			from_image = base_image_from_sim_requested(requested_image, install_dir)
-		else:
-			print('Error: installation directory required')
-			exit(1)
+	elif image == 'almalinux93':
+		header += '# JLab certificate\n'
 
-	return from_image
+	elif image == 'ubuntu22':
+		header += '# Update needed at beginning to use the right package repos\n'
+		header += 'RUN apt-get install -y ca-certificates\n'
 
+	return header
 
 
 if __name__ == "__main__":
 	main()
-
-
-
