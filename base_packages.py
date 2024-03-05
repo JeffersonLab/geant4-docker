@@ -1,0 +1,89 @@
+#!/usr/bin/env python3
+
+import argparse
+
+# Purposes:
+# return a list of RPM packages for fedora36, almalinux93, ubuntu22
+
+fedora = ''
+ubuntu = ''
+
+# c++ essentials
+fedora += ' git make cmake gcc-c++'
+ubuntu += ' git make cmake g++'
+
+# expat
+fedora += ' expat-devel'
+ubuntu += ' expat libexpat1-dev'
+
+# sql
+fedora += ' mariadb-devel sqlite-devel'
+ubuntu += ' libmariadb-dev libsqlite3-dev'
+
+# python
+fedora += ' python3-devel python3-scons'
+ubuntu += ' python3-dev scons'
+
+# x11
+fedora += ' mesa-libGLU-devel libX11-devel libXpm-devel libXft-devel '
+ubuntu += ' libglu1-mesa-dev  libx11-dev   libxpm-dev   libxft-dev   '
+fedora += ' libXt-devel libXmu-devel libXrender-devel  xorg-x11-server-Xvfb xrandr '
+ubuntu += ' libxt-dev   libxmu-dev   libxrender-dev    xvfb                 x11-xserver-utils'
+
+# utilities
+fedora += ' bzip2 wget curl nano which bash tcsh zsh hostname gedit environment-modules'
+ubuntu += ' bzip2 wget curl nano which bash tcsh zsh hostname gedit environment-modules'
+
+# more utilities
+fedora += ' psmisc procps mailcap net-tools'
+ubuntu += ' psmisc procps mailcap net-tools'
+
+# even more utilities
+fedora += ' perl-CPAN glibc-langpack-en'
+ubuntu += ' libcpandb-perl'
+
+# xterm
+fedora += ' xterm'
+ubuntu += ' xterm'
+
+# vnc
+fedora += ' x11vnc novnc'
+ubuntu += ' x11vnc novnc'
+
+# fluxbox
+fedora += ' fluxbox supervisor'
+ubuntu += ' fluxbox supervisor'
+
+# qt5
+fedora += ' qt5-qtbase-devel qt5-linguist'
+ubuntu += ' libqt5widgets5 libqt5opengl5-dev libqt5printsupport5'
+
+
+def main():
+	desc_str = 'Return list of packages for the requested platform'
+	example = 'Example: -p fedora36'
+	parser = argparse.ArgumentParser(description=desc_str, epilog=example)
+
+	parser.add_argument('-p', action='store', help='list of packages for specific platform')
+
+	args = parser.parse_args()
+
+	# support the following platforms: fedora36, almalinux93, ubuntu22
+	platform = args.p
+	if platform:
+		if platform == 'fedora36':
+			print(fedora)
+		elif platform == 'almalinux93':
+			# remove fluxbox supervisor
+			# almalinux = fedora.replace('fluxbox supervisor', '')
+			# print(almalinux)
+			print(fedora)
+		elif platform == 'ubuntu22':
+			print(ubuntu)
+		else:
+			print(f'Error: platform {platform} not supported')
+			exit(1)
+
+
+if __name__ == "__main__":
+	main()
