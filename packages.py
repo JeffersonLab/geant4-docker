@@ -1,63 +1,67 @@
 #!/usr/bin/env python3
 
 import argparse
+from base_packages import packages_to_be_installed
 
 # Purposes:
-# Return from_image, dockerfile, image name, tag
+# Return installation commands
 
 
 def main():
-	# Provides the -h, --help message
-	desc_str = "   Naming for images, dockerfile, tags\n"
-	parser = argparse.ArgumentParser(description=desc_str)
+	desc_str = 'Install Packages for dockerfile'
+	example = 'Example: -i fedora36'
+	parser = argparse.ArgumentParser(description=desc_str, epilog=example)
 
-	parser.add_argument('-f', action='store', help='FROM container image based on what to build')
-	parser.add_argument('-d', action='store', help='installation directory')
+	parser.add_argument('-i', action='store', help='Docker header based on image to build')
 
 	args = parser.parse_args()
+	image = args.i
 
-	# FROM
-	if args.f:
-		from_image = from_container_image(args.f)
-		print(f'FROM: {from_container_image(args.f, args.d)}')
-
-
-
-def from_container_image(requested_image, install_dir):
-
-	if requested_image.count('-') == 0:
-		from_image = os_image_from_base_requested(requested_image)
-	# sim image, requesting base image
-	elif requested_image.count('-') == 2:
-		if install_dir:
-			from_image = base_image_from_sim_requested(requested_image, install_dir)
-		else:
-			print('Error: installation directory required')
-			exit(1)
-
-	return from_image
+	if image:
+		icommands = install_commands(image)
+		print(icommands)
 
 
-def os_image_from_base_requested(requested_image):
-	if requested_image == 'fedora36':
-		return 'fedora:36'
-	elif requested_image == 'almalinux93':
-		return 'almalinux:9.3'
-	elif requested_image == 'ubuntu22':
-		return 'ubuntu:22.04'
-	else:
-		# not supported
-		print(f'Error: platform {requested_image} not supported')
-		exit(1)
+def install_commands(image):
+
+	commands = '\n'
+	packages = packages_to_be_installed(image)
+
+	if 'fedora36' == image:
+		commands += 'RUN dnf install -y '
+		commands += packages
+		commands += '\\\n'
+		commands += '    && dnf -y update \\\n'
+		commands += '	&& dnf -y check-update \\\n'
+		commands += '	&& dnf clean packages \\\n'
+		commands += '	&& dnf clean all \\\n'
+		commands += '	&& rm -rf /var/cache/yum \\\n'
+		commands += '	&& ln -s /usr/bin/cmake3 /usr/local/bin/cmake\n'
 
 
-def base_image_from_sim_requested(requested_image, install_dir):
-	from_image = 'jeffersonlab/base:'
+	elif 'almalinux93' == image:
+		commands += 'RUN dnf install -y --allowerasing '
+		commands += packages
+		commands += '\\\n'
+		commands += '	&& apt  update \\\n'
+		commands += '	&& dnf -y check-update \\\n'
+		commands += '	&& dnf clean packages \\\n'
+		commands += '	&& dnf clean all \\\n'
+		commands += '	&& rm -rf /var/cache/yum \\\n'
+		commands += '	&& ln -s /usr/bin/cmake3 /usr/local/bin/cmake\n'
 
+	elif 'ubuntu22' == image:
+		commands += 'RUN ln -fs /usr/share/zoneinfo/America/New_York /etc/localtime \\\n'
+		commands += '    && DEBIAN_FRONTEND=noninteractive apt  install -y --no-install-recommends tzdata '
+		commands += packages
+		commands += '\\\n'
+		commands += '	&& apt  update \\\n'
+		commands += '	&& apt  autoclean\n'
+
+
+	commands += '\n'
+	return commands
 
 
 if __name__ == "__main__":
 	main()
-
-
-

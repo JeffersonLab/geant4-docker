@@ -58,32 +58,36 @@ ubuntu += ' fluxbox supervisor'
 fedora += ' qt5-qtbase-devel qt5-linguist'
 ubuntu += ' libqt5widgets5 libqt5opengl5-dev libqt5printsupport5'
 
+# root not on ubuntu
+fedora += ' root'
+
 
 def main():
 	desc_str = 'Return list of packages for the requested platform'
 	example = 'Example: -p fedora36'
 	parser = argparse.ArgumentParser(description=desc_str, epilog=example)
-
 	parser.add_argument('-p', action='store', help='list of packages for specific platform')
-
 	args = parser.parse_args()
 
 	# support the following platforms: fedora36, almalinux93, ubuntu22
 	platform = args.p
 	if platform:
-		if platform == 'fedora36':
-			print(fedora)
-		elif platform == 'almalinux93':
-			# remove fluxbox supervisor
-			# almalinux = fedora.replace('fluxbox supervisor', '')
-			# print(almalinux)
-			print(fedora)
-		elif platform == 'ubuntu22':
-			print(ubuntu)
-		else:
-			print(f'Error: platform {platform} not supported')
-			exit(1)
+		print(packages_to_be_installed(platform))
 
+
+def packages_to_be_installed(platform):
+	if platform == 'fedora36':
+		return fedora
+	elif platform == 'almalinux93':
+		# remove fluxbox supervisor
+		# almalinux = fedora.replace('fluxbox supervisor', '')
+		# return almalinux
+		return fedora
+	elif platform == 'ubuntu22':
+		return ubuntu
+	else:
+		return 'Error: platform not supported'
+		exit(1)
 
 if __name__ == "__main__":
 	main()
