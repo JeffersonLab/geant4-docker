@@ -30,9 +30,9 @@ ubuntu += ' libglu1-mesa-dev  libx11-dev   libxpm-dev   libxft-dev   '
 fedora += ' libXt-devel libXmu-devel libXrender-devel  xorg-x11-server-Xvfb xrandr '
 ubuntu += ' libxt-dev   libxmu-dev   libxrender-dev    xvfb                 x11-xserver-utils'
 
-# utilities
-fedora += ' bzip2 wget curl nano which bash tcsh zsh hostname gedit environment-modules'
-ubuntu += ' bzip2 wget curl nano which bash tcsh zsh hostname gedit environment-modules'
+# utilities. No 'which' in ubuntu?
+fedora += ' bzip2 wget curl nano bash tcsh zsh hostname gedit environment-modules which'
+ubuntu += ' bzip2 wget curl nano bash tcsh zsh hostname gedit environment-modules'
 
 # more utilities
 fedora += ' psmisc procps mailcap net-tools'

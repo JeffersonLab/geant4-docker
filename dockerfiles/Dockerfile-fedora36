@@ -9,7 +9,7 @@ ADD https://pki.jlab.org/JLabCA.crt /etc/pki/ca-trust/source/anchors/JLabCA.crt
 RUN update-ca-trust
 
 
-RUN dnf install -y  git make cmake gcc-c++ expat-devel mariadb-devel sqlite-devel python3-devel python3-scons mesa-libGLU-devel libX11-devel libXpm-devel libXft-devel  libXt-devel libXmu-devel libXrender-devel  xorg-x11-server-Xvfb xrandr  bzip2 wget curl nano which bash tcsh zsh hostname gedit environment-modules psmisc procps mailcap net-tools perl-CPAN glibc-langpack-en xterm x11vnc novnc fluxbox supervisor qt5-qtbase-devel qt5-linguist root\
+RUN dnf install -y  git make cmake gcc-c++ expat-devel mariadb-devel sqlite-devel python3-devel python3-scons mesa-libGLU-devel libX11-devel libXpm-devel libXft-devel  libXt-devel libXmu-devel libXrender-devel  xorg-x11-server-Xvfb xrandr  bzip2 wget curl nano bash tcsh zsh hostname gedit environment-modules which psmisc procps mailcap net-tools perl-CPAN glibc-langpack-en xterm x11vnc novnc fluxbox supervisor qt5-qtbase-devel qt5-linguist root\
     && dnf -y update \
 	&& dnf -y check-update \
 	&& dnf clean packages \
