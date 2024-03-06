@@ -4,6 +4,8 @@ import argparse
 from conventions import from_image, dockerfile_name
 from header import container_header
 from packages import install_commands
+from fluxbox import fluxbox_install_commands
+
 
 # Purposes:
 # Write a dockerfile
@@ -17,16 +19,14 @@ def main():
 	args = parser.parse_args()
 
 	image = args.i
-	from_label = from_image(image) # calling this will make sure the requested image is supported
-	dname = dockerfile_name(image)
-
-	create_dockerfile(dname, from_label, image)
+	create_dockerfile(image)
 
 
-def create_dockerfile(dockerfile, from_label, image):
-
-	header = container_header(from_label, image)
+def create_dockerfile( image ):
+	dockerfile = dockerfile_name(image)
+	header = container_header(image)
 	ipackages = install_commands(image)
+	ifluxbox = fluxbox_install_commands(image)
 
 	# pre-requisites
 	with open(dockerfile, 'w') as f:
@@ -38,8 +38,10 @@ def create_dockerfile(dockerfile, from_label, image):
 		f.write(ipackages)
 		f.close()
 
+	# fluxbox
+	with open(dockerfile, 'a') as f:
+		f.write(ifluxbox)
+
+
 if __name__ == "__main__":
 	main()
-
-
-

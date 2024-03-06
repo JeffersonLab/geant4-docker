@@ -11,20 +11,18 @@ def main():
 	desc_str = 'Header for dockerfile'
 	example = 'Example: -i fedora36'
 	parser = argparse.ArgumentParser(description=desc_str, epilog=example)
-
 	parser.add_argument('-i', action='store', help='Docker header based on image to build')
-
 	args = parser.parse_args()
+
 	image = args.i
-	from_label = from_image(image)
 
 	if image:
-		header = container_header(from_label, image)
+		header = container_header(image)
 		print(header)
 
 
-def container_header(from_label, image):
-
+def container_header(image):
+	from_label = from_image(image)
 	header = f'FROM {from_label} \n'
 	header += 'LABEL maintainer="Maurizio Ungaro <ungaro@jlab.org>"\n\n'
 	header += '# run shell instead of sh\n'

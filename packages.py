@@ -11,10 +11,9 @@ def main():
 	desc_str = 'Install Packages for dockerfile'
 	example = 'Example: -i fedora36'
 	parser = argparse.ArgumentParser(description=desc_str, epilog=example)
-
 	parser.add_argument('-i', action='store', help='Docker header based on image to build')
-
 	args = parser.parse_args()
+
 	image = args.i
 
 	if image:
@@ -52,11 +51,11 @@ def install_commands(image):
 
 	elif 'ubuntu22' == image:
 		commands += 'RUN ln -fs /usr/share/zoneinfo/America/New_York /etc/localtime \\\n'
-		commands += '    && DEBIAN_FRONTEND=noninteractive apt  install -y --no-install-recommends tzdata '
+		commands += '    && DEBIAN_FRONTEND=noninteractive apt-get  install -y --no-install-recommends tzdata '
 		commands += packages
 		commands += '\\\n'
-		commands += '	&& apt  update \\\n'
-		commands += '	&& apt  autoclean\n'
+		commands += '	&& apt-get -y update \\\n'
+		commands += '	&& apt-get -y autoclean\n'
 
 
 	commands += '\n'
