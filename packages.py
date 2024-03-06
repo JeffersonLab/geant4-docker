@@ -56,9 +56,24 @@ def install_commands(image):
 		commands += '\\\n'
 		commands += '	&& apt-get -y update \\\n'
 		commands += '	&& apt-get -y autoclean\n'
+		commands += install_root_from_ubuntu_tarball()
 
 
 	commands += '\n'
+	return commands
+
+
+def install_root_from_ubuntu_tarball():
+	commands = '\n'
+	commands += '# root installed using tarball\n'
+	commands += 'ENV ROOT_RELEASE=6.30.04\n'
+	commands += 'ENV ROOT_FILE=root_v${ROOT_RELEASE}.Linux-ubuntu22.04-x86_64-gcc11.4.tar.gz\n'
+	commands += 'ENV ROOT_INSTALL_DIR=/usr/local\n'
+	commands += 'RUN cd ${ROOT_INSTALL_DIR} \\\n'
+	commands += '    && wget https://root.cern/download/${ROOT_FILE} \\\n'
+	commands += '    && tar -xzvf ${ROOT_FILE} \\\n'
+	commands += '    && rm ${ROOT_FILE} \\\n'
+	commands += '    && echo "cd ${ROOT_INSTALL_DIR}/root ; source bin/thisroot.sh ; cd -" >> /etc/profile.d/root.sh\n'
 	return commands
 
 

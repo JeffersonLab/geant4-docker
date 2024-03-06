@@ -45,8 +45,13 @@ Examples:
 - jeffersonlab/sim:g4v11.2.1-almalinux9-cvmfs
 
 
-# Build base images:
+## Automated builds from docker hub
 
-```
-./create_dockerfile.py fedora36
-```
+- source: JeffersonLab/geant4-docker
+- source type: branch, main
+- docker tag: see tags below
+- You can specify the Dockerfile location as a path relative to the build context. 
+- The build context is the path to the files needed for the build, 
+  relative to the root of the repository. 
+  Enter the path to these files in the Build context field. 
+  Enter / to set the build context as the root of the source code repository.

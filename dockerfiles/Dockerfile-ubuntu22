@@ -20,6 +20,16 @@ RUN ln -fs /usr/share/zoneinfo/America/New_York /etc/localtime \
 	&& apt-get -y update \
 	&& apt-get -y autoclean
 
+# root installed using tarball
+ENV ROOT_RELEASE=6.30.04
+ENV ROOT_FILE=root_v${ROOT_RELEASE}.Linux-ubuntu22.04-x86_64-gcc11.4.tar.gz
+ENV ROOT_INSTALL_DIR=/usr/local
+RUN cd ${ROOT_INSTALL_DIR} \
+    && wget https://root.cern/download/${ROOT_FILE} \
+    && tar -xzvf ${ROOT_FILE} \
+    && rm ${ROOT_FILE} \
+    && echo "cd ${ROOT_INSTALL_DIR}/root ; source bin/thisroot.sh ; cd -" >> /etc/profile.d/root.sh
+
 
 # Setup demo environment variables
 ENV HOME=/root LANG=en_US.UTF-8 LANGUAGE=en_US.UTF-8  LC_ALL=C.UTF-8  DISPLAY=:0.0 DISPLAY_WIDTH=1400 DISPLAY_HEIGHT=1000 RUN_XTERM=yes RUN_FLUXBOX=yes
