@@ -80,9 +80,9 @@ def packages_to_be_installed(platform):
 		return fedora
 	elif platform == 'almalinux93':
 		# remove fluxbox supervisor
-		# almalinux = fedora.replace('fluxbox supervisor', '')
-		# return almalinux
-		return fedora
+		almalinux = fedora.replace('fluxbox supervisor', '')
+		return almalinux
+		# return fedora
 	elif platform == 'ubuntu22':
 		return ubuntu
 	else:
