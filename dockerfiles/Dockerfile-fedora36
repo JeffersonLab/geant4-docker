@@ -4,6 +4,8 @@ LABEL maintainer="Maurizio Ungaro <ungaro@jlab.org>"
 # run shell instead of sh
 SHELL ["/bin/bash", "-c"]
 
+COPY localSetupBase.sh /app/
+
 # JLab certificate
 ADD https://pki.jlab.org/JLabCA.crt /etc/pki/ca-trust/source/anchors/JLabCA.crt
 RUN update-ca-trust

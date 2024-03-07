@@ -27,6 +27,7 @@ def container_header(image):
 	header += 'LABEL maintainer="Maurizio Ungaro <ungaro@jlab.org>"\n\n'
 	header += '# run shell instead of sh\n'
 	header += 'SHELL ["/bin/bash", "-c"]\n\n'
+	header += 'COPY localSetupBase.sh /app/\n\n'
 
 	if 'fedora36' == image:
 		header += '# JLab certificate\n'

@@ -129,5 +129,15 @@ def g4_version_from_image(requested_image):
 
 	return g4_version
 
+
+def sim_version_from_g4_version(g4_version):
+	if g4_version == '10.6.2':
+		return '1.0'
+	elif g4_version == '10.7.4':
+		return '1.1'
+	elif g4_version == '11.2.1':
+		return '1.2'
+
+
 if __name__ == "__main__":
 	main()

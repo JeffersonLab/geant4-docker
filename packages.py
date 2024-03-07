@@ -31,31 +31,31 @@ def install_commands(image):
 		commands += packages
 		commands += '\\\n'
 		commands += '   && dnf -y update \\\n'
-		commands += '	&& dnf -y check-update \\\n'
-		commands += '	&& dnf clean packages \\\n'
-		commands += '	&& dnf clean all \\\n'
-		commands += '	&& rm -rf /var/cache/yum \\\n'
-		commands += '	&& ln -s /usr/bin/cmake3 /usr/local/bin/cmake\n'
+		commands += '   && dnf -y check-update \\\n'
+		commands += '   && dnf clean packages \\\n'
+		commands += '   && dnf clean all \\\n'
+		commands += '   && rm -rf /var/cache/yum \\\n'
+		commands += '   && ln -s /usr/bin/cmake3 /usr/local/bin/cmake\n'
 
 
 	elif 'almalinux93' == image:
 		commands += 'RUN dnf install -y --allowerasing '
 		commands += packages
 		commands += '\\\n'
-		commands += '	&& dnf  update \\\n'
-		commands += '	&& dnf -y check-update \\\n'
-		commands += '	&& dnf clean packages \\\n'
-		commands += '	&& dnf clean all \\\n'
-		commands += '	&& rm -rf /var/cache/yum \\\n'
-		commands += '	&& ln -s /usr/bin/cmake3 /usr/local/bin/cmake\n'
+		commands += '   && dnf -y update \\\n'
+		commands += '   && dnf -y check-update \\\n'
+		commands += '   && dnf clean packages \\\n'
+		commands += '   && dnf clean all \\\n'
+		commands += '   && rm -rf /var/cache/yum \\\n'
+		commands += '   && ln -s /usr/bin/cmake3 /usr/local/bin/cmake\n'
 
 	elif 'ubuntu22' == image:
 		commands += 'RUN ln -fs /usr/share/zoneinfo/America/New_York /etc/localtime \\\n'
 		commands += '    && DEBIAN_FRONTEND=noninteractive apt-get  install -y --no-install-recommends tzdata '
 		commands += packages
 		commands += '\\\n'
-		commands += '	&& apt-get -y update \\\n'
-		commands += '	&& apt-get -y autoclean\n'
+		commands += '   && apt-get -y update \\\n'
+		commands += '   && apt-get -y autoclean\n'
 		commands += install_root_from_ubuntu_tarball()
 
 
