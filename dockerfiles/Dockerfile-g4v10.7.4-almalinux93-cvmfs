@@ -9,10 +9,13 @@ WORKDIR $SIM_HOME
 
 COPY localSetupSimTemplate.sh $SIM_HOME/localSetup.sh
 
-RUN sed  -i -e "s|templateSim|$SIM_HOME|g"   $SIM_HOME/localSetup.sh \
-     && echo "module load $MODULE_TO_LOAD" >> $SIM_HOME/localSetup.sh \
-     && cp $SIM_HOME/localSetup.sh /app/localSetup.sh \
-     && cp $SIM_HOME/localSetup.sh /etc/profile.d/localSetup.sh
+RUN sed  -i -e "s|templateSim|$SIM_HOME|g"    $SIM_HOME/localSetup.sh \
+    && echo "module load 1.1" >> $SIM_HOME/localSetup.sh \
+    && cp $SIM_HOME/localSetup.sh /app/localSetup.sh \
+    && cp $SIM_HOME/localSetup.sh /etc/profile.d/localSetup.sh
 
 
+source /app/localSetup.sh \
+       && install_sim 1.1 \
+       && strip --remove-section=.note.ABI-tag $QTDIR/lib/libQt5Core.so.5
 

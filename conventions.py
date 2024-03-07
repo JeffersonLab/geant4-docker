@@ -42,7 +42,7 @@ def main():
 		from_label = from_image(image)
 		dockerfile = dockerfile_name(image)
 		g4_version = g4_version_from_image(image)
-		sim_version = sim_version_from_g4_image(image)
+		sim_version = sim_version_from_image(image)
 		print()
 		print(f'Supported images:\t\t {supported_osnames()}')
 		print(f'Supported geant4 versions:\t {supported_geant4_versions()}')
@@ -141,7 +141,7 @@ def g4_version_from_image(requested_image):
 	return g4_version
 
 
-def sim_version_from_g4_image(requested_image):
+def sim_version_from_image(requested_image):
 	g4_version = g4_version_from_image(requested_image)
 	if g4_version == '10.6.2':
 		return '1.0'

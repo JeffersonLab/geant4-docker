@@ -2,6 +2,7 @@
 
 import argparse
 from base_packages import packages_to_be_installed
+from conventions import sim_version_from_image
 
 # Purposes:
 # Return installation commands
@@ -57,6 +58,13 @@ def install_commands(image):
 		commands += '   && apt-get -y update \\\n'
 		commands += '   && apt-get -y autoclean\n'
 		commands += install_root_from_ubuntu_tarball()
+
+	# sim image
+	elif image.startswith('g4v'):
+		sim_version = sim_version_from_image(image)
+		commands += 'source /app/localSetup.sh \\\n'
+		commands += f'       && install_sim {sim_version} \\\n'
+		commands += '       && strip --remove-section=.note.ABI-tag $QTDIR/lib/libQt5Core.so.5\n'
 
 
 	commands += '\n'
