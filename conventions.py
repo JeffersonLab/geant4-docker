@@ -2,8 +2,21 @@
 
 import argparse
 
+
 # Purposes:
 # Functions containing naming conventions for images, dockerfiles, tags
+
+
+def supported_images():
+	return ['fedora36', 'almalinux93', 'ubuntu22']
+
+
+def supported_geant4_versions():
+	return ['10.6.2', '10.7.4', '11.2.1']
+
+
+def supported_gemc_versions():
+	return ['4.4.2', '5.7', '5.8']
 
 
 def main():
@@ -20,7 +33,9 @@ def main():
 		from_label = from_image(image)
 		dockerfile = dockerfile_name(image)
 		print()
-		print(f'Supported images: {supported_images()}')
+		print(f'Supported images:\t\t {supported_images()}')
+		print(f'Supported geant4 versions:\t {supported_geant4_versions()}')
+		print(f'Supported gemc versions:\t {supported_gemc_versions()}')
 		print()
 		print(f'OS Name: {osname}')
 		print(f'Install Directory: {install_dir}')
@@ -28,8 +43,6 @@ def main():
 		print(f'Dockerfile: {dockerfile}')
 		print()
 
-def supported_images():
-	return ['fedora36', 'almalinux93', 'ubuntu22']
 
 def from_image(requested_image):
 	if requested_image.count('-') == 0:
@@ -39,7 +52,7 @@ def from_image(requested_image):
 		return base_imagename_from_sim(requested_image)
 	# gemc image, requesting sim image
 	elif requested_image.count('-') == 3:
-		return sim_imagename_from_sim(requested_image)
+		return sim_imagename_from_gemc(requested_image)
 
 
 def os_imagename_from_base(requested_image):
@@ -56,12 +69,12 @@ def os_imagename_from_base(requested_image):
 
 
 def base_imagename_from_sim(requested_image):
-	install_dir = install_dir_from_image(requested_image)
-	from_image = 'jeffersonlab/base:'
+	osname = osname_from_image(requested_image)
+	from_image = 'jeffersonlab/base:' + osname
 	return from_image
 
 
-def sim_imagename_from_sim(requested_image):
+def sim_imagename_from_gemc(requested_image):
 	install_dir = install_dir_from_image(requested_image)
 	from_image = 'jeffersonlab/sim:'
 	return from_image
@@ -76,11 +89,12 @@ def dockerfile_name(image):
 
 
 def osname_from_image(requested_image):
-
 	if requested_image.count('-') == 0:
 		osname = requested_image
 	elif requested_image.count('-') == 2:
 		osname = requested_image.split('-')[1]
+	else:
+		osname = requested_image.split('-')[2]
 
 	# make sure requested image is supported
 	if osname not in supported_images():
@@ -89,6 +103,7 @@ def osname_from_image(requested_image):
 
 	return osname
 
+
 def install_dir_from_image(requested_image):
 	if requested_image.count('-') == 0:
 		return 'system'
@@ -96,6 +111,23 @@ def install_dir_from_image(requested_image):
 		return requested_image.split('-')[-1]
 
 
+def g4_version_from_image(requested_image):
+	g4_version = ''
+	if requested_image.count('-') == 2:
+		g4_version = requested_image.split('-')[0]
+	elif requested_image.count('-') == 3:
+		g4_version = requested_image.split('-')[1]
+	else:
+		print(f'Error: osname {requested_image}\'s geant4 not supported')
+		exit(1)
+
+	# make sure requested geant4 version is supported
+	g4_version = g4_version[3:]
+	if g4_version not in supported_geant4_versions():
+		print(f'Error: geant4 version {g4_version} not supported')
+		exit(1)
+
+	return g4_version
 
 if __name__ == "__main__":
 	main()

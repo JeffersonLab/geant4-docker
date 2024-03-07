@@ -30,7 +30,7 @@ def install_commands(image):
 		commands += 'RUN dnf install -y '
 		commands += packages
 		commands += '\\\n'
-		commands += '    && dnf -y update \\\n'
+		commands += '   && dnf -y update \\\n'
 		commands += '	&& dnf -y check-update \\\n'
 		commands += '	&& dnf clean packages \\\n'
 		commands += '	&& dnf clean all \\\n'
@@ -42,7 +42,7 @@ def install_commands(image):
 		commands += 'RUN dnf install -y --allowerasing '
 		commands += packages
 		commands += '\\\n'
-		commands += '	&& apt  update \\\n'
+		commands += '	&& dnf  update \\\n'
 		commands += '	&& dnf -y check-update \\\n'
 		commands += '	&& dnf clean packages \\\n'
 		commands += '	&& dnf clean all \\\n'

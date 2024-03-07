@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 
 import argparse
-from conventions import from_image, dockerfile_name
+from conventions import dockerfile_name
 from header import container_header
 from packages import install_commands
 from fluxbox import fluxbox_install_commands
@@ -22,7 +22,7 @@ def main():
 	create_dockerfile(image)
 
 
-def create_dockerfile( image ):
+def create_dockerfile(image):
 	dockerfile = dockerfile_name(image)
 	header = container_header(image)
 	ipackages = install_commands(image)
