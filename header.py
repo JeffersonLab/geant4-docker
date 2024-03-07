@@ -65,9 +65,9 @@ def container_header(image):
 		sim_version = sim_version_from_g4_image(image)
 		header += f'ENV SIM_HOME {install_dir}\n'
 		header += 'WORKDIR $SIM_HOME\n\n'
-		header += 'COPY localSetupSimTemplate.sh /app/localSetup.sh\n'
+		header += 'COPY localSetupSimTemplate.sh $SIM_HOME/localSetup.sh\n'
 		header += '\n'
-		header += 'RUN sed  -i -e "s|templateSim|$SIM_HOME|g"   $SIM_HOME/localSetup.sh \\\n'
+		header += 'RUN sed  -i -e "s|templateSim|$SIM_HOME|g"    $SIM_HOME/localSetup.sh \\\n'
 		header += '     && echo "module load $MODULE_TO_LOAD" >> $SIM_HOME/localSetup.sh \\\n'
 		header += '     && cp $SIM_HOME/localSetup.sh /app/localSetup.sh \\\n'
 		header += '     && cp $SIM_HOME/localSetup.sh /etc/profile.d/localSetup.sh\n'

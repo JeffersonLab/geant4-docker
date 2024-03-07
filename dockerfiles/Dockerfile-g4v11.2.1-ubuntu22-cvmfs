@@ -7,7 +7,7 @@ SHELL ["/bin/bash", "-c"]
 ENV SIM_HOME /cvmfs/oasis.opensciencegrid.org/jlab/geant4
 WORKDIR $SIM_HOME
 
-COPY localSetupSimTemplate.sh /app/localSetup.sh
+COPY localSetupSimTemplate.sh $SIM_HOME/localSetup.sh
 
 RUN sed  -i -e "s|templateSim|$SIM_HOME|g"   $SIM_HOME/localSetup.sh \
      && echo "module load $MODULE_TO_LOAD" >> $SIM_HOME/localSetup.sh \
