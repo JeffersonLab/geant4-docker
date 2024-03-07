@@ -19,7 +19,7 @@ def main():
 		icommands = fluxbox_install_commands(image)
 		print(icommands)
 
-
+# notice copy directory conf.d needs destination /app/conf.d
 def fluxbox_install_commands(image):
 	commands = '\n'
 	commands += '# Setup demo environment variables'
@@ -34,7 +34,7 @@ def fluxbox_install_commands(image):
 	commands += ' RUN_XTERM=yes'
 	commands += ' RUN_FLUXBOX=yes\n'
 	commands += '\n'
-	commands += 'COPY fluxbox/conf.d /app/\n'
+	commands += 'COPY fluxbox/conf.d /app/conf.d\n'
 	commands += 'COPY fluxbox/supervisord.conf fluxbox/entrypoint.sh  /app/\n'
 	commands += '\n'
 	commands += 'CMD ["/app/entrypoint.sh"]\n'
