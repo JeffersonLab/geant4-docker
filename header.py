@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 
 import argparse
-from conventions import from_image
+from conventions import from_image, install_dir_from_image, sim_version_from_g4_image
 
 # Purposes:
 # Return commands to satisfy container prerequisites
@@ -27,14 +27,15 @@ def container_header(image):
 	header += 'LABEL maintainer="Maurizio Ungaro <ungaro@jlab.org>"\n\n'
 	header += '# run shell instead of sh\n'
 	header += 'SHELL ["/bin/bash", "-c"]\n\n'
-	header += 'COPY localSetupBase.sh /app/\n\n'
 
 	if 'fedora36' == image:
+		header += 'COPY localSetupBase.sh /app/localSetup.sh\n\n'
 		header += '# JLab certificate\n'
 		header += 'ADD https://pki.jlab.org/JLabCA.crt /etc/pki/ca-trust/source/anchors/JLabCA.crt\n'
 		header += 'RUN update-ca-trust\n'
 
 	elif 'almalinux93' == image:
+		header += 'COPY localSetupBase.sh /app/localSetup.sh\n\n'
 		header += '# JLab certificate\n'
 		header += 'ADD https://pki.jlab.org/JLabCA.crt /etc/pki/ca-trust/source/anchors/JLabCA.crt\n'
 		header += 'RUN update-ca-trust\n'
@@ -47,6 +48,7 @@ def container_header(image):
 		header += '    && dnf install -y almalinux-release-synergy\n'
 
 	elif 'ubuntu22' == image:
+		header += 'COPY localSetupBase.sh /app/localSetup.sh\n\n'
 		header += '# Update needed at beginning to use the right package repos\n'
 		header += 'RUN  apt update\n'
 		header += '\n'
@@ -56,6 +58,20 @@ def container_header(image):
 		header += '# JLab certificate\n'
 		header += 'ADD https://pki.jlab.org/JLabCA.crt /etc/pki/ca-trust/source/anchors/JLabCA.crt\n'
 		header += 'RUN update-ca-certificates\n'
+
+	# if image starts with "g4v" it's a sim image
+	if image.startswith('g4v'):
+		install_dir = install_dir_from_image(image)
+		sim_version = sim_version_from_g4_image(image)
+		header += f'ENV SIM_HOME {install_dir}\n'
+		header += 'WORKDIR $SIM_HOME\n\n'
+		header += 'COPY localSetupSimTemplate.sh /app/localSetup.sh\n'
+		header += '\n'
+		header += 'RUN sed  -i -e "s|templateSim|$SIM_HOME|g"   $SIM_HOME/localSetup.sh \\\n'
+		header += '     && echo "module load $MODULE_TO_LOAD" >> $SIM_HOME/localSetup.sh \\\n'
+		header += '     && cp $SIM_HOME/localSetup.sh /app/localSetup.sh \\\n'
+		header += '     && cp $SIM_HOME/localSetup.sh /etc/profile.d/localSetup.sh\n'
+
 
 	header += '\n'
 

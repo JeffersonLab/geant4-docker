@@ -18,7 +18,7 @@ for osname in $osnames; do
   for g4_version in $g4_versions; do
 	for install_dir in $install_dirs; do
 	  echo "g4v$g4_version-$osname-$install_dir"
-	#  ./create_dockerfile.py -i $osname -g $g4_version -d $install_dir
+	  ./create_dockerfile.py -i "g4v$g4_version-$osname-$install_dir"
 	done
   done
 done

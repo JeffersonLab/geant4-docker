@@ -1,0 +1,18 @@
+FROM jeffersonlab/base:almalinux93 
+LABEL maintainer="Maurizio Ungaro <ungaro@jlab.org>"
+
+# run shell instead of sh
+SHELL ["/bin/bash", "-c"]
+
+ENV SIM_HOME /cvmfs/oasis.opensciencegrid.org/jlab/geant4
+WORKDIR $SIM_HOME
+
+COPY localSetupSimTemplate.sh /app/localSetup.sh
+
+RUN sed  -i -e "s|templateSim|$SIM_HOME|g"   $SIM_HOME/localSetup.sh \
+     && echo "module load $MODULE_TO_LOAD" >> $SIM_HOME/localSetup.sh \
+     && cp $SIM_HOME/localSetup.sh /app/localSetup.sh \
+     && cp $SIM_HOME/localSetup.sh /etc/profile.d/localSetup.sh
+
+
+

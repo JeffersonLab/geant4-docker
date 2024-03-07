@@ -7,7 +7,7 @@ import argparse
 # Functions containing naming conventions for images, dockerfiles, tags
 
 
-def supported_images():
+def supported_osnames():
 	return ['fedora36', 'almalinux93', 'ubuntu22']
 
 
@@ -18,6 +18,15 @@ def supported_geant4_versions():
 def supported_gemc_versions():
 	return ['4.4.2', '5.7', '5.8']
 
+
+def install_dir_path_from_label(label):
+	if label == 'local':
+		return '/usr/local'
+	elif label == 'cvmfs':
+		return '/cvmfs/oasis.opensciencegrid.org/jlab/geant4'
+	else:
+		print(f'Error: install directory {label} not supported')
+		exit(1)
 
 def main():
 	desc_str = 'Naming for images, dockerfile, tags'
@@ -32,8 +41,10 @@ def main():
 		install_dir = install_dir_from_image(image)
 		from_label = from_image(image)
 		dockerfile = dockerfile_name(image)
+		g4_version = g4_version_from_image(image)
+		sim_version = sim_version_from_g4_image(image)
 		print()
-		print(f'Supported images:\t\t {supported_images()}')
+		print(f'Supported images:\t\t {supported_osnames()}')
 		print(f'Supported geant4 versions:\t {supported_geant4_versions()}')
 		print(f'Supported gemc versions:\t {supported_gemc_versions()}')
 		print()
@@ -41,6 +52,9 @@ def main():
 		print(f'Install Directory: {install_dir}')
 		print(f'FROM Label: {from_label}')
 		print(f'Dockerfile: {dockerfile}')
+		print()
+		print(f'Geant4 Version: {g4_version}')
+		print(f'Sim Version: {sim_version}')
 		print()
 
 
@@ -81,11 +95,7 @@ def sim_imagename_from_gemc(requested_image):
 
 
 def dockerfile_name(image):
-	from_label = from_image(image)
-	if image.count('-') == 0:
-		return 'dockerfiles/Dockerfile-' + image
-	else:
-		return 'dockerfiles/Dockerfile-' + from_label
+	return 'dockerfiles/Dockerfile-' + image
 
 
 def osname_from_image(requested_image):
@@ -97,7 +107,7 @@ def osname_from_image(requested_image):
 		osname = requested_image.split('-')[2]
 
 	# make sure requested image is supported
-	if osname not in supported_images():
+	if osname not in supported_osnames():
 		print(f'Error: osname {osname} not supported')
 		exit(1)
 
@@ -108,7 +118,8 @@ def install_dir_from_image(requested_image):
 	if requested_image.count('-') == 0:
 		return 'system'
 	else:
-		return requested_image.split('-')[-1]
+		install_dir_label = requested_image.split('-')[-1]
+		return install_dir_path_from_label(install_dir_label)
 
 
 def g4_version_from_image(requested_image):
@@ -130,7 +141,8 @@ def g4_version_from_image(requested_image):
 	return g4_version
 
 
-def sim_version_from_g4_version(g4_version):
+def sim_version_from_g4_image(requested_image):
+	g4_version = g4_version_from_image(requested_image)
 	if g4_version == '10.6.2':
 		return '1.0'
 	elif g4_version == '10.7.4':
