@@ -2,7 +2,7 @@
 
 import argparse
 from base_packages import packages_to_be_installed
-from conventions import sim_version_from_image
+from conventions import sim_version_from_image, clas12_tags_from_docker_tag
 
 # Purposes:
 # Return installation commands
@@ -66,6 +66,13 @@ def install_commands(image):
 		commands += f'           && install_sim {sim_version} \\\n'
 		commands += '           && strip --remove-section=.note.ABI-tag $QTDIR/lib/libQt5Core.so.5\n'
 
+	# gemc image containing clas12_tags
+	elif image.count('-') == 3:
+		clas12_tags = clas12_tags_from_docker_tag(image)
+		commands += 'RUN source /app/localSetup.sh \\\n'
+		for tag in clas12_tags:
+			commands += f'           && module switch gemc/{tag}\n'
+			commands += f'           && install_gemc {tag}\n'
 
 	commands += '\n'
 	return commands
