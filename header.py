@@ -68,7 +68,7 @@ def container_header(image):
 		header += 'COPY localSetupSimTemplate.sh $SIM_HOME/localSetup.sh\n'
 		header += '\n'
 		header += 'RUN sed  -i -e "s|templateSim|$SIM_HOME|g"    $SIM_HOME/localSetup.sh \\\n'
-		header += f'    && echo "module load {sim_version}" >> $SIM_HOME/localSetup.sh \\\n'
+		header += f'    && echo "module load sim/{sim_version}" >> $SIM_HOME/localSetup.sh \\\n'
 		header += '    && cp $SIM_HOME/localSetup.sh /app/localSetup.sh \\\n'
 		header += '    && cp $SIM_HOME/localSetup.sh /etc/profile.d/localSetup.sh\n'
 
