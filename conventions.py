@@ -15,8 +15,22 @@ def supported_geant4_versions():
 	return ['10.6.2', '10.7.4', '11.2.1']
 
 
-def supported_gemc_versions():
-	return ['4.4.2', '5.7', '5.8']
+# as of march 2024:
+# prod 1 has gemc versions 4.4.2, 5.7
+# dev has gemc versions 5.8, dev
+def clas12_tags_from_docker_tag(image):
+	if image.count('-') == 3:
+		tag = image.split('-')[0]
+
+		if tag == 'prod1':
+			return ['4.4.2', '5.7']
+		elif tag == 'dev':
+			return ['5.8', 'dev']
+		else:
+			print(f'Error: tag {tag} not supported')
+			exit(1)
+	else:
+		return []
 
 
 def install_dir_path_from_label(label):
@@ -27,6 +41,7 @@ def install_dir_path_from_label(label):
 	else:
 		print(f'Error: install directory {label} not supported')
 		exit(1)
+
 
 def main():
 	desc_str = 'Naming for images, dockerfile, tags'
@@ -43,18 +58,22 @@ def main():
 		dockerfile = dockerfile_name(image)
 		g4_version = g4_version_from_image(image)
 		sim_version = sim_version_from_image(image)
+		clas12_tags = clas12_tags_from_docker_tag(image)
 		print()
 		print(f'Supported images:\t\t {supported_osnames()}')
 		print(f'Supported geant4 versions:\t {supported_geant4_versions()}')
-		print(f'Supported gemc versions:\t {supported_gemc_versions()}')
 		print()
 		print(f'OS Name: {osname}')
 		print(f'Install Directory: {install_dir}')
 		print(f'FROM Label: {from_label}')
 		print(f'Dockerfile: {dockerfile}')
 		print()
-		print(f'Geant4 Version: {g4_version}')
-		print(f'Sim Version: {sim_version}')
+		if g4_version != 'na':
+			print(f'Geant4 Version: {g4_version}')
+		if sim_version != 'na':
+			print(f'Sim Version: {sim_version}')
+		if clas12_tags:
+			print(f'clas12 tags:\t\t {clas12_tags}')
 		print()
 
 
@@ -89,8 +108,7 @@ def base_imagename_from_sim(requested_image):
 
 
 def sim_imagename_from_gemc(requested_image):
-	install_dir = install_dir_from_image(requested_image)
-	from_image = 'jeffersonlab/sim:'
+	from_image = 'jeffersonlab/sim:' + requested_image
 	return from_image
 
 
@@ -123,22 +141,21 @@ def install_dir_from_image(requested_image):
 
 
 def g4_version_from_image(requested_image):
-	g4_version = ''
 	if requested_image.count('-') == 2:
 		g4_version = requested_image.split('-')[0]
 	elif requested_image.count('-') == 3:
 		g4_version = requested_image.split('-')[1]
 	else:
-		print(f'Error: osname {requested_image}\'s geant4 not supported')
-		exit(1)
+		return 'na'
 
 	# make sure requested geant4 version is supported
 	g4_version = g4_version[3:]
 	if g4_version not in supported_geant4_versions():
 		print(f'Error: geant4 version {g4_version} not supported')
 		exit(1)
+	else:
+		return g4_version
 
-	return g4_version
 
 
 def sim_version_from_image(requested_image):
@@ -149,7 +166,8 @@ def sim_version_from_image(requested_image):
 		return '1.1'
 	elif g4_version == '11.2.1':
 		return '1.2'
-
+	else:
+		return 'na'
 
 if __name__ == "__main__":
 	main()
