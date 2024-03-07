@@ -42,7 +42,7 @@ def container_header(image):
 		header += '\n'
 		header += '# alma specific:\n'
 		header += '# crb: for mysql-devel\n'
-		header += '# synergy: root, scons, vncs\n'
+		header += '# synergy: root, scons, vnc\n'
 		header += 'RUN    dnf install -y  \'dnf-command(config-manager)\' \\\n'
 		header += '    && dnf config-manager --set-enabled crb \\\n'
 		header += '    && dnf install -y almalinux-release-synergy\n'
@@ -71,7 +71,6 @@ def container_header(image):
 		header += f'    && echo "module load sim/{sim_version}" >> $SIM_HOME/localSetup.sh \\\n'
 		header += '    && cp $SIM_HOME/localSetup.sh /app/localSetup.sh \\\n'
 		header += '    && cp $SIM_HOME/localSetup.sh /etc/profile.d/localSetup.sh\n'
-
 
 	header += '\n'
 

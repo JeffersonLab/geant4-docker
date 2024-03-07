@@ -12,7 +12,7 @@ RUN update-ca-trust
 
 # alma specific:
 # crb: for mysql-devel
-# synergy: root, scons, vncs
+# synergy: root, scons, vnc
 RUN    dnf install -y  'dnf-command(config-manager)' \
     && dnf config-manager --set-enabled crb \
     && dnf install -y almalinux-release-synergy
