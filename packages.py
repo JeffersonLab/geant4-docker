@@ -62,9 +62,9 @@ def install_commands(image):
 	# sim image
 	elif image.startswith('g4v'):
 		sim_version = sim_version_from_image(image)
-		commands += 'source /app/localSetup.sh \\\n'
-		commands += f'       && install_sim {sim_version} \\\n'
-		commands += '       && strip --remove-section=.note.ABI-tag $QTDIR/lib/libQt5Core.so.5\n'
+		commands += 'RUN source /app/localSetup.sh \\\n'
+		commands += f'           && install_sim {sim_version} \\\n'
+		commands += '           && strip --remove-section=.note.ABI-tag $QTDIR/lib/libQt5Core.so.5\n'
 
 
 	commands += '\n'
