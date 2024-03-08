@@ -1,37 +1,25 @@
 #!/bin/zsh
 
-osnames=(fedora36 almalinux93 ubuntu22)
-g4_versions=(10.6.2 10.7.4 11.2.1)
-clas12tags_docker_tags=(prod1 dev) # see conventions.py for details
-install_dirs=(cvmfs local)
+file=/usr/local/mywork/$1
 
-function g4_version_from_clas12tags_version {
+function ce_version_from_clas12tags_docker_version {
 	case $1 in
-		4.4.2) echo "10.6.2" ;;
-		5.7) echo "10.6.2" ;;
-		5.8) echo "10.7.4" ;;
+		prod1) echo "1.0" ;;
+		dev) echo "1.1" ;;
 	esac
 }
 
-function g4_version_from_clas12tags_docker_version {
-	case $1 in
-		prod1) echo "10.6.2" ;;
-		dev) echo "10.7.4" ;;
-	esac
-}
+cd $SIM_HOME
 
+docker_tag=$(echo $file | cut -d'-' -f1)
+os_tag=$(echo $file | cut -d'-' -f3)
+to_tar="$os_tag/$(ce_version_from_clas12tags_docker_version $docker_tag)"
 
-# clas12tags images
-echo "\n\nClas12Tags images:\n"
-for osname in $osnames; do
-	for cdocker_tag in $clas12tags_docker_tags; do
-		for install_dir in $install_dirs; do
-			g4_version=$(g4_version_from_clas12tags_docker_version $cdocker_tag)
-			image_name="$cdocker_tag-g4v$g4_version-$osname-$install_dir"
-			echo "$image_name"
-			./create_dockerfile.py -i "$image_name"
-		done
-	done
-done
+echo "Tar file: $file"
+echo "To Tar: $to_tar"
 
-echo "\n\n"
+find ./ -type l  -name "*.so*" -exec sh -c 'for i in "$@"; do cp --preserve --remove-destination "$(readlink -f "$i")" "$i"; echo $i; done' sh {} +
+find ./ -type l  -name "*.a*"  -exec sh -c 'for i in "$@"; do cp --preserve --remove-destination "$(readlink -f "$i")" "$i"; echo $i; done' sh {} +
+find ./ -type d -name ".git" -exec rm -rf {} +
+
+tar cvfz $file $to_tar

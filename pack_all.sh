@@ -3,7 +3,7 @@
 osnames=(fedora36 almalinux93 ubuntu22)
 g4_versions=(10.6.2 10.7.4 11.2.1)
 clas12tags_docker_tags=(prod1 dev) # see conventions.py for details
-install_dirs=(cvmfs local)
+install_dirs=(cvmfs)
 
 function g4_version_from_clas12tags_version {
 	case $1 in
@@ -29,7 +29,7 @@ for osname in $osnames; do
 			g4_version=$(g4_version_from_clas12tags_docker_version $cdocker_tag)
 			image_name="$cdocker_tag-g4v$g4_version-$osname-$install_dir"
 			echo "$image_name"
-			./create_dockerfile.py -i "$image_name"
+
 		done
 	done
 done
