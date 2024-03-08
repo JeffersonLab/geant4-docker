@@ -1,4 +1,4 @@
-FROM jeffersonlab/sim:prod1-g4v10.6.2-almalinux93-local 
+FROM jeffersonlab/sim:g4v10.6.2-almalinux93-local 
 LABEL maintainer="Maurizio Ungaro <ungaro@jlab.org>"
 
 # run shell instead of sh

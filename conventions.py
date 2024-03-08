@@ -108,7 +108,8 @@ def base_imagename_from_sim(requested_image):
 
 
 def sim_imagename_from_gemc(requested_image):
-	from_image = 'jeffersonlab/sim:' + requested_image
+	# strip everything before first '-'
+	from_image = 'jeffersonlab/sim:' + requested_image.split('-', 1)[1]
 	return from_image
 
 
