@@ -17,8 +17,8 @@ fedora += ' expat-devel'
 ubuntu += ' expat libexpat1-dev'
 
 # sql
-fedora += ' mariadb-devel sqlite-devel'
-ubuntu += ' libmariadb-dev libsqlite3-dev'
+fedora += ' mariadb-devel sqlite-devel'        # mariadb-devel provides mysql_config and libmysqlclient
+ubuntu += ' libmysqlclient-dev libsqlite3-dev' # in ubuntu line mysq_config is not given by mariadb.
 
 # python
 fedora += ' python3-devel python3-scons'
