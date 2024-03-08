@@ -71,8 +71,13 @@ def install_commands(image):
 		clas12_tags = clas12_tags_from_docker_tag(image)
 		commands += 'RUN source /app/localSetup.sh \\\n'
 		for tag in clas12_tags:
-			commands += f'           && module switch gemc/{tag}\n'
-			commands += f'           && install_gemc {tag}\n'
+			commands += f'           && module switch gemc/{tag} \\\n'
+			commands += f'           && install_gemc {tag} '
+			# if not the last item in clas12_tags, add \n
+			if tag != clas12_tags[-1]:
+				commands += '\\\n'
+			else:
+				commands += '\n'
 
 	commands += '\n'
 	return commands
