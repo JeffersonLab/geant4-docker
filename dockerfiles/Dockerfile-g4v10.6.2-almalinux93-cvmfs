@@ -2,7 +2,7 @@ FROM jeffersonlab/base:almalinux93
 LABEL maintainer="Maurizio Ungaro <ungaro@jlab.org>"
 
 # run shell instead of sh
-SHELL ["/bin/bash", "-i"]
+SHELL ["/bin/bash", "-i", "-c"]
 
 ENV SIM_HOME /cvmfs/oasis.opensciencegrid.org/jlab/geant4
 WORKDIR $SIM_HOME
