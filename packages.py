@@ -50,7 +50,7 @@ def install_commands(image):
 		commands += '   && rm -rf /var/cache/yum \\\n'
 		commands += '   && ln -s /usr/bin/cmake3 /usr/local/bin/cmake\n'
 
-	elif 'ubuntu22' == image:
+	elif 'ubuntu24' == image:
 		commands += 'RUN ln -fs /usr/share/zoneinfo/America/New_York /etc/localtime \\\n'
 		commands += '    && DEBIAN_FRONTEND=noninteractive apt-get  install -y --no-install-recommends tzdata '
 		commands += packages

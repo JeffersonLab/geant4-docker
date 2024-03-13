@@ -1,13 +1,14 @@
-FROM jeffersonlab/sim:g4v10.6.2-ubuntu22-cvmfs 
+FROM jeffersonlab/sim:g4v10.6.2-ubuntu24-local 
 LABEL maintainer="Maurizio Ungaro <ungaro@jlab.org>"
 
 # run shell instead of sh
 SHELL ["/bin/bash", "-c"]
 
-ENV SIM_HOME /cvmfs/oasis.opensciencegrid.org/jlab/geant4
+ENV SIM_HOME /usr/local
 WORKDIR $SIM_HOME
 
 COPY localSetupSimTemplate.sh $SIM_HOME/localSetup.sh
+COPY pack_me.sh /app/pack_me.sh
 
 RUN sed  -i -e "s|templateSim|$SIM_HOME|g"    $SIM_HOME/localSetup.sh \
     && echo "module load gemc/4.4.2" >> $SIM_HOME/localSetup.sh \

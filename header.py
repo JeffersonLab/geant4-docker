@@ -47,7 +47,7 @@ def container_header(image):
 		header += '    && dnf config-manager --set-enabled crb \\\n'
 		header += '    && dnf install -y almalinux-release-synergy\n'
 
-	elif 'ubuntu22' == image:
+	elif 'ubuntu24' == image:
 		header += 'COPY localSetupBase.sh /app/localSetup.sh\n\n'
 		header += '# Update needed at beginning to use the right package repos\n'
 		header += 'RUN  apt update\n'

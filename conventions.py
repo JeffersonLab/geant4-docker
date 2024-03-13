@@ -8,7 +8,7 @@ import argparse
 
 
 def supported_osnames():
-	return ['fedora36', 'almalinux93', 'ubuntu22']
+	return ['fedora36', 'almalinux93', 'ubuntu24']
 
 
 def supported_geant4_versions():
@@ -93,8 +93,8 @@ def os_imagename_from_base(requested_image):
 		return 'fedora:36'
 	elif 'almalinux93' == requested_image:
 		return 'almalinux:9.3'
-	elif 'ubuntu22' == requested_image:
-		return 'ubuntu:22.04'
+	elif 'ubuntu24' == requested_image:
+		return 'ubuntu:24.04'
 	else:
 		# not supported
 		print(f'Error: platform {requested_image} not supported')

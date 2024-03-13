@@ -3,7 +3,7 @@
 import argparse
 
 # Purposes:
-# return a list of RPM packages for fedora36, almalinux93, ubuntu22
+# return a list of RPM packages for fedora / ubuntu flavors
 
 fedora = ''
 ubuntu = ''
@@ -69,7 +69,6 @@ def main():
 	parser.add_argument('-p', action='store', help='list of packages for specific platform')
 	args = parser.parse_args()
 
-	# support the following platforms: fedora36, almalinux93, ubuntu22
 	platform = args.p
 	if platform:
 		print(packages_to_be_installed(platform))
@@ -83,7 +82,7 @@ def packages_to_be_installed(platform):
 		almalinux = fedora.replace('fluxbox supervisor', '')
 		return almalinux
 		# return fedora
-	elif platform == 'ubuntu22':
+	elif platform == 'ubuntu24':
 		return ubuntu
 	else:
 		return 'Error: platform not supported'

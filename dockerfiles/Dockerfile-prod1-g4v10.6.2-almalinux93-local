@@ -8,6 +8,7 @@ ENV SIM_HOME /usr/local
 WORKDIR $SIM_HOME
 
 COPY localSetupSimTemplate.sh $SIM_HOME/localSetup.sh
+COPY pack_me.sh /app/pack_me.sh
 
 RUN sed  -i -e "s|templateSim|$SIM_HOME|g"    $SIM_HOME/localSetup.sh \
     && echo "module load gemc/4.4.2" >> $SIM_HOME/localSetup.sh \

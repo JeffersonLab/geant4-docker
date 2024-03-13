@@ -1,21 +1,21 @@
-FROM jeffersonlab/base:ubuntu22 
+FROM jeffersonlab/base:ubuntu24 
 LABEL maintainer="Maurizio Ungaro <ungaro@jlab.org>"
 
 # run shell instead of sh
 SHELL ["/bin/bash", "-c"]
 
-ENV SIM_HOME /cvmfs/oasis.opensciencegrid.org/jlab/geant4
+ENV SIM_HOME /usr/local
 WORKDIR $SIM_HOME
 
 COPY localSetupSimTemplate.sh $SIM_HOME/localSetup.sh
 
 RUN sed  -i -e "s|templateSim|$SIM_HOME|g"    $SIM_HOME/localSetup.sh \
-    && echo "module load sim/1.0" >> $SIM_HOME/localSetup.sh \
+    && echo "module load sim/1.2" >> $SIM_HOME/localSetup.sh \
     && cp $SIM_HOME/localSetup.sh /app/localSetup.sh \
     && cp $SIM_HOME/localSetup.sh /etc/profile.d/localSetup.sh
 
 
 RUN source /app/localSetup.sh \
-           && install_sim 1.0 \
+           && install_sim 1.2 \
            && strip --remove-section=.note.ABI-tag $QTDIR/lib/libQt5Core.so.5
 
