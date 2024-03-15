@@ -37,11 +37,12 @@ for osname in $=osnames; do
 		for install_dir in $install_dirs; do
 			g4_version=$(g4_version_from_clas12tags_docker_version "$cdocker_tag")
 			image_name="$cdocker_tag-g4v$g4_version-$osname-$install_dir"
-			# dev-g4v10.7.4-ubuntu24-cvmfs is not available
-			if [ "$image_name" = "dev-g4v10.7.4-ubuntu24-cvmfs" ]; then
-				echo "skipping $image_name"
+			# if image_name contains ubuntu, skip it
+			if [[ $image_name == *"ubuntu"* ]]; then
+				echo "Skipping $image_name"
 				continue
 			fi
+
 			do_the_deed "$image_name" "gemc"
 		done
 	done
