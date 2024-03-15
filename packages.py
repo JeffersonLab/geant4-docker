@@ -38,7 +38,6 @@ def install_commands(image):
 		commands += '   && rm -rf /var/cache/yum \\\n'
 		commands += '   && ln -s /usr/bin/cmake3 /usr/local/bin/cmake\n'
 
-
 	elif 'almalinux93' == image:
 		commands += 'RUN dnf install -y --allowerasing '
 		commands += packages

@@ -79,7 +79,6 @@ def container_header(image):
 		header += f'ENV SIM_HOME {install_dir}\n'
 		header += 'WORKDIR $SIM_HOME\n\n'
 		header += 'COPY localSetupSimTemplate.sh $SIM_HOME/localSetup.sh\n'
-		header += 'COPY pack_me.sh /app/pack_me.sh\n'
 		header += '\n'
 		header += 'RUN sed  -i -e "s|templateSim|$SIM_HOME|g"    $SIM_HOME/localSetup.sh \\\n'
 		header += f'    && echo "module load gemc/{clas12_tags[0]}" >> $SIM_HOME/localSetup.sh \\\n'

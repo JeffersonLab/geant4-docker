@@ -2,7 +2,7 @@
 
 Docker files for geant4 installation
 
-## Base images:
+## Base images OS:
 
 - [Almalinux](https://hub.docker.com/_/almalinux)
 - [Fedora](https://hub.docker.com/_/fedora)
