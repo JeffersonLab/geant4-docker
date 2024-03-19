@@ -26,7 +26,7 @@ function do_the_deed {
 	remote_image_name="jeffersonlab/$gemc_or_sim:$image_name"
 	echo "$image_name  remote: $remote_image_name"
 	docker pull "$remote_image_name"
-	cp ./pack_me.sh ~/mywork
+	cp ./pack_me.sh unpack_me.sh ~/mywork
 	docker run --platform linux/amd64 -it --rm -v ~/mywork:/usr/local/mywork "$remote_image_name" /usr/local/mywork/pack_me.sh "$image_name"
 }
 

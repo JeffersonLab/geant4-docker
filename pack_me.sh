@@ -1,6 +1,7 @@
 #!/bin/zsh
 
 image=$1
+export_location="/usr/local/mywork"
 
 function ce_version_from_clas12tags_docker_version {
 	case $1 in
@@ -17,7 +18,7 @@ function ce_version_from_g4v_docker_version {
 }
 
 docker_tag=$(echo "$image" | cut -d'-' -f1)
-tar_file="/usr/local/mywork/$image.tar.gz"
+tar_file="$export_location/$image.tar.gz"
 echo "Image: $image"
 echo "Docker Tag: $docker_tag"
 echo "Tar file: $tar_file"
@@ -45,3 +46,8 @@ tar cvfz "$tar_file" "$to_tar"
 if [ "$docker_tag" = "dev" ]; then
 	tar cvfz noarch.tar.gz noarch
 fi
+
+echo
+echo "To copy the tar file to the host, run:"
+echo "cd $export_location"
+echo "scp *.tar.gz unpack_me.sh ifarm:/work/clas12/ungaro "
