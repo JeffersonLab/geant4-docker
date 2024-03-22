@@ -2,6 +2,7 @@
 
 import argparse
 from base_packages import packages_to_be_installed
+from cvmfs_packages import packages_to_be_installed as cvmfs_packages_to_be_installed
 from conventions import sim_version_from_image, clas12_tags_from_docker_tag
 
 # Purposes:
@@ -26,8 +27,14 @@ def install_commands(image):
 
 	commands = '\n'
 	packages = packages_to_be_installed(image)
+	if 'cvmfs-fedora36' == image:
+		packages = cvmfs_packages_to_be_installed('fedora36')
+	elif 'cvmfs-almalinux93' == image:
+		packages = cvmfs_packages_to_be_installed('almalinux93')
+	elif 'cvmfs-ubuntu24' == image:
+		packages = cvmfs_packages_to_be_installed('ubuntu24')
 
-	if 'fedora36' == image:
+	if 'fedora36' == image or 'cvmfs-fedora36' == image:
 		commands += 'RUN dnf install -y '
 		commands += packages
 		commands += '\\\n'
@@ -35,10 +42,13 @@ def install_commands(image):
 		commands += '   && dnf -y check-update \\\n'
 		commands += '   && dnf clean packages \\\n'
 		commands += '   && dnf clean all \\\n'
-		commands += '   && rm -rf /var/cache/yum \\\n'
-		commands += '   && ln -s /usr/bin/cmake3 /usr/local/bin/cmake\n'
+		if 'fedora36' == image:
+			commands += '   && rm -rf /var/cache/dnf \\\n'
+			commands += '   && ln -s /usr/bin/cmake3 /usr/local/bin/cmake\n'
+		else:
+			commands += '   && rm -rf /var/cache/dnf \n'
 
-	elif 'almalinux93' == image:
+	elif 'almalinux93' == image or 'cvmfs-almalinux93' == image:
 		commands += 'RUN dnf install -y --allowerasing '
 		commands += packages
 		commands += '\\\n'
@@ -46,10 +56,14 @@ def install_commands(image):
 		commands += '   && dnf -y check-update \\\n'
 		commands += '   && dnf clean packages \\\n'
 		commands += '   && dnf clean all \\\n'
-		commands += '   && rm -rf /var/cache/yum \\\n'
-		commands += '   && ln -s /usr/bin/cmake3 /usr/local/bin/cmake\n'
+		if 'almalinux93' == image:
+			commands += '   && rm -rf /var/cache/dnf \\\n'
+			commands += '   && ln -s /usr/bin/cmake3 /usr/local/bin/cmake\n'
+		else:
+			commands += '   && rm -rf /var/cache/dnf \n'
 
-	elif 'ubuntu24' == image:
+
+	elif 'ubuntu24' == image or 'cvmfs-ubuntu24' == image:
 		commands += 'RUN ln -fs /usr/share/zoneinfo/America/New_York /etc/localtime \\\n'
 		commands += '    && DEBIAN_FRONTEND=noninteractive apt-get  install -y --no-install-recommends tzdata '
 		commands += packages

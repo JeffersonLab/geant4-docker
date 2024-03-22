@@ -59,6 +59,49 @@ def container_header(image):
 		header += 'ADD https://pki.jlab.org/JLabCA.crt /etc/pki/ca-trust/source/anchors/JLabCA.crt\n'
 		header += 'RUN update-ca-certificates\n'
 
+	if 'cvmfs-fedora36' == image:
+		header += 'COPY localSetupBase.sh /app/localSetup.sh\n\n'
+		header += '# JLab certificate\n'
+		header += 'ADD https://pki.jlab.org/JLabCA.crt /etc/pki/ca-trust/source/anchors/JLabCA.crt\n'
+		header += 'RUN update-ca-trust\n\n'
+		install_dir = install_dir_from_image(image)
+		header += f'RUN echo "export SIM_HOME={install_dir}" >> /app/localSetup.sh \\\n'
+		header += f'    && echo "source $SIM_HOME/ceInstall/setup.sh" >> /app/localSetup.sh \n'
+
+
+	elif 'cvmfs-almalinux93' == image:
+		header += 'COPY localSetupBase.sh /app/localSetup.sh\n\n'
+		header += '# JLab certificate\n'
+		header += 'ADD https://pki.jlab.org/JLabCA.crt /etc/pki/ca-trust/source/anchors/JLabCA.crt\n'
+		header += 'RUN update-ca-trust\n'
+		header += '\n'
+		header += '# alma specific:\n'
+		header += '# crb: for mysql-devel\n'
+		header += '# synergy: root, scons, vnc\n'
+		header += 'RUN    dnf install -y  \'dnf-command(config-manager)\' \\\n'
+		header += '    && dnf config-manager --set-enabled crb \\\n'
+		header += '    && dnf install -y almalinux-release-synergy\n\n'
+		install_dir = install_dir_from_image(image)
+		header += f'RUN echo "export SIM_HOME={install_dir}" >> /app/localSetup.sh \\\n'
+		header += f'    && echo "source $SIM_HOME/ceInstall/setup.sh" >> /app/localSetup.sh \n'
+
+
+	elif 'cvmfs-ubuntu24' == image:
+		header += 'COPY localSetupBase.sh /app/localSetup.sh\n\n'
+		header += '# Update needed at beginning to use the right package repos\n'
+		header += 'RUN  apt update\n'
+		header += '\n'
+		header += '# Install ca-certificates tools\n'
+		header += 'RUN apt-get install -y ca-certificates\n'
+		header += '\n'
+		header += '# JLab certificate\n'
+		header += 'ADD https://pki.jlab.org/JLabCA.crt /etc/pki/ca-trust/source/anchors/JLabCA.crt\n'
+		header += 'RUN update-ca-certificates\n\n'
+		install_dir = install_dir_from_image(image)
+		header += f'RUN echo "export SIM_HOME={install_dir}" >> /app/localSetup.sh \\\n'
+		header += f'    && echo "source $SIM_HOME/ceInstall/setup.sh" >> /app/localSetup.sh \n'
+
+
 	# sim image
 	elif image.startswith('g4v'):
 		install_dir = install_dir_from_image(image)

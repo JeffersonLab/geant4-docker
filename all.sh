@@ -52,4 +52,12 @@ for osname in $osnames; do
 	done
 done
 
+# base cvmfs images
+echo "\n\nBase cvmfs images:\n"
+for osname in $osnames; do
+		image_name="cvmfs-$osname"
+		echo $image_name
+		./create_dockerfile.py -i "$image_name"
+done
+
 echo "\n\n"

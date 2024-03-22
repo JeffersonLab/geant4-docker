@@ -61,7 +61,8 @@ def main():
 		clas12_tags = clas12_tags_from_docker_tag(image)
 		print()
 		print(f'Supported images:\t\t {supported_osnames()}')
-		print(f'Supported geant4 versions:\t {supported_geant4_versions()}')
+		if image.split('-')[0] != 'cvmfs':
+			print(f'Supported geant4 versions:\t {supported_geant4_versions()}')
 		print()
 		print(f'OS Name: {osname}')
 		print(f'Install Directory: {install_dir}')
@@ -80,6 +81,8 @@ def main():
 def from_image(requested_image):
 	if requested_image.count('-') == 0:
 		return os_imagename_from_base(requested_image)
+	elif requested_image.count('-') == 1:
+		return os_imagename_from_base(requested_image)
 	# sim image, requesting base image
 	elif requested_image.count('-') == 2:
 		return base_imagename_from_sim(requested_image)
@@ -89,11 +92,11 @@ def from_image(requested_image):
 
 
 def os_imagename_from_base(requested_image):
-	if requested_image == 'fedora36':
+	if requested_image == 'fedora36' or 'cvmfs-fedora36' == requested_image:
 		return 'fedora:36'
-	elif 'almalinux93' == requested_image:
+	elif 'almalinux93' == requested_image or 'cvmfs-almalinux93' == requested_image:
 		return 'almalinux:9.3'
-	elif 'ubuntu24' == requested_image:
+	elif 'ubuntu24' == requested_image or 'cvmfs-ubuntu24' == requested_image:
 		return 'ubuntu:24.04'
 	else:
 		# not supported
@@ -122,6 +125,8 @@ def osname_from_image(requested_image):
 		osname = requested_image
 	elif requested_image.count('-') == 2:
 		osname = requested_image.split('-')[1]
+	elif requested_image.count('-') == 1:
+		osname = requested_image.split('-')[1]
 	else:
 		osname = requested_image.split('-')[2]
 
@@ -136,6 +141,8 @@ def osname_from_image(requested_image):
 def install_dir_from_image(requested_image):
 	if requested_image.count('-') == 0:
 		return 'system'
+	elif requested_image.split('-')[0] == 'cvmfs':
+		return install_dir_path_from_label('cvmfs')
 	else:
 		install_dir_label = requested_image.split('-')[-1]
 		return install_dir_path_from_label(install_dir_label)

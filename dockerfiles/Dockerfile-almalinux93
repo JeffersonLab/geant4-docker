@@ -23,7 +23,7 @@ RUN dnf install -y --allowerasing  git make cmake gcc-c++ expat-devel mariadb-de
    && dnf -y check-update \
    && dnf clean packages \
    && dnf clean all \
-   && rm -rf /var/cache/yum \
+   && rm -rf /var/cache/dnf \
    && ln -s /usr/bin/cmake3 /usr/local/bin/cmake
 
 
