@@ -66,7 +66,7 @@ def container_header(image):
 		header += 'RUN update-ca-trust\n\n'
 		install_dir = install_dir_from_image(image)
 		header += f'RUN echo "export SIM_HOME={install_dir}" >> /app/localSetup.sh \\\n'
-		header += f'    && echo "source $SIM_HOME/ceInstall/setup.sh" >> /app/localSetup.sh \n'
+		header += f'    && echo "source {install_dir}/ceInstall/setup.sh" >> /app/localSetup.sh \n'
 
 
 	elif 'cvmfs-almalinux93' == image:
@@ -83,7 +83,7 @@ def container_header(image):
 		header += '    && dnf install -y almalinux-release-synergy\n\n'
 		install_dir = install_dir_from_image(image)
 		header += f'RUN echo "export SIM_HOME={install_dir}" >> /app/localSetup.sh \\\n'
-		header += f'    && echo "source $SIM_HOME/ceInstall/setup.sh" >> /app/localSetup.sh \n'
+		header += f'    && echo "source {install_dir}/ceInstall/setup.sh" >> /app/localSetup.sh \n'
 
 
 	elif 'cvmfs-ubuntu24' == image:
@@ -99,7 +99,7 @@ def container_header(image):
 		header += 'RUN update-ca-certificates\n\n'
 		install_dir = install_dir_from_image(image)
 		header += f'RUN echo "export SIM_HOME={install_dir}" >> /app/localSetup.sh \\\n'
-		header += f'    && echo "source $SIM_HOME/ceInstall/setup.sh" >> /app/localSetup.sh \n'
+		header += f'    && echo "source {install_dir}/ceInstall/setup.sh" >> /app/localSetup.sh \n'
 
 
 	# sim image

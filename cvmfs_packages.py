@@ -22,6 +22,9 @@ ubuntu += ' gfortran libpcre3-dev xlibmesa-glu-dev libglew-dev libftgl-dev libmy
 fedora += ' gcc binutils xrootd-client lsof liburing flexiblas-devel '
 ubuntu += ' gcc binutils xrootd-client lsof liburing2 '
 
+# utilities. No 'which' in ubuntu?
+fedora += ' bzip2 wget curl nano bash tcsh zsh hostname gedit environment-modules which'
+ubuntu += ' bzip2 wget curl nano bash tcsh zsh hostname gedit environment-modules'
 
 
 
