@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 
 import argparse
-from conventions import dockerfile_name, supported_osnames
+from conventions import dockerfile_name, supported_osnames, supported_cvmfs_osnames
 from header import container_header
 from packages import install_commands
 from fluxbox import fluxbox_install_commands
@@ -39,7 +39,7 @@ def create_dockerfile(image):
 		f.close()
 
 	# fluxbox - only if image is in supported_images
-	if image in supported_osnames():
+	if image in supported_osnames() or image in supported_cvmfs_osnames():
 		with open(dockerfile, 'a') as f:
 			f.write(ifluxbox)
 			f.close()

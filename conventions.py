@@ -10,6 +10,9 @@ import argparse
 def supported_osnames():
 	return ['fedora36', 'almalinux93', 'ubuntu24']
 
+def supported_cvmfs_osnames():
+	return ['cvmfs-fedora36', 'cvmfs-almalinux93', 'cvmfs-ubuntu24']
+
 
 def supported_geant4_versions():
 	return ['10.6.2', '10.7.4', '11.2.1']
