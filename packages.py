@@ -37,7 +37,7 @@ def install_commands(image):
 	if 'fedora36' == image or 'cvmfs-fedora36' == image:
 		commands += 'RUN dnf install -y '
 		commands += packages
-		commands += '\\\n'
+		commands += ' \\\n'
 		commands += '   && dnf -y update \\\n'
 		commands += '   && dnf -y check-update \\\n'
 		commands += '   && dnf clean packages \\\n'

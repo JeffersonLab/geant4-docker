@@ -1,8 +1,12 @@
 #!/bin/zsh
 
+osnames=(fedora36 )
 osnames=(fedora36 almalinux93 ubuntu24)
+g4_versions_not_in_clas12=()
 g4_versions_not_in_clas12=(11.2.1)
+clas12tags_docker_tags=(dev) # see conventions.py for details
 clas12tags_docker_tags=(prod1 dev) # see conventions.py for details
+
 install_dirs=(cvmfs)
 
 function g4_version_from_clas12tags_version {

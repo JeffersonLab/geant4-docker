@@ -55,3 +55,26 @@ Examples:
   relative to the root of the repository. 
   Enter the path to these files in the Build context field. 
   Enter / to set the build context as the root of the source code repository.
+
+---
+
+## Release for clas12-validation
+
+- Currently used: jeffersonlab/gemc:dev-g4v10.7.4-fedora36-cvmfs
+
+Could also be tagged to jeffersonlab/gemc:dev-fedora36
+
+
+---
+
+## Release for OSG:
+
+
+```
+docker tag jeffersonlab/base:cvmfs-fedora36   jeffersonlab/clas12software:devel
+docker push jeffersonlab/clas12software:devel
+```
+
+After testing, can use the tag `production`.
+
+
