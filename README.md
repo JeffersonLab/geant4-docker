@@ -12,8 +12,9 @@ Docker files for geant4 installation
 
 - **ostype**: fedora36, ubuntu24, almalinux9
 - **geant4_version**: examples: 10.6.2, 10.7.4, 11.2.1
-- **gemc_version**: examples: 5.4, 5.7, dev
-- **install_dir**: software installation directory.  
+- **gemc_version**: examples: 4.4.2, 5.7, dev
+- **install_dir**: software installation directory label. 
+  It corresponds to the following paths: 
   - **local**: /usr/local
   - **cvmfs**: /cvmfs/oasis.opensciencegrid.org/jlab/geant4
 
@@ -21,7 +22,7 @@ Docker files for geant4 installation
 
 ### Base containers:
 
-**jeffersonlab/base:'ostype'**
+**jeffersonlab/base:**[cvmfs-]'ostype'
 
 
 ### Geant4 containers:
@@ -38,18 +39,18 @@ Docker files for geant4 installation
 Examples:
 
 - jeffersonlab/base:fedora36
+- jeffersonlab/base:cvmfs-fedora36
 - jeffersonlab/sim:g4v10.6.2-fedora36-local
-- jeffersonlab/gemc:5.4-g4v10.6.2-fedora36-local
 - jeffersonlab/sim:g4v10.7.4-ubuntu24-cvmfs
-- jeffersonlab/gemc:5.7-g4v10.7.4-ubuntu24-cvmfs
 - jeffersonlab/sim:g4v11.2.1-almalinux9-cvmfs
+- jeffersonlab/gemc:5.4-g4v10.6.2-fedora36-local
+- jeffersonlab/gemc:5.7-g4v10.7.4-ubuntu24-cvmfs
 
 
 ## Automated builds from docker hub
 
 - source: JeffersonLab/geant4-docker
 - source type: branch, main
-- docker tag: see tags below
 - You can specify the Dockerfile location as a path relative to the build context. 
 - The build context is the path to the files needed for the build, 
   relative to the root of the repository. 
@@ -58,11 +59,11 @@ Examples:
 
 ---
 
-## Release for clas12-validation
+## Container for clas12-validation and clas12Tags actions
 
-- Currently used: jeffersonlab/gemc:dev-g4v10.7.4-fedora36-cvmfs
+- Currently used: `jeffersonlab/gemc:dev-fedora36` which is an autobuild based on
+`jeffersonlab/gemc:dev-g4v10.7.4-fedora36-cvmfs`
 
-Could also be tagged to jeffersonlab/gemc:dev-fedora36
 
 
 ---
@@ -77,4 +78,9 @@ docker push jeffersonlab/clas12software:devel
 
 After testing, can use the tag `production`.
 
+### Test:
+
+```
+docker_run_image jeffersonlab/clas12software:devel cvmfs
+```
 
