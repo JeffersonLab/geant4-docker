@@ -21,10 +21,6 @@ export TERM=xterm-256color
 
 
 
-
-
-
-
 alias l='ls -l'
 alias lt='ls -lhrt'
 alias ll='ls -lah'

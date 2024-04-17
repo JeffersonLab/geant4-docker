@@ -13,10 +13,6 @@ cd $SIM_HOME
 # if ceInstall is not there, clone it, otherwise pull
 if [ ! -d "ceInstall" ]; then
   git clone https://github.com/JeffersonLab/ceInstall
-else
-  cd ceInstall
-  git pull
-  cd ..
 fi
 
 # root on ubuntu is installed with tarball, so we need to source it
