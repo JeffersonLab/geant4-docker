@@ -4,6 +4,7 @@ LABEL maintainer="Maurizio Ungaro <ungaro@jlab.org>"
 # run shell instead of sh
 SHELL ["/bin/bash", "-c"]
 
+COPY bgMerginFilename.sh /bin/bgMerginFilename.sh
 COPY localSetupBase.sh /app/localSetup.sh
 
 # Update needed at beginning to use the right package repos

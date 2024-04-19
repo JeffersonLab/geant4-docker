@@ -29,12 +29,14 @@ def container_header(image):
 	header += 'SHELL ["/bin/bash", "-c"]\n\n'
 
 	if 'fedora36' == image:
+		header += 'COPY bgMerginFilename.sh /bin/bgMerginFilename.sh\n'
 		header += 'COPY localSetupBase.sh /app/localSetup.sh\n\n'
 		header += '# JLab certificate\n'
 		header += 'ADD https://pki.jlab.org/JLabCA.crt /etc/pki/ca-trust/source/anchors/JLabCA.crt\n'
 		header += 'RUN update-ca-trust\n'
 
 	elif 'almalinux93' == image:
+		header += 'COPY bgMerginFilename.sh /bin/bgMerginFilename.sh\n'
 		header += 'COPY localSetupBase.sh /app/localSetup.sh\n\n'
 		header += '# JLab certificate\n'
 		header += 'ADD https://pki.jlab.org/JLabCA.crt /etc/pki/ca-trust/source/anchors/JLabCA.crt\n'
@@ -48,6 +50,7 @@ def container_header(image):
 		header += '    && dnf install -y almalinux-release-synergy\n'
 
 	elif 'ubuntu24' == image:
+		header += 'COPY bgMerginFilename.sh /bin/bgMerginFilename.sh\n'
 		header += 'COPY localSetupBase.sh /app/localSetup.sh\n\n'
 		header += '# Update needed at beginning to use the right package repos\n'
 		header += 'RUN  apt update\n'
@@ -60,6 +63,7 @@ def container_header(image):
 		header += 'RUN update-ca-certificates\n'
 
 	if 'cvmfs-fedora36' == image:
+		header += 'COPY bgMerginFilename.sh /bin/bgMerginFilename.sh\n'
 		header += 'COPY localSetupBase.sh /app/localSetup.sh\n\n'
 		header += '# JLab certificate\n'
 		header += 'ADD https://pki.jlab.org/JLabCA.crt /etc/pki/ca-trust/source/anchors/JLabCA.crt\n'
@@ -70,6 +74,7 @@ def container_header(image):
 
 
 	elif 'cvmfs-almalinux93' == image:
+		header += 'COPY bgMerginFilename.sh /bin/bgMerginFilename.sh\n'
 		header += 'COPY localSetupBase.sh /app/localSetup.sh\n\n'
 		header += '# JLab certificate\n'
 		header += 'ADD https://pki.jlab.org/JLabCA.crt /etc/pki/ca-trust/source/anchors/JLabCA.crt\n'
@@ -87,6 +92,7 @@ def container_header(image):
 
 
 	elif 'cvmfs-ubuntu24' == image:
+		header += 'COPY bgMerginFilename.sh /bin/bgMerginFilename.sh\n'
 		header += 'COPY localSetupBase.sh /app/localSetup.sh\n\n'
 		header += '# Update needed at beginning to use the right package repos\n'
 		header += 'RUN  apt update\n'

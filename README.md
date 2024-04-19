@@ -72,7 +72,8 @@ Examples:
 
 
 ```
-docker tag jeffersonlab/base:cvmfs-fedora36   jeffersonlab/clas12software:devel
+docker pull jeffersonlab/base:cvmfs-almalinux93  
+docker tag jeffersonlab/base:cvmfs-almalinux93   jeffersonlab/clas12software:devel
 docker push jeffersonlab/clas12software:devel
 ```
 
