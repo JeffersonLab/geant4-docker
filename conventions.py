@@ -10,6 +10,7 @@ import argparse
 def supported_osnames():
 	return ['fedora36', 'almalinux93', 'ubuntu24']
 
+
 def supported_cvmfs_osnames():
 	return ['cvmfs-fedora36', 'cvmfs-almalinux93', 'cvmfs-ubuntu24']
 
@@ -168,7 +169,6 @@ def g4_version_from_image(requested_image):
 		return g4_version
 
 
-
 def sim_version_from_image(requested_image):
 	g4_version = g4_version_from_image(requested_image)
 	if g4_version == '10.6.2':
@@ -179,6 +179,7 @@ def sim_version_from_image(requested_image):
 		return '1.2'
 	else:
 		return 'na'
+
 
 if __name__ == "__main__":
 	main()

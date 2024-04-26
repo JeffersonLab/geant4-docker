@@ -1,0 +1,21 @@
+FROM jeffersonlab/sim:g4v11.2.1-ubuntu24-local 
+LABEL maintainer="Maurizio Ungaro <ungaro@jlab.org>"
+
+# run shell instead of sh
+SHELL ["/bin/bash", "-c"]
+
+ENV SIM_HOME /usr/local
+WORKDIR $SIM_HOME
+
+COPY localSetupSimTemplate.sh $SIM_HOME/localSetup.sh
+
+RUN sed  -i -e "s|templateSim|$SIM_HOME|g"    $SIM_HOME/localSetup.sh \
+    && echo "module load gemc3/dev" >> $SIM_HOME/localSetup.sh \
+    && cp $SIM_HOME/localSetup.sh /app/localSetup.sh \
+    && cp $SIM_HOME/localSetup.sh /etc/profile.d/localSetup.sh
+
+
+RUN source /app/localSetup.sh \
+           && module switch gemc3/dev \
+           && install_gemc3 dev 
+

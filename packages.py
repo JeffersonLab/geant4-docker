@@ -5,6 +5,7 @@ from base_packages import packages_to_be_installed
 from cvmfs_packages import packages_to_be_installed as cvmfs_packages_to_be_installed
 from conventions import sim_version_from_image, clas12_tags_from_docker_tag
 
+
 # Purposes:
 # Return installation commands
 
@@ -24,7 +25,6 @@ def main():
 
 
 def install_commands(image):
-
 	commands = '\n'
 	packages = packages_to_be_installed(image)
 	if 'cvmfs-fedora36' == image:
@@ -62,7 +62,6 @@ def install_commands(image):
 		else:
 			commands += '   && rm -rf /var/cache/dnf \n'
 
-
 	elif 'ubuntu24' == image or 'cvmfs-ubuntu24' == image:
 		commands += 'RUN ln -fs /usr/share/zoneinfo/America/New_York /etc/localtime \\\n'
 		commands += '    && DEBIAN_FRONTEND=noninteractive apt-get  install -y --no-install-recommends tzdata '
@@ -78,6 +77,14 @@ def install_commands(image):
 		commands += 'RUN source /app/localSetup.sh \\\n'
 		commands += f'           && install_sim {sim_version} \\\n'
 		commands += '           && strip --remove-section=.note.ABI-tag $QTDIR/lib/libQt5Core.so.5\n'
+
+	# gemc3 image
+	elif image.startswith('g3v'):
+		g3_tag = image.split('-')[0].split('g3v')[1]
+		commands += 'RUN source /app/localSetup.sh \\\n'
+		commands += f'           && module switch gemc3/{g3_tag} \\\n'
+		commands += f'           && install_gemc3 {g3_tag} '
+		commands += '\n'
 
 	# gemc image containing clas12_tags
 	elif image.count('-') == 3:

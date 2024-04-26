@@ -4,6 +4,7 @@ osnames=(fedora36 almalinux93 ubuntu24)
 g4_versions=(10.6.2 10.7.4 11.2.1)
 clas12tags_docker_tags=(prod1 dev) # see conventions.py for details
 install_dirs=(cvmfs local)
+gemc3_docker_tags=(1.2 dev)
 
 function g4_version_from_clas12tags_version {
 	case $1 in
@@ -55,9 +56,22 @@ done
 # base cvmfs images
 echo "\n\nBase cvmfs images:\n"
 for osname in $osnames; do
-		image_name="cvmfs-$osname"
-		echo $image_name
-		./create_dockerfile.py -i "$image_name"
+	image_name="cvmfs-$osname"
+	echo $image_name
+	./create_dockerfile.py -i "$image_name"
+done
+
+# gemc3 images
+echo "\n\nGemc3 images:\n"
+last_g4_version=${g4_versions[-1]}
+for cdg3_tags in  $gemc3_docker_tags; do
+	for osname in $osnames; do
+		for install_dir in $install_dirs; do
+			image_name="g3v$cdg3_tags-g4v$last_g4_version-$osname-$install_dir"
+			echo $image_name
+			./create_dockerfile.py -i "$image_name"
+		done
+	done
 done
 
 echo "\n\n"
