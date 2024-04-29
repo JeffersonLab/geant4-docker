@@ -14,7 +14,7 @@ if [ ! -d "/root/meson-$meson_version" ]; then
 	wget https://github.com/mesonbuild/meson/releases/download/$meson_version/meson-$meson_version.tar.gz
 	tar -zxpf meson-$meson_version.tar.gz
 fi
-alias meson /root/meson-$meson_version/meson.py
+alias meson=/root/meson-$meson_version/meson.py
 
 
 
