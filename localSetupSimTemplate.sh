@@ -21,6 +21,15 @@ fi
 source $SIM_HOME/ceInstall/setup.sh install
 cd $currentDir
 
+# temp installation of meson, as the one in the container is too old
+meson_version=1.4.0
+if [ ! -d "/root/meson-$meson_version" ]; then
+	cd /root
+	wget https://github.com/mesonbuild/meson/releases/download/$meson_version/meson-$meson_version.tar.gz
+	tar -zxpf meson-$meson_version.tar.gz
+fi
+alias meson=/root/meson-$meson_version/meson.py
+
 alias l='ls -l'
 alias lt='ls -lhrt'
 alias ll='ls -lah'

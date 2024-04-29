@@ -7,6 +7,20 @@
 export TERM=xterm-256color
 
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 # temp installation of meson, as the one in the container is too old
 meson_version=1.4.0
 if [ ! -d "/root/meson-$meson_version" ]; then
@@ -15,11 +29,6 @@ if [ ! -d "/root/meson-$meson_version" ]; then
 	tar -zxpf meson-$meson_version.tar.gz
 fi
 alias meson=/root/meson-$meson_version/meson.py
-
-
-
-
-
 
 alias l='ls -l'
 alias lt='ls -lhrt'
