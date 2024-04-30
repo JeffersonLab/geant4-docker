@@ -21,8 +21,8 @@ fedora += ' mariadb-devel sqlite-devel'        # mariadb-devel provides mysql_co
 ubuntu += ' libmysqlclient-dev libsqlite3-dev' # in ubuntu line mysq_config is not given by mariadb.
 
 # python
-fedora += ' python3-devel python3-scons'
-ubuntu += ' python3-dev scons'
+fedora += ' python3-devel python3-scons ninja-build'
+ubuntu += ' python3-dev scons ninja-build'
 
 # x11
 fedora += ' mesa-libGLU-devel libX11-devel libXpm-devel libXft-devel '
