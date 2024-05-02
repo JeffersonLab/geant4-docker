@@ -27,9 +27,9 @@ def clas12_tags_from_docker_tag(image):
 		tag = image.split('-')[0]
 
 		if tag == 'prod1':
-			return ['4.4.2', '5.7']
+			return ['4.4.2', '5.9']
 		elif tag == 'dev':
-			return ['5.8', 'dev']
+			return ['5.10', 'dev']
 		else:
 			print(f'Error: tag {tag} not supported')
 			exit(1)

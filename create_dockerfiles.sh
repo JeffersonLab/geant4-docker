@@ -9,8 +9,8 @@ gemc3_docker_tags=(1.2 dev)
 function g4_version_from_clas12tags_version {
 	case $1 in
 		4.4.2) echo "10.6.2" ;;
-		5.7) echo "10.6.2" ;;
-		5.8) echo "10.7.4" ;;
+		5.9) echo "10.6.2" ;;
+		5.10) echo "10.7.4" ;;
 	esac
 }
 

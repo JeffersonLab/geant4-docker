@@ -18,6 +18,6 @@ RUN sed  -i -e "s|templateSim|$SIM_HOME|g"    $SIM_HOME/localSetup.sh \
 RUN source /app/localSetup.sh \
            && module switch gemc/4.4.2 \
            && install_gemc 4.4.2 \
-           && module switch gemc/5.7 \
-           && install_gemc 5.7 
+           && module switch gemc/5.9 \
+           && install_gemc 5.9 
 
