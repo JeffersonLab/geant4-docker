@@ -1,6 +1,6 @@
 #!/bin/zsh
 
-osnames=(fedora36 )
+#osnames=(almalinux93 )
 osnames=(fedora36 almalinux93 ubuntu24)
 g4_versions_not_in_clas12=()
 g4_versions_not_in_clas12=(11.2.1)
@@ -8,6 +8,11 @@ clas12tags_docker_tags=(dev) # see conventions.py for details
 clas12tags_docker_tags=(prod1 dev) # see conventions.py for details
 
 install_dirs=(cvmfs)
+
+gemc_only=""
+if [ $1 = "gemc" ]; then
+	gemc_only="yes"
+fi
 
 function g4_version_from_clas12tags_version {
 	case $1 in
@@ -31,7 +36,7 @@ function do_the_deed {
 	echo "$image_name  remote: $remote_image_name"
 	docker pull "$remote_image_name"
 	cp ./pack_me.sh unpack_me.sh ~/mywork
-	docker run --platform linux/amd64 -it --rm -v ~/mywork:/usr/local/mywork "$remote_image_name" /usr/local/mywork/pack_me.sh "$image_name"
+	docker run --platform linux/amd64 -it --rm -v ~/mywork:/usr/local/mywork "$remote_image_name" /usr/local/mywork/pack_me.sh "$image_name" "$gemc_only"
 }
 
 # clas12tags images
@@ -64,3 +69,7 @@ for osname in $=osnames; do
 done
 
 echo "\n\n"
+echo
+echo "To copy the tar file to the host, run:"
+echo "cd $export_location"
+echo "scp *.tar.gz unpack_me.sh ifarm:/work/clas12/ungaro/images "
