@@ -68,8 +68,11 @@ for osname in $=osnames; do
 	done
 done
 
-echo "\n\n"
 echo
 echo "To copy the tar file to the host, run:"
 echo "cd $export_location"
-echo "scp *.tar.gz unpack_me.sh ifarm:/work/clas12/ungaro/images "
+echo "scp *.tar.gz unpack_me.sh ifarm:/work/clas12/ungaro/images"
+echo
+echo "To unpack the tar files on ifarm, run:"
+echo "/work/clas12/ungaro/images/unpack_me.sh"
+echo "\n\n"

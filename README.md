@@ -79,9 +79,44 @@ docker push jeffersonlab/clas12software:devel
 
 After testing, can use the tag `production`.
 
-### Test:
+## Testing with docker container:
 
 ```
 docker_run_image jeffersonlab/clas12software:devel cvmfs
 ```
 
+### Test script:
+
+```
+source /etc/profile.d/modules.csh
+set cvmfsPath = /cvmfs/oasis.opensciencegrid.org/jlab/hallb/clas12/sw/
+set cvmfsSetupFile = $cvmfsPath/setup.csh
+source $cvmfsSetupFile $cvmfsPath
+module load sqlite/5.7
+setenv SIM_HOME /cvmfs/oasis.opensciencegrid.org/jlab/geant4
+source /cvmfs/oasis.opensciencegrid.org/jlab/geant4/ceInstall/setup.csh
+module load gemc/5.9
+setenv RCDB_CONNECTION mysql://null
+
+module avail
+module load coatjava/10.0.2
+module load jdk/17.0.2
+module load mcgen/3.02
+
+generate-seeds.py generate
+set seed = `generate-seeds.py read --row 1`
+clasdis --trig 100 --docker --t 20 25 --seed $seed
+gemc -USE_GUI=0 -N=100 /cvmfs/oasis.opensciencegrid.org/jlab/hallb/clas12/sw/noarch/clas12-config/dev/gemc/5.7/rga_fall2018_target_at_m3.5.gcard  -INPUT_GEN_FILE='lund, clasdis.dat'   -RANDOMIZE_LUND_VZ='-3.0*cm, 2.5*cm, reset '  -BEAM_SPOT='0.0*mm, 0.0*mm, 0.0*mm, 0.0*mm, 0*deg, reset '          -RASTER_VERTEX='0.0*cm, 0.0*cm, reset '       -SCALE_FIELD='binary_torus,    +1.00'   -SCALE_FIELD='binary_solenoid, -1.00'   -OUTPUT='hipo, gemc.hipo'   -INTEGRATEDRAW='*'   | sed '/G4Exception-START/,/G4Exception-END/d'  
+$DRIFTCHAMBERS/install/bin/denoise2.exe  -i gemc.hipo -o gemc_denoised.hipo -t 1 -n $DRIFTCHAMBERS/denoising/code/network/cnn_autoenc_0f_112.json 
+recon-util -y /cvmfs/oasis.opensciencegrid.org/jlab/hallb/clas12/sw/noarch/clas12-config/dev/coatjava/10.0.2/rga_fall2018_target_at_m3.5.yaml -i gemc_denoised.hipo -o recon.hipo
+echo
+ls -l
+```
+
+## Testing with apptainer
+
+```
+module load singularity
+singularity shell  --bind /cvmfs --contain --ipc --pid --cleanenv /cvmfs/singularity.opensciencegrid.org/jeffersonlab/clas12software:devel
+singularity shell --home ${PWD}:/srv --pwd /srv --bind /cvmfs --contain --ipc --pid --cleanenv /cvmfs/singularity.opensciencegrid.org/jeffersonlab/clas12software:devel
+```
