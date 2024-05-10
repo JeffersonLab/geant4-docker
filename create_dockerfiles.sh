@@ -3,8 +3,9 @@
 osnames=(fedora36 almalinux93 ubuntu24)
 g4_versions=(10.6.2 10.7.4 11.2.1)
 clas12tags_docker_tags=(prod1 dev) # see conventions.py for details
-install_dirs=(cvmfs local)
-gemc3_docker_tags=(1.2 dev)
+install_dirs=(cvmfs)
+#install_dirs=(cvmfs local)
+gemc3_docker_tags=(1.3 dev)
 
 function g4_version_from_clas12tags_version {
 	case $1 in
