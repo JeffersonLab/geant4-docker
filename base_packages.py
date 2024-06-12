@@ -35,8 +35,8 @@ fedora += ' bzip2 wget curl nano bash tcsh zsh hostname gedit environment-module
 ubuntu += ' bzip2 wget curl nano bash tcsh zsh hostname gedit environment-modules'
 
 # more utilities
-fedora += ' psmisc procps mailcap net-tools'
-ubuntu += ' psmisc procps mailcap net-tools'
+fedora += ' psmisc procps mailcap net-tools rsync patch'
+ubuntu += ' psmisc procps mailcap net-tools rsync patch'
 
 # even more utilities
 fedora += ' perl-CPAN glibc-langpack-en'

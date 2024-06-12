@@ -70,6 +70,17 @@ Examples:
 
 ## Release for OSG:
 
+First make a tag of the current version:
+```
+docker pull  jeffersonlab/clas12software:production
+docker tag jeffersonlab/clas12software:production jeffersonlab/clas12software:tag_sept_24
+docker push jeffersonlab/clas12software:tag_sept_24
+```
+
+Then make a new tag for the new version:
+
+```
+
 
 ```
 docker pull jeffersonlab/base:cvmfs-almalinux93  

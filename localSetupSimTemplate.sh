@@ -18,7 +18,9 @@ fi
 # root on ubuntu is installed with tarball, so we need to source it
 [[ -d /etc/profile.d/root.sh ]] && source /etc/profile.d/root.sh
 
-source $SIM_HOME/ceInstall/setup.sh install
+module use $SIM_HOME/ceInstall/modulefiles
+export PATH="$SIM_HOME"/ceInstall/install:${PATH}
+
 cd $currentDir
 
 # temp installation of meson, as the one in the container is too old
