@@ -19,7 +19,7 @@ RUN    dnf install -y  'dnf-command(config-manager)' \
     && dnf install -y almalinux-release-synergy
 
 
-RUN dnf install -y --allowerasing  git make cmake gcc-c++ expat-devel mariadb-devel sqlite-devel python3-devel python3-scons ninja-build mesa-libGLU-devel libX11-devel libXpm-devel libXft-devel  libXt-devel libXmu-devel libXrender-devel  xorg-x11-server-Xvfb xrandr  bzip2 wget curl nano bash tcsh zsh hostname gedit environment-modules which psmisc procps mailcap net-tools perl-CPAN glibc-langpack-en xterm x11vnc novnc  qt5-qtbase-devel qt5-linguist root\
+RUN dnf install -y --allowerasing  git make cmake gcc-c++ expat-devel mariadb-devel sqlite-devel python3-devel python3-scons ninja-build mesa-libGLU-devel libX11-devel libXpm-devel libXft-devel  libXt-devel libXmu-devel libXrender-devel  xorg-x11-server-Xvfb xrandr  bzip2 wget curl nano bash tcsh zsh hostname gedit environment-modules which psmisc procps mailcap net-tools rsync patch perl-CPAN glibc-langpack-en xterm x11vnc novnc  qt5-qtbase-devel qt5-linguist root\
    && dnf -y update \
    && dnf -y check-update \
    && dnf clean packages \
