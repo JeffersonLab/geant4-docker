@@ -5,10 +5,11 @@ from base_packages import packages_to_be_installed
 from cvmfs_packages import packages_to_be_installed as cvmfs_packages_to_be_installed
 from conventions import sim_version_from_image, clas12_tags_from_docker_tag
 
-
 # Purposes:
 # Return installation commands
 
+cleanup_string_fedora = ' \\\n  && dnf -y update \\\n  && dnf -y check-update \\\n  && dnf clean packages \\\n  && dnf clean all \\\n  && rm -rf /var/cache/dnf \n'
+cleanup_string_ubuntu = ' \\\n  && apt-get -y update \\\n  && apt-get -y autoclean \n'
 
 def main():
 	desc_str = 'Install Packages for dockerfile'
@@ -37,38 +38,17 @@ def install_commands(image):
 	if 'fedora36' == image or 'cvmfs-fedora36' == image:
 		commands += 'RUN dnf install -y '
 		commands += packages
-		commands += ' \\\n'
-		commands += '   && dnf -y update \\\n'
-		commands += '   && dnf -y check-update \\\n'
-		commands += '   && dnf clean packages \\\n'
-		commands += '   && dnf clean all \\\n'
-		if 'fedora36' == image:
-			commands += '   && rm -rf /var/cache/dnf \\\n'
-			commands += '   && ln -s /usr/bin/cmake3 /usr/local/bin/cmake\n'
-		else:
-			commands += '   && rm -rf /var/cache/dnf \n'
+		commands += cleanup_string_fedora
 
 	elif 'almalinux93' == image or 'cvmfs-almalinux93' == image:
 		commands += 'RUN dnf install -y --allowerasing '
 		commands += packages
-		commands += '\\\n'
-		commands += '   && dnf -y update \\\n'
-		commands += '   && dnf -y check-update \\\n'
-		commands += '   && dnf clean packages \\\n'
-		commands += '   && dnf clean all \\\n'
-		if 'almalinux93' == image:
-			commands += '   && rm -rf /var/cache/dnf \\\n'
-			commands += '   && ln -s /usr/bin/cmake3 /usr/local/bin/cmake\n'
-		else:
-			commands += '   && rm -rf /var/cache/dnf \n'
+		commands += cleanup_string_fedora
 
 	elif 'ubuntu24' == image or 'cvmfs-ubuntu24' == image:
 		commands += 'RUN ln -fs /usr/share/zoneinfo/America/New_York /etc/localtime \\\n'
 		commands += '    && DEBIAN_FRONTEND=noninteractive apt-get  install -y --no-install-recommends tzdata '
-		commands += packages
-		commands += '\\\n'
-		commands += '   && apt-get -y update \\\n'
-		commands += '   && apt-get -y autoclean\n'
+		commands += cleanup_string_ubuntu
 		commands += install_root_from_ubuntu_tarball()
 
 	# sim image
@@ -76,7 +56,7 @@ def install_commands(image):
 		sim_version = sim_version_from_image(image)
 		commands += 'RUN source /app/localSetup.sh \\\n'
 		commands += f'           && install_sim {sim_version} \\\n'
-		commands += '           && strip --remove-section=.note.ABI-tag $QTDIR/lib/libQt5Core.so.5\n'
+		commands += '            && strip --remove-section=.note.ABI-tag $QTDIR/lib/libQt5Core.so.5\n'
 
 	# gemc3 image
 	elif image.startswith('g3v'):
