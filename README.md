@@ -79,14 +79,26 @@ docker push jeffersonlab/clas12software:tag_sept_24
 
 Then make a new tag for the new version:
 
-```
-
+Almalinux:
 
 ```
 docker pull jeffersonlab/base:cvmfs-almalinux93  
 docker tag jeffersonlab/base:cvmfs-almalinux93   jeffersonlab/clas12software:devel
 docker push jeffersonlab/clas12software:devel
+docker tag jeffersonlab/base:cvmfs-almalinux93   jeffersonlab/clas12software:production
+docker push jeffersonlab/clas12software:production
 ```
+
+Fedora:
+
+```
+docker pull jeffersonlab/base:cvmfs-fedora36  
+docker tag jeffersonlab/base:cvmfs-fedora36   jeffersonlab/clas12software:devel
+docker push jeffersonlab/clas12software:devel
+docker tag jeffersonlab/base:cvmfs-fedora36   jeffersonlab/clas12software:production
+docker push jeffersonlab/clas12software:production
+```
+
 
 After testing, can use the tag `production`.
 

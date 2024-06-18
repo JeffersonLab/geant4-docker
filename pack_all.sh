@@ -63,19 +63,21 @@ for osname in $=osnames; do
 done
 
 
-# remaining g4 versions - only if NOT gewmc only
-echo "\n\nRemaining g4 versions:\n"
-for osname in $=osnames; do
-	for g4_version in $=g4_versions_not_in_clas12; do
-		for install_dir in $=install_dirs; do
-			image_name="g4v$g4_version-$osname-$install_dir"
-			do_the_deed "$image_name" "sim"
+# remaining g4 versions - only if NOT gemc only
+if [ "$gemc_only" = "" ]; then
+	echo "\n\nRemaining g4 versions:\n"
+	for osname in $=osnames; do
+		for g4_version in $=g4_versions_not_in_clas12; do
+			for install_dir in $=install_dirs; do
+				image_name="g4v$g4_version-$osname-$install_dir"
+				do_the_deed "$image_name" "gemc"
+			done
 		done
 	done
-done
+fi
 
 echo
-echo "To copy the tar file to the host, run:"
+echo "To copy the tar file to the host, may have to remove .tcshrc from jlab then run:"
 echo "cd $local_install_dir"
 echo "scp *.tar.gz unpack_me.sh ifarm:/work/clas12/ungaro/images"
 echo
