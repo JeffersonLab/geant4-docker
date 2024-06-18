@@ -7,6 +7,7 @@ export_location="/usr/local/mywork"
 function ce_version_from_clas12tags_docker_version {
 	if [ "$2" = "yes" ]; then
 		echo $(find ./ -name clas12Tags)
+#		echo $(find ./ -name clas12Tags) $(find ./ -name ccdb | grep -v bin | grep -v lib | grep -v ceInstall | grep -v python)
 	else
 		case $1 in
 			prod1) echo "1.0" ;;
@@ -28,6 +29,7 @@ function ce_version_from_g4v_docker_version {
 
 docker_tag=$(echo "$image" | cut -d'-' -f1)
 tar_file="$export_location/$image.tar.gz"
+echo ; echo
 echo "Image: $image"
 echo "Docker Tag: $docker_tag"
 echo "Tar file: $tar_file"
@@ -56,9 +58,9 @@ find ./ -type l -name "*.so*" -exec sh -c 'for i in "$@"; do cp --preserve --rem
 find ./ -type l -name "*.a*" -exec sh -c 'for i in "$@"; do cp --preserve --remove-destination "$(readlink -f "$i")" "$i"; echo $i; done' sh {} +
 find ./ -type d -name ".git" -exec rm -rf {} +
 echo
-echo Done, now tarring.
+echo Done, now tarring...
 
-tar cvfz "$tar_file" "$to_tar"
+tar cvfz "$tar_file" "$=to_tar"
 
 # if docker_tag is dev, tar noarch as well
 if [ "$docker_tag" = "dev" ]; then

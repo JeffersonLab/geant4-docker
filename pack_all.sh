@@ -2,10 +2,15 @@
 
 #osnames=(almalinux93 )
 osnames=(fedora36 almalinux93 ubuntu24)
+osnames=(fedora36 almalinux93)
 g4_versions_not_in_clas12=()
 g4_versions_not_in_clas12=(11.2.1)
 clas12tags_docker_tags=(dev) # see conventions.py for details
 clas12tags_docker_tags=(prod1 dev) # see conventions.py for details
+local_install_dir=/Users/ungaro/mywork
+container_install_dir=/Users/ungaro/mywork
+remote_images_location=/work/clas12/ungaro/images
+
 
 install_dirs=(cvmfs)
 
@@ -17,8 +22,8 @@ fi
 function g4_version_from_clas12tags_version {
 	case $1 in
 		4.4.2) echo "10.6.2" ;;
-		5.7) echo "10.6.2" ;;
-		5.8) echo "10.7.4" ;;
+		5.9) echo "10.6.2" ;;
+		5.10) echo "10.7.4" ;;
 	esac
 }
 
@@ -35,8 +40,8 @@ function do_the_deed {
 	remote_image_name="jeffersonlab/$gemc_or_sim:$image_name"
 	echo "$image_name  remote: $remote_image_name"
 	docker pull "$remote_image_name"
-	cp ./pack_me.sh unpack_me.sh ~/mywork
-	docker run --platform linux/amd64 -it --rm -v ~/mywork:/usr/local/mywork "$remote_image_name" /usr/local/mywork/pack_me.sh "$image_name" "$gemc_only"
+	cp ./pack_me.sh unpack_me.sh $local_install_dir
+	docker run --platform linux/amd64 -it --rm -v $local_install_dir:$container_install_dir "$remote_image_name" $container_install_dir/pack_me.sh "$image_name" "$gemc_only"
 }
 
 # clas12tags images
@@ -57,7 +62,8 @@ for osname in $=osnames; do
 	done
 done
 
-# remaining g4 versions
+
+# remaining g4 versions - only if NOT gewmc only
 echo "\n\nRemaining g4 versions:\n"
 for osname in $=osnames; do
 	for g4_version in $=g4_versions_not_in_clas12; do
@@ -70,9 +76,9 @@ done
 
 echo
 echo "To copy the tar file to the host, run:"
-echo "cd $export_location"
+echo "cd $local_install_dir"
 echo "scp *.tar.gz unpack_me.sh ifarm:/work/clas12/ungaro/images"
 echo
 echo "To unpack the tar files on ifarm, run:"
-echo "/work/clas12/ungaro/images/unpack_me.sh"
+echo "$remote_images_location/unpack_me.sh"
 echo "\n\n"
