@@ -115,6 +115,7 @@ def container_header(image):
 		install_dir = install_dir_from_image(image)
 		sim_version = sim_version_from_image(image)
 		header += f'ENV SIM_HOME {install_dir}\n'
+		header += f'ENV AUTOBUILD 1\n'
 		header += 'WORKDIR $SIM_HOME\n\n'
 		header += 'COPY localSetupSimTemplate.sh $SIM_HOME/localSetup.sh\n'
 		header += '\n'
@@ -128,7 +129,7 @@ def container_header(image):
 		install_dir = install_dir_from_image(image)
 		g3_tag = image.split('-')[0].split('g3v')[1]
 		header += f'ENV SIM_HOME {install_dir}\n'
-		header += 'WORKDIR $SIM_HOME\n\n'
+		header += f'ENV AUTOBUILD 1\n'
 		header += 'COPY localSetupSimTemplate.sh $SIM_HOME/localSetup.sh\n'
 		header += '\n'
 		header += 'RUN sed  -i -e "s|templateSim|$SIM_HOME|g"    $SIM_HOME/localSetup.sh \\\n'
@@ -140,6 +141,7 @@ def container_header(image):
 		install_dir = install_dir_from_image(image)
 		clas12_tags = clas12_tags_from_docker_tag(image)
 		header += f'ENV SIM_HOME {install_dir}\n'
+		header += f'ENV AUTOBUILD 1\n'
 		header += 'WORKDIR $SIM_HOME\n\n'
 		header += 'COPY localSetupSimTemplate.sh $SIM_HOME/localSetup.sh\n'
 		header += '\n'

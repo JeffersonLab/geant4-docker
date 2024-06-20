@@ -5,6 +5,7 @@ LABEL maintainer="Maurizio Ungaro <ungaro@jlab.org>"
 SHELL ["/bin/bash", "-c"]
 
 ENV SIM_HOME /cvmfs/oasis.opensciencegrid.org/jlab/geant4
+ENV AUTOBUILD 1
 WORKDIR $SIM_HOME
 
 COPY localSetupSimTemplate.sh $SIM_HOME/localSetup.sh
