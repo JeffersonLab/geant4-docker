@@ -16,7 +16,7 @@ def supported_cvmfs_osnames():
 
 
 def supported_geant4_versions():
-	return ['10.6.2', '10.7.4', '11.2.1']
+	return ['10.6.2', '10.7.4', '11.2.2']
 
 
 # as of march 2024:
@@ -175,7 +175,7 @@ def sim_version_from_image(requested_image):
 		return '1.0'
 	elif g4_version == '10.7.4':
 		return '1.1'
-	elif g4_version == '11.2.1':
+	elif g4_version == '11.2.2':
 		return '1.2'
 	else:
 		return 'na'

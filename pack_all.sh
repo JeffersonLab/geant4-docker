@@ -4,7 +4,7 @@
 osnames=(fedora36 almalinux93 ubuntu24)
 osnames=(fedora36 almalinux93)
 g4_versions_not_in_clas12=()
-g4_versions_not_in_clas12=(11.2.1)
+g4_versions_not_in_clas12=(11.2.2)
 clas12tags_docker_tags=(dev) # see conventions.py for details
 clas12tags_docker_tags=(prod1 dev) # see conventions.py for details
 local_install_dir=/Users/ungaro/mywork

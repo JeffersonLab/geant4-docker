@@ -1,4 +1,4 @@
-FROM jeffersonlab/sim:g4v11.2.1-almalinux93-cvmfs 
+FROM jeffersonlab/sim:g4v11.2.2-fedora36-cvmfs 
 LABEL maintainer="Maurizio Ungaro <ungaro@jlab.org>"
 
 # run shell instead of sh

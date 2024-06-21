@@ -22,7 +22,7 @@ function ce_version_from_g4v_docker_version {
 		echo $(find ./ -name clas12Tags)
 	else
 		case $1 in
-			g4v11.2.1) echo "1.2" ;;
+			g4v11.2.2) echo "1.2" ;;
 		esac
 	fi
 }
