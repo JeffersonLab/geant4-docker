@@ -59,6 +59,23 @@ Examples:
 
 ---
 
+## Copy images to cvmfs
+
+## Linux OSes:
+
+Use the pack_all.sh script to copy the images to cvmfs. The option 'gemc' will only pack the clas12Tag directory.
+
+## MacOS:
+
+Manually tar the files. Make sure tar is an alias to gtar or use gtar directly.
+```
+cd /opt/jlab_software
+gtar  cvfz 1.1-macos.tar.gz 1.1
+mv 1.1-macos.tar.gz ~/mywork
+scp *.tar.gz ifarm:/work/clas12/ungaro/images  
+```
+
+
 ## Container for clas12-validation and clas12Tags actions
 
 - Currently used: `jeffersonlab/gemc:dev-fedora36` which is an autobuild based on
