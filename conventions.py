@@ -20,7 +20,7 @@ def modules_path():
 	return modules_path_base_dir() + '/geant4/modules'
 
 def localSetupFilename():
-	return '/app/localSetup.sh'
+	return '/etc/profile.d/localSetup.sh'
 
 def dockerfile_name(image):
 	return 'dockerfiles/Dockerfile-' + image
@@ -50,8 +50,8 @@ def is_cvmfs_image(image):
 		return True
 	return False
 
-def is_sim_image(image):
-	if image.startswith('g4v') or image.startswith('g3v'):
+def is_geant4_image(image):
+	if 'geant4' in image:
 		return True
 	return False
 

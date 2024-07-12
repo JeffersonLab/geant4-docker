@@ -4,7 +4,7 @@ import argparse
 from base_packages import packages_to_be_installed
 from cvmfs_packages import packages_to_be_installed as cvmfs_packages_to_be_installed
 from conventions import gemc_tags_from_docker_image, is_cvmfs_image, is_fedora_line, is_ubuntu_line, \
-	is_sim_image, g4_version_from_image, is_gemc_image, localSetupFilename
+	is_geant4_image, g4_version_from_image, is_gemc_image, localSetupFilename, modules_path_base_dir, modules_path
 
 # Purposes:
 # Return installation commands
@@ -45,12 +45,13 @@ def packages_install_commands(image):
 		commands += install_root_from_ubuntu_tarball(localSetupFile)
 
 	# sim image
-	elif is_sim_image(image):
+	elif is_geant4_image(image):
 		g4_version = g4_version_from_image(image)
-		commands += f'RUN source {localSetupFile} \\\n'
-		commands += f'           && module load sim_system \\\n'
-		commands += f'           && install_geant4 {g4_version} \\\n'
-		commands += '            && strip --remove-section=.note.ABI-tag $QTDIR/lib/libQt5Core.so.5\n'
+		commands += install_or_update_ceInstall()
+		commands += f'RUN  module use {modules_path()} \\\n'
+		commands += f'     && module load sim_system \\\n'
+		commands += f'     && install_geant4 {g4_version} \\\n'
+		commands += '      && strip --remove-section=.note.ABI-tag $QTDIR/lib/libQt5Core.so.5\n'
 
 	# gemc image
 	elif is_gemc_image(image):
@@ -75,7 +76,7 @@ def install_root_from_ubuntu_tarball(localSetupFile):
 	root_file        = f'root_v{root_version}.Linux-ubuntu22.04-x86_64-gcc11.4.tar.gz'
 	root_install_dir = '/usr/local'
 	commands = '\n'
-	commands += '# root installed using tarball\n'
+	commands += '# root installation using tarball\n'
 	commands += f'RUN cd {root_install_dir} \\\n'
 	commands += f'    && wget https://root.cern/download/{root_file} \\\n'
 	commands += f'    && tar -xzvf {root_file} \\\n'
@@ -89,7 +90,7 @@ def install_meson():
 	meson_file	= f'meson-{meson_version}.tar.gz'
 	meson_install_dir = '/usr/local'
 	commands = '\n'
-	commands += '# meson installed using tarball\n'
+	commands += '# meson installation using tarball\n'
 	commands += f'RUN cd {meson_install_dir} \\\n'
 	commands += f'    && wget {meson_location}/{meson_file} \\\n'
 	commands += f'    && tar -xzvf {meson_file} \\\n'
@@ -97,6 +98,20 @@ def install_meson():
 	commands += f'    && ln -s {meson_install_dir}/meson-{meson_version}/meson.py /usr/bin/meson\n'
 	return commands
 
+def install_or_update_ceInstall():
+	modulebasepath = modules_path_base_dir()
+	commands = '\n'
+	commands += '# ceInstall installation or update from github \n'
+	commands += f'RUN cd {modulebasepath}/geant4 \\\n'
+	commands += f'    && if [ ! -d ".git" ]; then \\\n'
+	commands += f'    &&    git pull \\\n'
+	commands += f'    && else \\\n'
+	commands += f'    &&    git https://github.com/JeffersonLab/ceInstall  \\\n'
+	commands += f'    &&    mv ceInstall/* . \\\n'
+	commands += f'    &&    mv ceInstall/.git . \\\n'
+	commands += f'    &&    rm -rf ceInstall \\\n'
+	commands += f'    &&    git checkout nosim \\\n'
+	commands += f'    && fi\n\n'
 
 if __name__ == "__main__":
 	main()

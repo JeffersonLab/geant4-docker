@@ -43,7 +43,7 @@ echo "\n\n > Geant4 images:\n"
 for osname in $osnames; do
 	for g4_version in $g4_versions; do
 			image_name="g4v$g4_version-$osname"
-			echo $image_name
+			echo "  > Creating dockerfile for $image_name"
 			./create_dockerfile.py -i "$image_name"
 	done
 done

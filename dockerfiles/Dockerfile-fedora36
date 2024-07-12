@@ -6,7 +6,7 @@ SHELL ["/bin/bash", "-c"]
 ENV AUTOBUILD 1
 
 COPY bgMerginFilename.sh /bin/bgMerginFilename.sh
-COPY localSetupBase.sh /app/localSetup.sh
+COPY localSetupBase.sh /etc/profile.d/localSetup.sh
 
 # JLab certificate
 ADD https://pki.jlab.org/JLabCA.crt /etc/pki/ca-trust/source/anchors/JLabCA.crt
@@ -21,7 +21,7 @@ RUN dnf install -y --allowerasing  git make cmake gcc-c++ expat-devel mariadb-de
  && rm -rf /var/cache/dnf 
 
 
-# meson installed using tarball
+# meson installation using tarball
 RUN cd /usr/local \
     && wget https://github.com/mesonbuild/meson/releases/download/1.5.0/meson-1.5.0.tar.gz \
     && tar -xzvf meson-1.5.0.tar.gz \
