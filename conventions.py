@@ -61,23 +61,21 @@ def is_gemc_image(image):
 	return False
 
 def from_image(requested_image):
-	if requested_image.count('-') == 0:
-		return os_base_image_from_imagename(requested_image)
-	elif requested_image.count('-') == 1:
+	if requested_image.count('-') == 0 or 'cvmfs' in requested_image:
 		return os_base_image_from_imagename(requested_image)
 	# sim image, requesting base image
-	elif requested_image.count('-') == 2:
+	elif requested_image.count('-') == 1:
 		return base_imagename_from_sim(requested_image)
 	# gemc image, requesting sim image
-	elif requested_image.count('-') == 3:
-		return sim_imagename_from_gemc(requested_image)
+	elif requested_image.count('-') == 2:
+		return base_imagename_from_sim(requested_image)
 
 def os_base_image_from_imagename(requested_image):
-	if requested_image == 'fedora36' or 'cvmfs-fedora36' == requested_image:
+	if 'fedora36' in requested_image:
 		return 'fedora:36'
-	elif 'almalinux93' == requested_image or 'cvmfs-almalinux93' == requested_image:
+	elif 'almalinux93' in requested_image:
 		return 'almalinux:9.3'
-	elif 'ubuntu24' == requested_image or 'cvmfs-ubuntu24' == requested_image:
+	elif 'ubuntu24' in requested_image:
 		return 'ubuntu:24.04'
 	else:
 		# not supported
@@ -85,8 +83,9 @@ def os_base_image_from_imagename(requested_image):
 		exit(1)
 
 def base_imagename_from_sim(requested_image):
-	osname = osname_from_image(requested_image)
-	from_image = 'jeffersonlab/base:' + osname
+	for osname in supported_osnames():
+		if osname in requested_image:
+			from_image = 'jeffersonlab/base:' + osname
 	return from_image
 
 def sim_imagename_from_gemc(requested_image):
@@ -97,9 +96,9 @@ def sim_imagename_from_gemc(requested_image):
 def osname_from_image(requested_image):
 	if requested_image.count('-') == 0:
 		osname = requested_image
-	elif requested_image.count('-') == 2:
-		osname = requested_image.split('-')[1]
 	elif requested_image.count('-') == 1:
+		osname = requested_image.split('-')[1]
+	elif requested_image.count('-') == 2:
 		osname = requested_image.split('-')[1]
 	else:
 		osname = requested_image.split('-')[2]

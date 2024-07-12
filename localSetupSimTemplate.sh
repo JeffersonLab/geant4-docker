@@ -29,9 +29,6 @@ else
 	cd ..
 fi
 
-# root on ubuntu is installed with tarball, so we need to source it
-[[ -d /etc/profile.d/root.sh ]] && source /etc/profile.d/root.sh
-
 cd $currentDir
 
 

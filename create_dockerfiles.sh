@@ -30,7 +30,7 @@ done
 
 
 # base cvmfs images
-echo "\n\nBase cvmfs images:\n"
+echo "\n\n > Base cvmfs images:\n"
 for osname in $osnames; do
 	image_name="cvmfs-$osname"
 	echo "  > Creating dockerfile for $image_name"
@@ -38,23 +38,19 @@ for osname in $osnames; do
 done
 
 
-
-
-exit
-
-# sim images
-echo "\n\nSim images:\n"
+# geant4 images
+echo "\n\n > Geant4 images:\n"
 for osname in $osnames; do
 	for g4_version in $g4_versions; do
-		for install_dir in $install_dirs; do
-			image_name="g4v$g4_version-$osname-$install_dir"
+			image_name="g4v$g4_version-$osname"
 			echo $image_name
 			./create_dockerfile.py -i "$image_name"
-		done
 	done
 done
 
-# clas12tags images
+exit
+
+# gemc images
 echo "\n\nClas12Tags images:\n"
 for osname in $osnames; do
 	for cdocker_tag in $clas12tags_docker_tags; do

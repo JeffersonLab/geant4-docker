@@ -26,7 +26,7 @@ RUN cd /usr/local \
     && wget https://github.com/mesonbuild/meson/releases/download/1.5.0/meson-1.5.0.tar.gz \
     && tar -xzvf meson-1.5.0.tar.gz \
     && rm meson-1.5.0.tar.gz \
-    && ln -s /usr/local/meson-1.5.0/meson.py /usr/bin/meson 
+    && ln -s /usr/local/meson-1.5.0/meson.py /usr/bin/meson
 
 
 # Setup demo environment variables
