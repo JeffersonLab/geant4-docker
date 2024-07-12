@@ -22,14 +22,19 @@ RUN update-ca-certificates
 RUN ln -fs /usr/share/zoneinfo/America/New_York /etc/localtime \
     && DEBIAN_FRONTEND=noninteractive apt-get  install -y --no-install-recommends tzdata  git make cmake g++ expat libexpat1-dev libmysqlclient-dev libsqlite3-dev python3-dev scons ninja-build libglu1-mesa-dev  libx11-dev   libxpm-dev   libxft-dev    libxt-dev   libxmu-dev   libxrender-dev    xvfb                 x11-xserver-utils bzip2 wget curl nano bash tcsh zsh hostname gedit environment-modules psmisc procps mailcap net-tools rsync patch libcpandb-perl xterm x11vnc novnc fluxbox supervisor libqt5widgets5 libqt5opengl5-dev libqt5printsupport5
 # root installed using tarball
-ENV ROOT_RELEASE=6.30.04
-ENV ROOT_FILE=root_v${ROOT_RELEASE}.Linux-ubuntu22.04-x86_64-gcc11.4.tar.gz
-ENV ROOT_INSTALL_DIR=/usr/local
-RUN cd ${ROOT_INSTALL_DIR} \
-    && wget https://root.cern/download/${ROOT_FILE} \
-    && tar -xzvf ${ROOT_FILE} \
-    && rm ${ROOT_FILE} \
-    && echo "cd ${ROOT_INSTALL_DIR}/root ; source bin/thisroot.sh ; cd -" >> /etc/profile.d/root.sh
+RUN cd /usr/local \
+    && wget https://root.cern/download/root_v6.30.04.Linux-ubuntu22.04-x86_64-gcc11.4.tar.gz \
+    && tar -xzvf root_v6.30.04.Linux-ubuntu22.04-x86_64-gcc11.4.tar.gz \
+    && rm root_v6.30.04.Linux-ubuntu22.04-x86_64-gcc11.4.tar.gz \
+    && echo "cd /usr/local/root/bin ; source thisroot.sh ; cd -" >> /app/localSetup.sh
+
+
+# meson installed using tarball
+RUN cd /usr/local \
+    && wget https://github.com/mesonbuild/meson/releases/download/1.5.0/meson-1.5.0.tar.gz \
+    && tar -xzvf meson-1.5.0.tar.gz \
+    && rm meson-1.5.0.tar.gz \
+    && ln -s /usr/local/meson-1.5.0/meson.py /usr/bin/meson 
 
 
 # Setup demo environment variables

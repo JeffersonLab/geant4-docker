@@ -33,7 +33,6 @@ def packages_install_commands(image):
 	if is_cvmfs_image(image):
 		packages = cvmfs_packages_to_be_installed(image)
 
-
 	if is_fedora_line(image):
 		commands += 'RUN dnf install -y --allowerasing '
 		commands += packages
@@ -43,7 +42,7 @@ def packages_install_commands(image):
 		commands += 'RUN ln -fs /usr/share/zoneinfo/America/New_York /etc/localtime \\\n'
 		commands += '    && DEBIAN_FRONTEND=noninteractive apt-get  install -y --no-install-recommends tzdata '
 		commands += packages
-		commands += install_root_from_ubuntu_tarball()
+		commands += install_root_from_ubuntu_tarball(localSetupFile)
 
 	# sim image
 	elif is_sim_image(image):
@@ -71,28 +70,31 @@ def packages_install_commands(image):
 	commands += '\n'
 	return commands
 
-def install_root_from_ubuntu_tarball():
+def install_root_from_ubuntu_tarball(localSetupFile):
+	root_version     = '6.30.04'
+	root_file        = f'root_v{root_version}.Linux-ubuntu22.04-x86_64-gcc11.4.tar.gz'
+	root_install_dir = '/usr/local'
 	commands = '\n'
 	commands += '# root installed using tarball\n'
-	commands += 'ENV ROOT_RELEASE=6.30.04\n'
-	commands += 'ENV ROOT_FILE=root_v${ROOT_RELEASE}.Linux-ubuntu22.04-x86_64-gcc11.4.tar.gz\n'
-	commands += 'ENV ROOT_INSTALL_DIR=/usr/local\n'
-	commands += 'RUN cd ${ROOT_INSTALL_DIR} \\\n'
-	commands += '    && wget https://root.cern/download/${ROOT_FILE} \\\n'
-	commands += '    && tar -xzvf ${ROOT_FILE} \\\n'
-	commands += '    && rm ${ROOT_FILE} \\\n'
-	commands += '    && echo "cd ${ROOT_INSTALL_DIR}/root ; source bin/thisroot.sh ; cd -" >> /etc/profile.d/root.sh\n'
+	commands += f'RUN cd {root_install_dir} \\\n'
+	commands += f'    && wget https://root.cern/download/{root_file} \\\n'
+	commands += f'    && tar -xzvf {root_file} \\\n'
+	commands += f'    && rm {root_file} \\\n'
+	commands += f'    && echo "cd {root_install_dir}/root/bin ; source thisroot.sh ; cd -" >> {localSetupFile}\n'
 	return commands
 
 def install_meson():
+	meson_version = '1.5.0'
+	meson_location	= f'https://github.com/mesonbuild/meson/releases/download/{meson_version}'
+	meson_file	= f'meson-{meson_version}.tar.gz'
+	meson_install_dir = '/usr/local'
 	commands = '\n'
-	commands += '# meson \n'
-	commands += 'ENV MESON_TAG=1.5.0\n'
-	commands += 'ENV MESON_FILE=https://github.com/mesonbuild/meson/releases/download/${MESON_TAG}/meson-${MESON_TAG}\n'
-	commands += 'ENV MESON_INSTALL_DIR=/usr/local\n'
-	commands += 'RUN cd ${MESON_INSTALL_DIR} \\\n'
-	commands += '    && tar -xzvf ${MESON_FILE} \\\n'
-	commands += '    && ln -s  ${MESON_INSTALL_DIR}/meson-$meson_version/meson.py /usr/bin/meson \\\n'
+	commands += '# meson installed using tarball\n'
+	commands += f'RUN cd {meson_install_dir} \\\n'
+	commands += f'    && wget {meson_location}/{meson_file} \\\n'
+	commands += f'    && tar -xzvf {meson_file} \\\n'
+	commands += f'    && rm {meson_file} \\\n'
+	commands += f'    && ln -s {meson_install_dir}/meson-{meson_version}/meson.py /usr/bin/meson\n'
 	return commands
 
 

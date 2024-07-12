@@ -28,6 +28,14 @@ RUN dnf install -y --allowerasing  git make cmake gcc-c++ expat-devel mariadb-de
  && rm -rf /var/cache/dnf 
 
 
+# meson installed using tarball
+RUN cd /usr/local \
+    && wget https://github.com/mesonbuild/meson/releases/download/1.5.0/meson-1.5.0.tar.gz \
+    && tar -xzvf meson-1.5.0.tar.gz \
+    && rm meson-1.5.0.tar.gz \
+    && ln -s /usr/local/meson-1.5.0/meson.py /usr/bin/meson 
+
+
 # Setup demo environment variables
 ENV HOME=/root LANG=en_US.UTF-8 LANGUAGE=en_US.UTF-8  LC_ALL=C.UTF-8  DISPLAY=:0.0 DISPLAY_WIDTH=1400 DISPLAY_HEIGHT=1000 RUN_XTERM=yes RUN_FLUXBOX=yes
 
