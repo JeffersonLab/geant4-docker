@@ -9,11 +9,12 @@ from conventions import from_image, modules_path, modules_path_base_dir, g4_vers
 
 def copy_files(image):
 	copy_string = ''
+	localSetupFile = localSetupFilename()
 	if is_base_container(image):
 		copy_string += 'COPY bgMerginFilename.sh /bin/bgMerginFilename.sh\n'
-		copy_string += 'COPY localSetupBase.sh /app/localSetup.sh\n\n'
+		copy_string += f'COPY localSetupBase.sh {localSetupFile}\n\n'
 	elif is_sim_image():
-		copy_string += 'COPY localSetupSimTemplate.sh /app/localSetup.sh\n\n'
+		copy_string += f'COPY localSetupSimTemplate.sh {localSetupFile}\n\n'
 	return copy_string
 
 def load_jlab_certificate(image):
@@ -57,7 +58,7 @@ def main():
 
 def create_dockerfile_header(image):
 	from_label = from_image(image)
-	localSetup = localSetupFilename()
+	localSetupFile = localSetupFilename()
 	header = f'FROM {from_label} \n'
 	header += 'LABEL maintainer="Maurizio Ungaro <ungaro@jlab.org>"\n\n'
 	header += '# run shell instead of sh\n'
@@ -67,12 +68,12 @@ def create_dockerfile_header(image):
 	header += load_jlab_certificate(image)
 	modulespath = modules_path()
 	if is_cvmfs_image(image) or is_sim_image(image):
-		header += f'RUN echo "module use {modules_path}" >> {localSetup} \n'
+		header += f'RUN echo "module use {modulespath}" >> {localSetupFile} \n\n'
 	if is_sim_image(image):
 		modules_path_base = modules_path_base_dir(image)
-		header += f'RUN sed  -i -e "s|install_dir_module_path_template|{modules_path_base}|g" {localSetup} \\\n'
+		header += f'RUN sed  -i -e "s|install_dir_module_path_template|{modules_path_base}|g" {localSetupFile} \\\n'
 		g4_version = g4_version_from_image(image)
-		header += f'    && echo "module load geant4/{g4_version}" >> {localSetup} \\\n'
+		header += f'    && echo "module load geant4/{g4_version}" >> {localSetupFile} \\\n'
 	header += '\n'
 
 	return header

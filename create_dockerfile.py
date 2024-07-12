@@ -6,8 +6,6 @@ from header import create_dockerfile_header
 from packages import packages_install_commands
 from fluxbox import fluxbox_install_commands
 
-# Purposes:
-# Write the dockerfiles
 
 def main():
 	desc_str = 'Dockerfile creator'
@@ -25,7 +23,7 @@ def create_dockerfile(image):
 	ipackages = packages_install_commands(image)
 	ifluxbox = fluxbox_install_commands(image)
 
-	# pre-requisites
+	# header: pre-requisites
 	with open(dockerfile, 'w') as f:
 		f.write(header)
 		f.close()
@@ -35,7 +33,7 @@ def create_dockerfile(image):
 		f.write(ipackages)
 		f.close()
 
-	# fluxbox - only if image is in supported_images
+	# fluxbox - only for base images
 	if image in supported_osnames() or image in supported_cvmfs_osnames():
 		with open(dockerfile, 'a') as f:
 			f.write(ifluxbox)
