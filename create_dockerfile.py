@@ -2,14 +2,12 @@
 
 import argparse
 from conventions import dockerfile_name, supported_osnames, supported_cvmfs_osnames
-from header import container_header
-from packages import install_commands
+from header import create_dockerfile_header
+from packages import packages_install_commands
 from fluxbox import fluxbox_install_commands
 
-
 # Purposes:
-# Write a dockerfile
-
+# Write the dockerfiles
 
 def main():
 	desc_str = 'Dockerfile creator'
@@ -17,15 +15,14 @@ def main():
 	parser = argparse.ArgumentParser(description=desc_str, epilog=example)
 	parser.add_argument('-i', action='store', help='image to build')
 	args = parser.parse_args()
-
 	image = args.i
 	create_dockerfile(image)
 
 
 def create_dockerfile(image):
 	dockerfile = dockerfile_name(image)
-	header = container_header(image)
-	ipackages = install_commands(image)
+	header = create_dockerfile_header(image)
+	ipackages = packages_install_commands(image)
 	ifluxbox = fluxbox_install_commands(image)
 
 	# pre-requisites

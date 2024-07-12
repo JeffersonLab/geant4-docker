@@ -3,21 +3,22 @@ LABEL maintainer="Maurizio Ungaro <ungaro@jlab.org>"
 
 # run shell instead of sh
 SHELL ["/bin/bash", "-c"]
+ENV AUTOBUILD 1
 
 COPY bgMerginFilename.sh /bin/bgMerginFilename.sh
 COPY localSetupBase.sh /app/localSetup.sh
 
 # JLab certificate
 ADD https://pki.jlab.org/JLabCA.crt /etc/pki/ca-trust/source/anchors/JLabCA.crt
-RUN update-ca-trust
+RUN update-ca-trust 
 
 
-RUN dnf install -y  git make cmake gcc-c++ expat-devel mariadb-devel sqlite-devel python3-devel python3-scons ninja-build mesa-libGLU-devel libX11-devel libXpm-devel libXft-devel  libXt-devel libXmu-devel libXrender-devel  xorg-x11-server-Xvfb xrandr  bzip2 wget curl nano bash tcsh zsh hostname gedit environment-modules which psmisc procps mailcap net-tools rsync patch perl-CPAN glibc-langpack-en xterm x11vnc novnc fluxbox supervisor qt5-qtbase-devel qt5-linguist root \
-  && dnf -y update \
-  && dnf -y check-update \
-  && dnf clean packages \
-  && dnf clean all \
-  && rm -rf /var/cache/dnf 
+RUN dnf install -y --allowerasing  git make cmake gcc-c++ expat-devel mariadb-devel sqlite-devel python3-devel python3-scons ninja-build mesa-libGLU-devel libX11-devel libXpm-devel libXft-devel  libXt-devel libXmu-devel libXrender-devel  xorg-x11-server-Xvfb xrandr  bzip2 wget curl nano bash tcsh zsh hostname gedit environment-modules which psmisc procps mailcap net-tools rsync patch perl-CPAN glibc-langpack-en xterm x11vnc novnc fluxbox supervisor qt5-qtbase-devel qt5-linguist root \
+ && dnf -y update \
+ && dnf -y check-update \
+ && dnf clean packages \
+ && dnf clean all \
+ && rm -rf /var/cache/dnf 
 
 
 # Setup demo environment variables

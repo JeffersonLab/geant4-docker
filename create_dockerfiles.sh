@@ -2,9 +2,8 @@
 
 osnames=(fedora36 almalinux93 ubuntu24)
 g4_versions=(10.6.2 10.7.4 11.2.2)
+
 clas12tags_docker_tags=(prod1 dev) # see conventions.py for details
-install_dirs=(cvmfs)
-#install_dirs=(cvmfs local)
 gemc3_docker_tags=(1.3 dev)
 
 function g4_version_from_clas12tags_version {
@@ -23,11 +22,25 @@ function g4_version_from_clas12tags_docker_version {
 }
 
 # base images
-echo "\nBase images:\n"
+echo "\n > Base images:\n"
 for osname in $osnames; do
-	echo "$osname"
+	echo "  > Creating dockerfile for $osname"
 	./create_dockerfile.py -i $osname
 done
+
+
+# base cvmfs images
+echo "\n\nBase cvmfs images:\n"
+for osname in $osnames; do
+	image_name="cvmfs-$osname"
+	echo "  > Creating dockerfile for $image_name"
+	./create_dockerfile.py -i "$image_name"
+done
+
+
+
+
+exit
 
 # sim images
 echo "\n\nSim images:\n"
@@ -54,13 +67,6 @@ for osname in $osnames; do
 	done
 done
 
-# base cvmfs images
-echo "\n\nBase cvmfs images:\n"
-for osname in $osnames; do
-	image_name="cvmfs-$osname"
-	echo $image_name
-	./create_dockerfile.py -i "$image_name"
-done
 
 # gemc3 images
 echo "\n\nGemc3 images:\n"

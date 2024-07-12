@@ -3,28 +3,29 @@ LABEL maintainer="Maurizio Ungaro <ungaro@jlab.org>"
 
 # run shell instead of sh
 SHELL ["/bin/bash", "-c"]
+ENV AUTOBUILD 1
 
 COPY bgMerginFilename.sh /bin/bgMerginFilename.sh
 COPY localSetupBase.sh /app/localSetup.sh
 
 # JLab certificate
 ADD https://pki.jlab.org/JLabCA.crt /etc/pki/ca-trust/source/anchors/JLabCA.crt
-RUN update-ca-trust
+RUN update-ca-trust 
 
 # alma specific:
 # crb: for mysql-devel
 # synergy: root, scons, vnc
 RUN    dnf install -y  'dnf-command(config-manager)' \
     && dnf config-manager --set-enabled crb \
-    && dnf install -y almalinux-release-synergy
+    && dnf install -y almalinux-release-synergy 
 
 
 RUN dnf install -y --allowerasing  git make cmake gcc-c++ expat-devel mariadb-devel sqlite-devel python3-devel python3-scons ninja-build mesa-libGLU-devel libX11-devel libXpm-devel libXft-devel  libXt-devel libXmu-devel libXrender-devel  xorg-x11-server-Xvfb xrandr  bzip2 wget curl nano bash tcsh zsh hostname gedit environment-modules which psmisc procps mailcap net-tools rsync patch perl-CPAN glibc-langpack-en xterm x11vnc novnc  qt5-qtbase-devel qt5-linguist root \
-  && dnf -y update \
-  && dnf -y check-update \
-  && dnf clean packages \
-  && dnf clean all \
-  && rm -rf /var/cache/dnf 
+ && dnf -y update \
+ && dnf -y check-update \
+ && dnf clean packages \
+ && dnf clean all \
+ && rm -rf /var/cache/dnf 
 
 
 # Setup demo environment variables

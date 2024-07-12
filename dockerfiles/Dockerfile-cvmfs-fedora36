@@ -3,24 +3,23 @@ LABEL maintainer="Maurizio Ungaro <ungaro@jlab.org>"
 
 # run shell instead of sh
 SHELL ["/bin/bash", "-c"]
+ENV AUTOBUILD 1
 
 COPY bgMerginFilename.sh /bin/bgMerginFilename.sh
 COPY localSetupBase.sh /app/localSetup.sh
 
 # JLab certificate
 ADD https://pki.jlab.org/JLabCA.crt /etc/pki/ca-trust/source/anchors/JLabCA.crt
-RUN update-ca-trust
+RUN update-ca-trust 
 
-RUN echo "export SIM_HOME=/cvmfs/oasis.opensciencegrid.org/jlab/geant4" >> /app/localSetup.sh \
-    && echo "source /cvmfs/oasis.opensciencegrid.org/jlab/geant4/ceInstall/setup.sh" >> /app/localSetup.sh 
+RUN echo "module use <function modules_path at 0x100c43ce0>" >> /app/localSetup.sh 
 
-
-RUN dnf install -y  gcc-gfortran pcre-devel mesa-libGL-devel mesa-libGLU-devel glew-devel ftgl-devel mariadb-devel sqlite-devel fftw-devel cfitsio-devel graphviz-devel libuuid-devel avahi-compat-libdns_sd-devel openldap-devel python-devel python3-numpy libxml2-devel gsl-devel readline-devel qt5-qtwebengine-devel R-devel R-Rcpp-devel R-RInside-devel gcc binutils xrootd-client lsof liburing flexiblas-devel  bzip2 wget curl nano bash tcsh zsh hostname gedit environment-modules rsync patch which  \
-  && dnf -y update \
-  && dnf -y check-update \
-  && dnf clean packages \
-  && dnf clean all \
-  && rm -rf /var/cache/dnf 
+RUN dnf install -y --allowerasing  gcc-gfortran pcre-devel mesa-libGL-devel mesa-libGLU-devel glew-devel ftgl-devel mariadb-devel sqlite-devel fftw-devel cfitsio-devel graphviz-devel libuuid-devel avahi-compat-libdns_sd-devel openldap-devel python-devel python3-numpy libxml2-devel gsl-devel readline-devel qt5-qtwebengine-devel R-devel R-Rcpp-devel R-RInside-devel gcc binutils xrootd-client lsof liburing flexiblas-devel  bzip2 wget curl nano bash tcsh zsh hostname gedit environment-modules rsync patch which  \
+ && dnf -y update \
+ && dnf -y check-update \
+ && dnf clean packages \
+ && dnf clean all \
+ && rm -rf /var/cache/dnf 
 
 
 # Setup demo environment variables

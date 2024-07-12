@@ -5,16 +5,26 @@
 [[ -f /usr/share/modules/init/sh ]] && source /usr/share/modules/init/sh
 
 export TERM=xterm-256color
-export SIM_HOME=templateSim
+alias l='ls -l'
+alias lt='ls -lhrt'
+alias ll='ls -lah'
+alias gist='git status -s | grep -v \?'
+alias gista='git status -s'
 
 currentDir=$(pwd)
+cd install_dir_module_path_template
 
-cd $SIM_HOME
 # if ceInstall is not there, clone it, otherwise pull
-if [ ! -d "ceInstall" ]; then
+if [ ! -d "geant4" ]; then
 	git clone https://github.com/JeffersonLab/ceInstall
+
+	mv ceInstall/* .
+	mv ceInstall/.git .
+	rm -rf ceInstall
+
+	git checkout nosim
 else
-	cd ceInstall
+	cd geant4
 	git pull
 	cd ..
 fi
@@ -22,22 +32,7 @@ fi
 # root on ubuntu is installed with tarball, so we need to source it
 [[ -d /etc/profile.d/root.sh ]] && source /etc/profile.d/root.sh
 
-module use $SIM_HOME/ceInstall/modulefiles
-export PATH="$SIM_HOME"/ceInstall/install:${PATH}
-
 cd $currentDir
 
-# temp installation of meson, as the one in the container is too old
-meson_version=1.4.0
-if [ ! -d "/root/meson-$meson_version" ]; then
-	cd /root
-	wget https://github.com/mesonbuild/meson/releases/download/$meson_version/meson-$meson_version.tar.gz
-	tar -zxpf meson-$meson_version.tar.gz
-	ln -s /root/meson-$meson_version/meson.py /usr/bin/meson
-fi
 
-alias l='ls -l'
-alias lt='ls -lhrt'
-alias ll='ls -lah'
-alias gist='git status -s | grep -v \?'
-alias gista='git status -s'
+
