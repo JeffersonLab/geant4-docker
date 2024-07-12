@@ -1,0 +1,29 @@
+FROM jeffersonlab/base:fedora36 
+LABEL maintainer="Maurizio Ungaro <ungaro@jlab.org>"
+
+# run shell instead of sh
+SHELL ["/bin/bash", "-c"]
+ENV AUTOBUILD 1
+
+RUN echo "module use /cvmfs/oasis.opensciencegrid.org/jlab/geant4/modules" >> /etc/profile.d/localSetup.sh 
+RUN echo "module load geant4/10.6.2" >> /etc/profile.d/localSetup.sh 
+
+
+
+# ceInstall installation or update from github 
+RUN cd /cvmfs/oasis.opensciencegrid.org/jlab/geant4 \
+    && if [ ! -d ".git" ]; then \
+    &&    git pull \
+    && else \
+    &&    git https://github.com/JeffersonLab/ceInstall  \
+    &&    mv ceInstall/* . \
+    &&    mv ceInstall/.git . \
+    &&    rm -rf ceInstall \
+    &&    git checkout nosim \
+    && fi
+
+RUN  module use /cvmfs/oasis.opensciencegrid.org/jlab/geant4/modules \
+     && module load sim_system \
+     && install_geant4 10.6.2 \
+     && strip --remove-section=.note.ABI-tag $QTDIR/lib/libQt5Core.so.5
+

@@ -12,7 +12,7 @@ def copy_files(image):
 	localSetupFile = localSetupFilename()
 	if is_base_container(image):
 		copy_string += 'COPY bgMerginFilename.sh /bin/bgMerginFilename.sh\n'
-	copy_string += f'COPY localSetupBase.sh {localSetupFile}\n\n'
+		copy_string += f'COPY localSetupBase.sh {localSetupFile}\n\n'
 	return copy_string
 
 def load_jlab_certificate(image):
@@ -64,14 +64,10 @@ def create_dockerfile_header(image):
 	header += 'ENV AUTOBUILD 1\n\n'
 	header += copy_files(image)
 	header += load_jlab_certificate(image)
-	modulespath = modules_path()
 	if is_cvmfs_image(image) or is_geant4_image(image):
-		header += f'RUN echo "module use {modulespath}" >> {localSetupFile} \n\n'
+		header += f'RUN echo "module use { modules_path()}" >> {localSetupFile} \n'
 	if is_geant4_image(image):
-		modules_path_base = modules_path_base_dir(image)
-		header += f'RUN sed  -i -e "s|install_dir_module_path_template|{modules_path_base}|g" {localSetupFile} \\\n'
-		g4_version = g4_version_from_image(image)
-		header += f'    && echo "module load geant4/{g4_version}" >> {localSetupFile} \\\n'
+		header += f'RUN echo "module load geant4/{g4_version_from_image(image)}" >> {localSetupFile} \n\n'
 	header += '\n'
 
 	return header

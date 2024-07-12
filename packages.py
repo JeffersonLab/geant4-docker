@@ -3,7 +3,7 @@
 import argparse
 from base_packages import packages_to_be_installed
 from cvmfs_packages import packages_to_be_installed as cvmfs_packages_to_be_installed
-from conventions import gemc_tags_from_docker_image, is_cvmfs_image, is_fedora_line, is_ubuntu_line, \
+from conventions import gemc_tags_from_docker_image, is_cvmfs_image, is_fedora_line, is_ubuntu_line, is_base_container, \
 	is_geant4_image, g4_version_from_image, is_gemc_image, localSetupFilename, modules_path_base_dir, modules_path
 
 # Purposes:
@@ -30,35 +30,39 @@ def packages_install_commands(image):
 	commands = ''
 	packages = packages_to_be_installed(image)
 	localSetupFile = localSetupFilename()
-	if is_cvmfs_image(image):
-		packages = cvmfs_packages_to_be_installed(image)
+	if is_base_container(image):
+		if is_cvmfs_image(image):
+			packages = cvmfs_packages_to_be_installed(image)
 
-	if is_fedora_line(image):
-		commands += 'RUN dnf install -y --allowerasing '
-		commands += packages
-		commands += cleanup_string_fedora
+		if is_fedora_line(image):
+			commands += 'RUN dnf install -y --allowerasing '
+			commands += packages
+			commands += cleanup_string_fedora
 
-	elif is_ubuntu_line(image):
-		commands += 'RUN ln -fs /usr/share/zoneinfo/America/New_York /etc/localtime \\\n'
-		commands += '    && DEBIAN_FRONTEND=noninteractive apt-get  install -y --no-install-recommends tzdata '
-		commands += packages
-		commands += install_root_from_ubuntu_tarball(localSetupFile)
+		elif is_ubuntu_line(image):
+			commands += 'RUN ln -fs /usr/share/zoneinfo/America/New_York /etc/localtime \\\n'
+			commands += '    && DEBIAN_FRONTEND=noninteractive apt-get  install -y --no-install-recommends tzdata '
+			commands += packages
+			commands += install_root_from_ubuntu_tarball(localSetupFile)
+
+		commands += '\n'
+		commands += install_meson()
 
 	# sim image
 	elif is_geant4_image(image):
-		g4_version = g4_version_from_image(image)
 		commands += install_or_update_ceInstall()
 		commands += f'RUN  module use {modules_path()} \\\n'
 		commands += f'     && module load sim_system \\\n'
-		commands += f'     && install_geant4 {g4_version} \\\n'
-		commands += '      && strip --remove-section=.note.ABI-tag $QTDIR/lib/libQt5Core.so.5\n'
+		commands += f'     && install_geant4 {g4_version_from_image(image)} \\\n'
+		commands +=  '     && strip --remove-section=.note.ABI-tag $QTDIR/lib/libQt5Core.so.5\n'
 
 	# gemc image
 	elif is_gemc_image(image):
 		gemc_tags = gemc_tags_from_docker_image(image)
-		commands += f'RUN source {localSetupFile} \\\n'
+		commands += install_or_update_ceInstall()
+		commands += f'RUN  module use {modules_path()} \\\n'
+		commands += f'     && module load sim_system \\\n'
 		for tag in gemc_tags:
-			commands += f'           && module load sim_system \\\n'
 			commands += f'           && install_gemc {tag} '
 			# if not the last item in clas12_tags, add \n
 			if tag != gemc_tags[-1]:
@@ -66,8 +70,6 @@ def packages_install_commands(image):
 			else:
 				commands += '\n'
 
-	commands += '\n'
-	commands += install_meson()
 	commands += '\n'
 	return commands
 
@@ -99,10 +101,9 @@ def install_meson():
 	return commands
 
 def install_or_update_ceInstall():
-	modulebasepath = modules_path_base_dir()
 	commands = '\n'
 	commands += '# ceInstall installation or update from github \n'
-	commands += f'RUN cd {modulebasepath}/geant4 \\\n'
+	commands += f'RUN cd { modules_path_base_dir()}/geant4 \\\n'
 	commands += f'    && if [ ! -d ".git" ]; then \\\n'
 	commands += f'    &&    git pull \\\n'
 	commands += f'    && else \\\n'
@@ -112,6 +113,7 @@ def install_or_update_ceInstall():
 	commands += f'    &&    rm -rf ceInstall \\\n'
 	commands += f'    &&    git checkout nosim \\\n'
 	commands += f'    && fi\n\n'
+	return commands
 
 if __name__ == "__main__":
 	main()

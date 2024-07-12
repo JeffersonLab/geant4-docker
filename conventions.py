@@ -51,7 +51,7 @@ def is_cvmfs_image(image):
 	return False
 
 def is_geant4_image(image):
-	if 'geant4' in image:
+	if 'g4v' in image:
 		return True
 	return False
 
@@ -108,17 +108,12 @@ def osname_from_image(requested_image):
 	return osname
 
 def g4_version_from_image(requested_image):
-	if requested_image.count('-') == 2:
-		g4_version = requested_image.split('-')[0]
-	elif requested_image.count('-') == 3:
-		g4_version = requested_image.split('-')[1]
+	# return the string between 'g4v' and '-'
+	if 'g4v' in requested_image:
+		return requested_image.split('g4v')[1].split('-')[0]
 	else:
-		return 'na'
-	if g4_version[3:] not in supported_geant4_versions():
-		print(f'Error: geant4 version {g4_version} not supported')
+		print(f'Error: geant4 version not found in {requested_image}')
 		exit(1)
-	else:
-		return g4_version
 
 # as of july 2024:
 # prod1: gemc versions 4.4.2
