@@ -13,6 +13,7 @@ RUN echo "module load geant4/11.2.2" >> /etc/profile.d/localSetup.sh
 RUN mkdir -p /cvmfs/oasis.opensciencegrid.org/jlab \
     && cd /cvmfs/oasis.opensciencegrid.org/jlab \
     && git clone https://github.com/JeffersonLab/ceInstall geant4 ; \
+    && cd geant4 \
     && git checkout nosim ; 
 
 RUN source /etc/profile.d/localSetup.sh \

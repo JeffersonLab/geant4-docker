@@ -105,6 +105,7 @@ def install_ceInstall():
 	commands += f'RUN mkdir -p { modules_path_base_dir()} \\\n'
 	commands += f'    && cd { modules_path_base_dir()} \\\n'
 	commands += f'    && git clone https://github.com/JeffersonLab/ceInstall geant4 ; \\\n'
+	commands += f'    && cd geant4 \\\n'
 	commands += f'    && git checkout nosim ; \n\n'
 	return commands
 
