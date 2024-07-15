@@ -51,9 +51,10 @@ def packages_install_commands(image):
 	# sim image
 	elif is_geant4_image(image):
 		commands += install_ceInstall()
-		commands += f'RUN  module use {modules_path()} \\\n'
-		commands += f'     && module load sim_system \\\n'
-		commands += f'     && install_geant4 {g4_version_from_image(image)} \n\n'
+		commands += f'RUN source {localSetupFile} \\\n'
+		commands += f'    && module use {modules_path()} \\\n'
+		commands += f'    && module load sim_system \\\n'
+		commands += f'    && install_geant4 {g4_version_from_image(image)} \n\n'
 
 	# gemc image
 	elif is_gemc_image(image):
