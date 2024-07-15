@@ -101,19 +101,22 @@ def install_meson():
 	return commands
 
 def install_ceInstall():
+	modulebasepath=modules_path_base_dir()
+	modulesubdir='geant4'
 	commands = '# ceInstall installation  \n'
-	commands += f'RUN mkdir -p { modules_path_base_dir()} \\\n'
-	commands += f'    && cd { modules_path_base_dir()} \\\n'
-	commands += f'    && git clone https://github.com/JeffersonLab/ceInstall geant4 ; \\\n'
-	commands += f'    && cd geant4 \\\n'
-	commands += f'    && git checkout nosim ; \n\n'
+	commands += f'RUN mkdir -p {modulebasepath} \\\n'
+	commands += f'    && cd {modulebasepath} \\\n'
+	commands += f'    && git clone https://github.com/JeffersonLab/ceInstall {modulesubdir}  \\\n'
+	commands += f'    && cd {modulesubdir} \\\n'
+	commands += f'    && git checkout nosim  \n\n'
 	return commands
 
 def update_ceInstall():
+	modulepath=modules_path()
 	commands = '# ceInstall update  \n'
-	commands += f'RUN  cd { modules_path_base_dir()}/geant4 \\\n'
-	commands += f'    &&  git checkout nosim ; \\\n'
-	commands += f'    &&  git pull ; \n\n'
+	commands += f'RUN  cd {modulepath} \\\n'
+	commands += f'    &&  git checkout nosim  \\\n'
+	commands += f'    &&  git pull  \n\n'
 	return commands
 
 if __name__ == "__main__":
