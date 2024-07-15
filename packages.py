@@ -50,7 +50,7 @@ def packages_install_commands(image):
 
 	# sim image
 	elif is_geant4_image(image):
-		commands += install_or_update_ceInstall()
+		commands += install_ceInstall()
 		commands += f'RUN  module use {modules_path()} \\\n'
 		commands += f'     && module load sim_system \\\n'
 		commands += f'     && install_geant4 {g4_version_from_image(image)} \n\n'
@@ -58,7 +58,7 @@ def packages_install_commands(image):
 	# gemc image
 	elif is_gemc_image(image):
 		gemc_tags = gemc_tags_from_docker_image(image)
-		commands += install_or_update_ceInstall()
+		commands += update_ceInstall()
 		commands += f'RUN  module use {modules_path()} \\\n'
 		commands += f'     && module load sim_system \\\n'
 		for tag in gemc_tags:
@@ -99,20 +99,19 @@ def install_meson():
 	commands += f'    && ln -s {meson_install_dir}/meson-{meson_version}/meson.py /usr/bin/meson\n'
 	return commands
 
-def install_or_update_ceInstall():
-	commands = '\n'
-	commands += '# ceInstall installation or update from github \n'
-	commands += f'RUN mkdir -p { modules_path_base_dir()}/geant4 \\\n'
-	commands += f'    && cd { modules_path_base_dir()}/geant4 \\\n'
-	commands += f'    && if [  -d ".git" ]; then \\\n'
-	commands += f'        git pull ; \\\n'
-	commands += f'     else \\\n'
-	commands += f'        git clone https://github.com/JeffersonLab/ceInstall ; \\\n'
-	commands += f'        mv ceInstall/* . ; \\\n'
-	commands += f'        mv ceInstall/.git . ; \\\n'
-	commands += f'        rm -rf ceInstall ; \\\n'
-	commands += f'        git checkout nosim ; \\\n'
-	commands += f'     fi\n\n'
+def install_ceInstall():
+	commands = '# ceInstall installation  \n'
+	commands += f'RUN mkdir -p { modules_path_base_dir()} \\\n'
+	commands += f'    && cd { modules_path_base_dir()} \\\n'
+	commands += f'    && git clone https://github.com/JeffersonLab/ceInstall geant4 ; \\\n'
+	commands += f'    && git checkout nosim ; \n\n'
+	return commands
+
+def update_ceInstall():
+	commands = '# ceInstall update  \n'
+	commands += f'RUN  cd { modules_path_base_dir()}/geant4 \\\n'
+	commands += f'    &&  git checkout nosim ; \\\n'
+	commands += f'    &&  git pull ; \n\n'
 	return commands
 
 if __name__ == "__main__":
