@@ -105,14 +105,14 @@ def install_or_update_ceInstall():
 	commands += '# ceInstall installation or update from github \n'
 	commands += f'RUN cd { modules_path_base_dir()}/geant4 \\\n'
 	commands += f'    && if [  -d ".git" ]; then \\\n'
-	commands += f'    &&    git pull \\\n'
-	commands += f'    && else \\\n'
-	commands += f'    &&    git clone https://github.com/JeffersonLab/ceInstall  \\\n'
-	commands += f'    &&    mv ceInstall/* . \\\n'
-	commands += f'    &&    mv ceInstall/.git . \\\n'
-	commands += f'    &&    rm -rf ceInstall \\\n'
-	commands += f'    &&    git checkout nosim \\\n'
-	commands += f'    && fi\n\n'
+	commands += f'        git pull \\\n'
+	commands += f'     else \\\n'
+	commands += f'        git clone https://github.com/JeffersonLab/ceInstall  \\\n'
+	commands += f'        mv ceInstall/* . \\\n'
+	commands += f'        mv ceInstall/.git . \\\n'
+	commands += f'        rm -rf ceInstall \\\n'
+	commands += f'        git checkout nosim \\\n'
+	commands += f'     fi\n\n'
 	return commands
 
 if __name__ == "__main__":
