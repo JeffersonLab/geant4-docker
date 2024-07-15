@@ -53,8 +53,7 @@ def packages_install_commands(image):
 		commands += install_or_update_ceInstall()
 		commands += f'RUN  module use {modules_path()} \\\n'
 		commands += f'     && module load sim_system \\\n'
-		commands += f'     && install_geant4 {g4_version_from_image(image)} \\\n'
-		commands +=  '     && strip --remove-section=.note.ABI-tag $QTDIR/lib/libQt5Core.so.5\n'
+		commands += f'     && install_geant4 {g4_version_from_image(image)} \n\n'
 
 	# gemc image
 	elif is_gemc_image(image):
@@ -103,7 +102,8 @@ def install_meson():
 def install_or_update_ceInstall():
 	commands = '\n'
 	commands += '# ceInstall installation or update from github \n'
-	commands += f'RUN cd { modules_path_base_dir()}/geant4 \\\n'
+	commands += f'RUN mkdir { modules_path_base_dir()}/geant4 \\\n'
+	commands += f'    && cd { modules_path_base_dir()}/geant4 \\\n'
 	commands += f'    && if [  -d ".git" ]; then \\\n'
 	commands += f'        git pull ; \\\n'
 	commands += f'     else \\\n'
