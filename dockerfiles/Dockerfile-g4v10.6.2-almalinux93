@@ -13,13 +13,13 @@ RUN echo "module load geant4/10.6.2" >> /etc/profile.d/localSetup.sh
 # ceInstall installation or update from github 
 RUN cd /cvmfs/oasis.opensciencegrid.org/jlab/geant4 \
     && if [  -d ".git" ]; then \
-        git pull \
+        git pull ; \
      else \
-        git clone https://github.com/JeffersonLab/ceInstall  \
-        mv ceInstall/* . \
-        mv ceInstall/.git . \
-        rm -rf ceInstall \
-        git checkout nosim \
+        git clone https://github.com/JeffersonLab/ceInstall ; \
+        mv ceInstall/* . ; \
+        mv ceInstall/.git . ; \
+        rm -rf ceInstall ; \
+        git checkout nosim ; \
      fi
 
 RUN  module use /cvmfs/oasis.opensciencegrid.org/jlab/geant4/modules \
