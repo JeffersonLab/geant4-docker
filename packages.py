@@ -102,7 +102,7 @@ def install_meson():
 def install_or_update_ceInstall():
 	commands = '\n'
 	commands += '# ceInstall installation or update from github \n'
-	commands += f'RUN mkdir { modules_path_base_dir()}/geant4 \\\n'
+	commands += f'RUN mkdir -p { modules_path_base_dir()}/geant4 \\\n'
 	commands += f'    && cd { modules_path_base_dir()}/geant4 \\\n'
 	commands += f'    && if [  -d ".git" ]; then \\\n'
 	commands += f'        git pull ; \\\n'

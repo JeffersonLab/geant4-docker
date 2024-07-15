@@ -11,7 +11,7 @@ RUN echo "module load geant4/10.6.2" >> /etc/profile.d/localSetup.sh
 
 
 # ceInstall installation or update from github 
-RUN mkdir /cvmfs/oasis.opensciencegrid.org/jlab/geant4 \
+RUN mkdir -p /cvmfs/oasis.opensciencegrid.org/jlab/geant4 \
     && cd /cvmfs/oasis.opensciencegrid.org/jlab/geant4 \
     && if [  -d ".git" ]; then \
         git pull ; \
