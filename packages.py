@@ -3,11 +3,8 @@
 import argparse
 from base_packages import packages_to_be_installed
 from cvmfs_packages import packages_to_be_installed as cvmfs_packages_to_be_installed
-from conventions import gemc_tags_from_docker_image, is_cvmfs_image, is_fedora_line, is_ubuntu_line, is_base_container, \
-	is_geant4_image, g4_version_from_image, is_gemc_image, localSetupFilename, modules_path_base_dir, modules_path
+from conventions import *
 
-# Purposes:
-# Return installation commands
 
 cleanup_string_fedora = ' \\\n && dnf -y update \\\n && dnf -y check-update \\\n && dnf clean packages \\\n && dnf clean all \\\n && rm -rf /var/cache/dnf \n'
 cleanup_string_ubuntu = ' \\\n && apt-get -y update \\\n && apt-get -y autoclean \n'
@@ -63,7 +60,7 @@ def packages_install_commands(image):
 		commands += f'RUN  module use {modules_path()} \\\n'
 		commands += f'     && module load sim_system \\\n'
 		for tag in gemc_tags:
-			commands += f'           && install_gemc {tag} '
+			commands += f'     && install_gemc {tag} '
 			# if not the last item in clas12_tags, add \n
 			if tag != gemc_tags[-1]:
 				commands += '\\\n'

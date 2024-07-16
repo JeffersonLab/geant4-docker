@@ -1,8 +1,7 @@
 #!/usr/bin/env python3
 
 import argparse
-from conventions import from_image, modules_path, modules_path_base_dir, g4_version_from_image, localSetupFilename, \
-	gemc_tags_from_docker_image, is_geant4_image, is_base_container, is_fedora_line, is_alma_line, is_ubuntu_line, is_cvmfs_image
+from conventions import *
 
 # Purposes:
 # Return commands to satisfy container prerequisites
@@ -31,7 +30,7 @@ def load_jlab_certificate(image):
 				certificate_string += '    && dnf install -y almalinux-release-synergy \n\n'
 		elif is_ubuntu_line(image):
 			certificate_string += '# Update needed at beginning to use the right package repos\n'
-			certificate_string += 'RUN  apt update\n'
+			certificate_string += 'RUN apt update\n'
 			certificate_string += '\n'
 			certificate_string += '# Install ca-certificates tools\n'
 			certificate_string += 'RUN apt-get install -y ca-certificates\n'
@@ -68,6 +67,8 @@ def create_dockerfile_header(image):
 		header += f'RUN echo "module use { modules_path()}" >> {localSetupFile} \n'
 	if is_geant4_image(image):
 		header += f'RUN echo "module load geant4/{g4_version_from_image(image)}" >> {localSetupFile} \n\n'
+	if is_gemc_image(image):
+		header += f'RUN echo "module load gemc/{gemc_tags_from_docker_image(image)[0]}" >> {localSetupFile} \n\n'
 	header += '\n'
 
 	return header

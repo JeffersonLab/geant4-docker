@@ -9,7 +9,7 @@ COPY bgMerginFilename.sh /bin/bgMerginFilename.sh
 COPY localSetupBase.sh /etc/profile.d/localSetup.sh
 
 # Update needed at beginning to use the right package repos
-RUN  apt update
+RUN apt update
 
 # Install ca-certificates tools
 RUN apt-get install -y ca-certificates

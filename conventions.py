@@ -56,7 +56,7 @@ def is_geant4_image(image):
 	return False
 
 def is_gemc_image(image):
-	if image.count('-') == 3:
+	if 'gemc' in image:
 		return True
 	return False
 
@@ -64,11 +64,11 @@ def from_image(requested_image):
 	if requested_image.count('-') == 0 or 'cvmfs' in requested_image:
 		return os_base_image_from_imagename(requested_image)
 	# sim image, requesting base image
-	elif requested_image.count('-') == 1:
+	elif is_geant4_image(requested_image):
 		return base_imagename_from_sim(requested_image)
 	# gemc image, requesting sim image
-	elif requested_image.count('-') == 2:
-		return base_imagename_from_sim(requested_image)
+	elif is_gemc_image(requested_image):
+		return geant4_imagename_from_gemc(requested_image)
 
 def os_base_image_from_imagename(requested_image):
 	if 'fedora36' in requested_image:
@@ -88,29 +88,36 @@ def base_imagename_from_sim(requested_image):
 			from_image = 'jeffersonlab/base:' + osname
 	return from_image
 
-def sim_imagename_from_gemc(requested_image):
-	# strip everything before first '-'
-	from_image = 'jeffersonlab/sim:' + requested_image.split('-', 1)[1]
+def geant4_imagename_from_gemc(requested_image):
+	from_image = 'jeffersonlab/geant4:gv4' + g4_version_from_image(requested_image) + '-' + osname_from_image(requested_image)
 	return from_image
 
 def osname_from_image(requested_image):
-	if requested_image.count('-') == 0:
-		osname = requested_image
-	elif requested_image.count('-') == 1:
-		osname = requested_image.split('-')[1]
-	elif requested_image.count('-') == 2:
-		osname = requested_image.split('-')[1]
+	if is_base_container(requested_image):
+		return requested_image
+	elif is_cvmfs_image(requested_image):
+		return requested_image.split('-')[1]
+	elif is_geant4_image(requested_image):
+		return requested_image.split('-')[1]
+	elif is_gemc_image(requested_image):
+		return requested_image.split('-')[2]
 	else:
-		osname = requested_image.split('-')[2]
-	if osname not in supported_osnames():
-		print(f'Error: osname {osname} not supported')
+		print(f'Error: osname {requested_image} not supported')
 		exit(1)
-	return osname
 
 def g4_version_from_image(requested_image):
 	# return the string between 'g4v' and '-'
 	if 'g4v' in requested_image:
 		return requested_image.split('g4v')[1].split('-')[0]
+	elif 'gemc' in requested_image:
+		gtag = requested_image.split('-')[1]
+		if gtag == 'prod1':
+			return '10.6.2'
+		elif gtag == 'dev':
+			return '10.7.4'
+		else:
+			print(f'g4_version_from_image error: tag {gtag} not supported for {requested_image}')
+			exit(1)
 	else:
 		print(f'Error: geant4 version not found in {requested_image}')
 		exit(1)
@@ -119,18 +126,14 @@ def g4_version_from_image(requested_image):
 # prod1: gemc versions 4.4.2
 # dev:   gemc versions 5.10, dev
 def gemc_tags_from_docker_image(image):
-	if image.count('-') == 3:
-		tag = image.split('-')[0]
-		if tag == 'prod1':
-			return ['4.4.2']
-		elif tag == 'dev':
-			return ['5.10', 'dev']
-		else:
-			print(f'Error: tag {tag} not supported')
-			exit(1)
+	gtag = image.split('-')[1]
+	if gtag == 'prod1':
+		return ['4.4.2']
+	elif gtag == 'dev':
+		return ['5.10', 'dev']
 	else:
-		return []
-
+		print(f'gemc_tags_from_docker_image error: tag {gtag} not supported')
+		exit(1)
 
 
 def main():

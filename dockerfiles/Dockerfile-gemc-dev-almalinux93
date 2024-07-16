@@ -1,0 +1,20 @@
+FROM jeffersonlab/geant4:gv410.7.4-almalinux93 
+LABEL maintainer="Maurizio Ungaro <ungaro@jlab.org>"
+
+# run shell instead of sh
+SHELL ["/bin/bash", "-c"]
+ENV AUTOBUILD 1
+
+RUN echo "module load gemc/5.10" >> /etc/profile.d/localSetup.sh 
+
+
+# ceInstall update  
+RUN  cd /cvmfs/oasis.opensciencegrid.org/jlab/geant4/modules \
+    &&  git checkout nosim  \
+    &&  git pull  
+
+RUN  module use /cvmfs/oasis.opensciencegrid.org/jlab/geant4/modules \
+     && module load sim_system \
+     && install_gemc 5.10 \
+     && install_gemc dev 
+
