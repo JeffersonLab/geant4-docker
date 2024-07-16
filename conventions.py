@@ -89,7 +89,7 @@ def base_imagename_from_sim(requested_image):
 	return from_image
 
 def geant4_imagename_from_gemc(requested_image):
-	from_image = 'jeffersonlab/geant4:gv4' + g4_version_from_image(requested_image) + '-' + osname_from_image(requested_image)
+	from_image = 'jeffersonlab/geant4:g4v' + g4_version_from_image(requested_image) + '-' + osname_from_image(requested_image)
 	return from_image
 
 def osname_from_image(requested_image):

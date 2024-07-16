@@ -1,4 +1,4 @@
-FROM jeffersonlab/geant4:gv410.7.4-fedora36 
+FROM jeffersonlab/geant4:g4v10.7.4-fedora36 
 LABEL maintainer="Maurizio Ungaro <ungaro@jlab.org>"
 
 # run shell instead of sh
