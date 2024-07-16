@@ -57,10 +57,11 @@ def packages_install_commands(image):
 	elif is_gemc_image(image):
 		gemc_tags = gemc_tags_from_docker_image(image)
 		commands += update_ceInstall()
-		commands += f'RUN  module use {modules_path()} \\\n'
-		commands += f'     && module load sim_system \\\n'
+		commands += f'RUN source {localSetupFile} \\\n'
+		commands += f'    && module use {modules_path()} \\\n'
+		commands += f'    && module load sim_system \\\n'
 		for tag in gemc_tags:
-			commands += f'     && install_gemc {tag} '
+			commands += f'    && install_gemc {tag} '
 			# if not the last item in clas12_tags, add \n
 			if tag != gemc_tags[-1]:
 				commands += '\\\n'
@@ -111,7 +112,7 @@ def install_ceInstall():
 def update_ceInstall():
 	modulepath=modules_path()
 	commands = '# ceInstall update  \n'
-	commands += f'RUN  cd {modulepath} \\\n'
+	commands += f'RUN cd {modulepath} \\\n'
 	commands += f'    &&  git checkout nosim  \\\n'
 	commands += f'    &&  git pull  \n\n'
 	return commands
