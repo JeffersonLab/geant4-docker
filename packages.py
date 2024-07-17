@@ -92,7 +92,7 @@ def install_meson():
 	commands = '\n'
 	commands += '# meson installation using tarball\n'
 	commands += f'RUN cd {meson_install_dir} \\\n'
-	commands += f'    && wget {meson_location}/{meson_file} \\\n'
+	commands += f'    && curl -S --location-trusted --progress-bar --retry 4 {meson_location}/{meson_file} -O --cacert /etc/ssl/certs/JLabCA.crt  \\\n'
 	commands += f'    && tar -xzvf {meson_file} \\\n'
 	commands += f'    && rm {meson_file} \\\n'
 	commands += f'    && ln -s {meson_install_dir}/meson-{meson_version}/meson.py /usr/bin/meson\n'
