@@ -8,15 +8,10 @@ ENV AUTOBUILD 1
 COPY bgMerginFilename.sh /bin/bgMerginFilename.sh
 COPY localSetupBase.sh /etc/profile.d/localSetup.sh
 
-# Update needed at beginning to use the right package repos
-RUN apt update
-
-# Install ca-certificates tools
-RUN apt-get install -y ca-certificates
-
 # JLab certificate
 ADD https://pki.jlab.org/JLabCA.crt /etc/pki/ca-trust/source/anchors/JLabCA.crt
-RUN update-ca-certificates 
+# Update needed at beginning to use the right package repos
+RUN apt update
 
 
 RUN ln -fs /usr/share/zoneinfo/America/New_York /etc/localtime \

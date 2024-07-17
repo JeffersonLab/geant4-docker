@@ -60,6 +60,7 @@ def is_gemc_image(image):
 		return True
 	return False
 
+
 def from_image(requested_image):
 	if requested_image.count('-') == 0 or 'cvmfs' in requested_image:
 		return os_base_image_from_imagename(requested_image)

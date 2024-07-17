@@ -5,6 +5,8 @@ LABEL maintainer="Maurizio Ungaro <ungaro@jlab.org>"
 SHELL ["/bin/bash", "-c"]
 ENV AUTOBUILD 1
 
+# JLab certificate
+ADD https://pki.jlab.org/JLabCA.crt /etc/pki/ca-trust/source/anchors/JLabCA.crt
 RUN echo "module load gemc/5.10" >> /etc/profile.d/localSetup.sh 
 
 

@@ -14,13 +14,14 @@ def copy_files(image):
 		copy_string += f'COPY localSetupBase.sh {localSetupFile}\n\n'
 	return copy_string
 
+# the destination is hardcoded, and must be mimicked in ceInstall functions.zsh
 def load_jlab_certificate(image):
 	certificate_string = ''
+	certificate_string += '# JLab certificate\n'
+	certificate_string += 'ADD https://pki.jlab.org/JLabCA.crt /etc/pki/ca-trust/source/anchors/JLabCA.crt\n'
 	if is_base_container(image):
 		if is_fedora_line(image):
-			certificate_string += '# JLab certificate\n'
-			certificate_string += 'ADD https://pki.jlab.org/JLabCA.crt /etc/pki/ca-trust/source/anchors/JLabCA.crt\n'
-			certificate_string += 'RUN update-ca-trust \n\n'
+			# certificate_string += 'RUN update-ca-trust \n\n'
 			if is_alma_line(image):
 				certificate_string += '# alma specific:\n'
 				certificate_string += '# crb: for mysql-devel\n'
@@ -32,12 +33,12 @@ def load_jlab_certificate(image):
 			certificate_string += '# Update needed at beginning to use the right package repos\n'
 			certificate_string += 'RUN apt update\n'
 			certificate_string += '\n'
-			certificate_string += '# Install ca-certificates tools\n'
-			certificate_string += 'RUN apt-get install -y ca-certificates\n'
-			certificate_string += '\n'
-			certificate_string += '# JLab certificate\n'
-			certificate_string += 'ADD https://pki.jlab.org/JLabCA.crt /etc/pki/ca-trust/source/anchors/JLabCA.crt\n'
-			certificate_string += 'RUN update-ca-certificates \n\n'
+			# certificate_string += '# Install ca-certificates tools\n'
+			# certificate_string += 'RUN apt-get install -y ca-certificates\n'
+			# certificate_string += '\n'
+			# certificate_string += '# JLab certificate\n'
+			# certificate_string += 'ADD https://pki.jlab.org/JLabCA.crt /etc/pki/ca-trust/source/anchors/JLabCA.crt\n'
+			# certificate_string += 'RUN update-ca-certificates \n\n'
 	return  certificate_string
 
 def main():

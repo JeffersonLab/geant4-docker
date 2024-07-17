@@ -10,8 +10,6 @@ COPY localSetupBase.sh /etc/profile.d/localSetup.sh
 
 # JLab certificate
 ADD https://pki.jlab.org/JLabCA.crt /etc/pki/ca-trust/source/anchors/JLabCA.crt
-RUN update-ca-trust 
-
 # alma specific:
 # crb: for mysql-devel
 # synergy: root, scons, vnc
