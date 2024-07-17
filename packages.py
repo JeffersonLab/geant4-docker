@@ -78,7 +78,7 @@ def install_root_from_ubuntu_tarball(localSetupFile):
 	commands = '\n'
 	commands += '# root installation using tarball\n'
 	commands += f'RUN cd {root_install_dir} \\\n'
-	commands += f'    && wget https://root.cern/download/{root_file} \\\n'
+	commands += f'    && curl -S --location-trusted --progress-bar --retry 4 https://root.cern/download/{root_file} -O  --cacert /etc/ssl/certs/JLabCA.crt\\\n'
 	commands += f'    && tar -xzvf {root_file} \\\n'
 	commands += f'    && rm {root_file} \\\n'
 	commands += f'    && echo "cd {root_install_dir}/root/bin ; source thisroot.sh ; cd -" >> {localSetupFile}\n'
