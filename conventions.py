@@ -60,6 +60,8 @@ def is_gemc_image(image):
 		return True
 	return False
 
+def jlab_certificate():
+	return "/etc/pki/ca-trust/source/anchors/JLabCA.crt"
 
 def from_image(requested_image):
 	if requested_image.count('-') == 0 or 'cvmfs' in requested_image:
