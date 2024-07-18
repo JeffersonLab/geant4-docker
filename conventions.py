@@ -79,8 +79,11 @@ def jlab_certificate():
 
 
 # execute system curl command to download file
+# notice: both the cacert and the -k option are given here. For some reason the cacert option
+# was not enough on fedora line OSes
+# see also https://curl.se/docs/sslcerts.html
 def curl_command(filename):
-	return f'curl -S --location-trusted --progress-bar --retry 4 --cacert {jlab_certificate()} {filename} -O'
+	return f'curl -S --location-trusted --progress-bar --retry 4 --cacert {jlab_certificate()} {filename} -k -O'
 
 def from_image(requested_image):
 	if requested_image.count('-') == 0 or 'cvmfs' in requested_image:
