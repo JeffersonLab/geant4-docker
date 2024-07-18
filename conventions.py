@@ -7,61 +7,80 @@ import argparse
 def supported_osnames():
 	return ['fedora36', 'almalinux93', 'ubuntu24']
 
+
 def supported_cvmfs_osnames():
 	return [f'cvmfs-{osname}' for osname in supported_osnames()]
+
 
 def supported_geant4_versions():
 	return ['10.6.2', '10.7.4', '11.2.2']
 
+
 def modules_path_base_dir():
 	return '/cvmfs/oasis.opensciencegrid.org/jlab'
+
 
 def modules_path():
 	return modules_path_base_dir() + '/geant4/modules'
 
+
 def localSetupFilename():
 	return '/etc/profile.d/localSetup.sh'
 
+
 def dockerfile_name(image):
 	return 'dockerfiles/Dockerfile-' + image
+
 
 def is_base_container(image):
 	if image in supported_osnames() or image in supported_cvmfs_osnames():
 		return True
 	return False
 
+
 def is_fedora_line(image):
 	if 'fedora' in image or 'almalinux' in image:
 		return True
 	return False
+
 
 def is_alma_line(image):
 	if 'almalinux' in image:
 		return True
 	return False
 
+
 def is_ubuntu_line(image):
 	if 'ubuntu' in image:
 		return True
 	return False
+
 
 def is_cvmfs_image(image):
 	if image.startswith('cvmfs'):
 		return True
 	return False
 
+
 def is_geant4_image(image):
 	if 'g4v' in image:
 		return True
 	return False
+
 
 def is_gemc_image(image):
 	if 'gemc' in image:
 		return True
 	return False
 
+
 def jlab_certificate():
 	return "/etc/pki/ca-trust/source/anchors/JLabCA.crt"
+
+
+# execute system curl command to download file
+def curl_command(filename):
+	return f'curl -S --location-trusted --progress-bar --retry 4 --cacert {jlab_certificate()} {filename} -O'
 
 def from_image(requested_image):
 	if requested_image.count('-') == 0 or 'cvmfs' in requested_image:
@@ -72,6 +91,7 @@ def from_image(requested_image):
 	# gemc image, requesting sim image
 	elif is_gemc_image(requested_image):
 		return geant4_imagename_from_gemc(requested_image)
+
 
 def os_base_image_from_imagename(requested_image):
 	if 'fedora36' in requested_image:
@@ -85,15 +105,19 @@ def os_base_image_from_imagename(requested_image):
 		print(f'Error: platform {requested_image} not supported')
 		exit(1)
 
+
 def base_imagename_from_sim(requested_image):
 	for osname in supported_osnames():
 		if osname in requested_image:
 			from_image = 'jeffersonlab/base:' + osname
 	return from_image
 
+
 def geant4_imagename_from_gemc(requested_image):
-	from_image = 'jeffersonlab/geant4:g4v' + g4_version_from_image(requested_image) + '-' + osname_from_image(requested_image)
+	from_image = 'jeffersonlab/geant4:g4v' + g4_version_from_image(
+		requested_image) + '-' + osname_from_image(requested_image)
 	return from_image
+
 
 def osname_from_image(requested_image):
 	if is_base_container(requested_image):
@@ -107,6 +131,7 @@ def osname_from_image(requested_image):
 	else:
 		print(f'Error: osname {requested_image} not supported')
 		exit(1)
+
 
 def g4_version_from_image(requested_image):
 	# return the string between 'g4v' and '-'
@@ -124,6 +149,7 @@ def g4_version_from_image(requested_image):
 	else:
 		print(f'Error: geant4 version not found in {requested_image}')
 		exit(1)
+
 
 # as of july 2024:
 # prod1: gemc versions 4.4.2
@@ -170,7 +196,6 @@ def main():
 		if gemc_tags:
 			print(f'clas12 tags:\t\t {gemc_tags}')
 		print()
-
 
 
 if __name__ == "__main__":
