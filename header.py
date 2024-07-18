@@ -18,9 +18,9 @@ def copy_files(image):
 def load_jlab_certificate(image):
 	jcertificate = jlab_certificate()
 	certificate_string = ''
-	certificate_string += '# JLab certificate\n'
-	certificate_string += f'ADD https://pki.jlab.org/JLabCA.crt {jcertificate}\n'
 	if is_base_container(image):
+		certificate_string += '# JLab certificate\n'
+		certificate_string += f'ADD https://pki.jlab.org/JLabCA.crt {jcertificate}\n'
 		if is_fedora_line(image):
 			certificate_string += 'RUN update-ca-trust \n\n'
 			if is_alma_line(image):
