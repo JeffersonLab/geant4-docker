@@ -24,7 +24,7 @@ RUN ln -fs /usr/share/zoneinfo/America/New_York /etc/localtime \
     && DEBIAN_FRONTEND=noninteractive apt-get  install -y --no-install-recommends tzdata  gfortran libpcre3-dev xlibmesa-glu-dev libglew-dev libftgl-dev libmysqlclient-dev libfftw3-dev libcfitsio-dev graphviz-dev libavahi-compat-libdnssd-dev libldap2-dev python3-dev python3-numpy libxml2-dev libkrb5-dev libgsl0-dev qtwebengine5-dev nlohmann-json3-dev gcc binutils xrootd-client lsof liburing2  bzip2 wget curl nano bash tcsh zsh hostname gedit environment-modules rsync patch 
 # root installation using tarball
 RUN cd /usr/local \
-    && curl -S --location-trusted --progress-bar --retry 4 --cacert /etc/pki/ca-trust/source/anchors/JLabCA.crt {'https://root.cern/download/root_v6.30.04.Linux-ubuntu22.04-x86_64-gcc11.4.tar.gz'} -O  \
+    && curl -S --location-trusted --progress-bar --retry 4 --cacert /etc/pki/ca-trust/source/anchors/JLabCA.crt {'https://root.cern/download/root_v6.30.04.Linux-ubuntu22.04-x86_64-gcc11.4.tar.gz'} -k -O  \
     && tar -xzvf root_v6.30.04.Linux-ubuntu22.04-x86_64-gcc11.4.tar.gz \
     && rm root_v6.30.04.Linux-ubuntu22.04-x86_64-gcc11.4.tar.gz \
     && echo "cd /usr/local/root/bin ; source thisroot.sh ; cd -" >> /etc/profile.d/localSetup.sh
@@ -32,7 +32,7 @@ RUN cd /usr/local \
 
 # meson installation using tarball
 RUN cd /usr/local \
-    && curl -S --location-trusted --progress-bar --retry 4 --cacert /etc/pki/ca-trust/source/anchors/JLabCA.crt {'https://github.com/mesonbuild/meson/releases/download/1.5.0/meson-1.5.0.tar.gz'} -O  \
+    && curl -S --location-trusted --progress-bar --retry 4 --cacert /etc/pki/ca-trust/source/anchors/JLabCA.crt {'https://github.com/mesonbuild/meson/releases/download/1.5.0/meson-1.5.0.tar.gz'} -k -O  \
     && tar -xzvf meson-1.5.0.tar.gz \
     && rm meson-1.5.0.tar.gz \
     && ln -s /usr/local/meson-1.5.0/meson.py /usr/bin/meson
