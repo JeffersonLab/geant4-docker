@@ -31,8 +31,8 @@ fedora += ' libXt-devel libXmu-devel libXrender-devel  xorg-x11-server-Xvfb xran
 ubuntu += ' libxt-dev   libxmu-dev   libxrender-dev    xvfb                 x11-xserver-utils'
 
 # utilities. No 'which' in ubuntu?
-fedora += ' bzip2 wget curl nano bash tcsh zsh hostname gedit environment-modules which'
-ubuntu += ' bzip2 wget curl nano bash tcsh zsh hostname gedit environment-modules'
+fedora += ' bzip2 wget curl nano bash tcsh zsh hostname gedit environment-modules pv which'
+ubuntu += ' bzip2 wget curl nano bash tcsh zsh hostname gedit environment-modules pv'
 
 # more utilities
 fedora += ' psmisc procps mailcap net-tools rsync patch'
