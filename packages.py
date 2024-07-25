@@ -72,8 +72,9 @@ def packages_install_commands(image):
 	return commands
 
 def install_root_from_ubuntu_tarball(localSetupFile):
-	root_version     = '6.30.04'
-	root_file        = f'root_v{root_version}.Linux-ubuntu22.04-x86_64-gcc11.4.tar.gz'
+	root_version     = '6.32.02'
+	ubuntu_os_name   = 'ubuntu24.04-x86_64-gcc13.2'
+	root_file        = f'root_v{root_version}.Linux-{ubuntu_os_name}.tar.gz'
 	root_remote_file = f'https://root.cern/download/{root_file}'
 	root_install_dir = '/usr/local'
 	commands = '\n'
