@@ -61,6 +61,10 @@ ubuntu += ' libqt5widgets5 libqt5opengl5-dev libqt5printsupport5'
 # root not on ubuntu
 fedora += ' root'
 
+# AddressSanitizer: libasan; UndefinedBehaviorSanitizer: libubsan; MemorySanitizer: libmsan; ThreadSanitizer: libtsan
+fedora += ' libasan libubsan libtsan'
+ubuntu += ' libasan8 libubsan1 libtsan2'
+
 
 def main():
 	desc_str = 'Return list of packages for the requested platform'
