@@ -62,8 +62,8 @@ ubuntu += ' libqt5widgets5 libqt5opengl5-dev libqt5printsupport5'
 fedora += ' root'
 
 # AddressSanitizer: libasan; UndefinedBehaviorSanitizer: libubsan; MemorySanitizer: libmsan; ThreadSanitizer: libtsan
-fedora += ' libasan  libubsan  libtsan  tbb'
-ubuntu += ' libasan8 libubsan1 libtsan2 libtbb12'
+fedora += ' liblsan libasan  libubsan  libtsan  tbb'
+ubuntu += ' liblsan0 libasan8 libubsan1 libtsan2 libtbb12'
 
 
 def main():
