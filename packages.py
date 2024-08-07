@@ -107,8 +107,7 @@ def install_ceInstall():
 	commands = '# ceInstall installation  \n'
 	commands += f'RUN mkdir -p {modulebasepath} \\\n'
 	commands += f'    && cd {modulebasepath} \\\n'
-	commands += f'    && git clone https://github.com/JeffersonLab/ceInstall {modulesubdir}  \\\n'
-	commands += f'    && cd {modulesubdir} \\\n'
+	commands += f'    && git clone https://github.com/JeffersonLab/ceInstall {modulesubdir}  \n\n'
 	return commands
 
 def update_ceInstall():
