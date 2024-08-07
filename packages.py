@@ -109,14 +109,12 @@ def install_ceInstall():
 	commands += f'    && cd {modulebasepath} \\\n'
 	commands += f'    && git clone https://github.com/JeffersonLab/ceInstall {modulesubdir}  \\\n'
 	commands += f'    && cd {modulesubdir} \\\n'
-	commands += f'    && git checkout nosim  \n\n'
 	return commands
 
 def update_ceInstall():
 	modulepath=modules_path()
 	commands = '# ceInstall update  \n'
 	commands += f'RUN cd {modulepath} \\\n'
-	commands += f'    &&  git checkout nosim  \\\n'
 	commands += f'    &&  git pull  \n\n'
 	return commands
 
