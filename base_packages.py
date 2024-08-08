@@ -62,9 +62,12 @@ ubuntu += ' libqt5widgets5 libqt5opengl5-dev libqt5printsupport5'
 fedora += ' root'
 
 # AddressSanitizer: libasan; UndefinedBehaviorSanitizer: libubsan; MemorySanitizer: libmsan; ThreadSanitizer: libtsan
-fedora += ' liblsan libasan  libubsan  libtsan  tbb'
+fedora += ' liblsan  libasan  libubsan  libtsan  tbb'
 ubuntu += ' liblsan0 libasan8 libubsan1 libtsan2 libtbb12'
 
+# doxygen. This is quite big, perhaps we need a dedicated container w/o all the previous stuff
+fedora += ' doxygen'
+ubuntu += ' doxygen'
 
 def main():
 	desc_str = 'Return list of packages for the requested platform'
