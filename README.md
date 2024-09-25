@@ -63,7 +63,15 @@ Examples:
 
 ## Linux OSes:
 
-Use the pack_all.sh script to copy the images to cvmfs. The option 'gemc' will only pack the clas12Tag directory.
+Use the pack_all.sh script to copy the images to cvmfs. 
+The option 'gemc' will only pack the clas12Tag directory as opposed 
+to all the libraries.
+
+- **pack_all.sh**
+- **pack_all.sh gemc**
+
+
+
 
 ## MacOS:
 

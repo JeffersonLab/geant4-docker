@@ -1,7 +1,9 @@
 #!/bin/zsh
 
-osreleases=(fedora36-gcc12 almalinux9-gcc11 ubuntu24-gcc13)
+osreleases=(fedora36-gcc12  almalinux9-gcc11 ubuntu24-gcc13)
+osreleases=(fedora36-gcc12)
 tags=(prod1 dev)
+tags=(dev)
 remaining_g4=(11.2.2)
 
 local_install_dir=/Users/ungaro/mywork
@@ -39,23 +41,21 @@ function do_the_deed {
 	docker run --platform linux/amd64 -it --rm -v $local_install_dir:$container_install_dir "$remote_image_name" $container_install_dir/pack_me.sh "$osreleases" "$what_to_pack" "$remote_image_name"
 }
 
-#echo  "\n gemc docker images:\n"
-#for osrelease in  $=osreleases; do
-#	for tag in $=tags; do
-#		do_the_deed "$osrelease" "$tag"
-#	done
-#done
-
-echo  "\n geant4 docker images:\n"
-for osrelease in  $=osreleases; do
-	for g4version in $=remaining_g4; do
-		do_the_deed "$osrelease" "$g4version"
+if [[ $what_to_pack = "gemc" ]]; then
+	echo  "\n gemc docker images:\n"
+	for osrelease in  $=osreleases; do
+		for tag in $=tags; do
+			do_the_deed "$osrelease" "$tag"
+		done
 	done
-done
-
-echo  "\n local installation:\n"
-# cd /opt/jlab_software/
-# tar cfz $local_install_dir/macosx14-clang15.tar.gz macosx14-clang15
+else
+	echo  "\n geant4 docker images:\n"
+	for osrelease in  $=osreleases; do
+		for g4version in $=remaining_g4; do
+			do_the_deed "$osrelease" "$what_to_pack"
+		done
+	done
+fi
 
 echo
 echo "------------------------------------"
