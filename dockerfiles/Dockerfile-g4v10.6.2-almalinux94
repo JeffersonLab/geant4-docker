@@ -1,4 +1,4 @@
-FROM jeffersonlab/base:almalinux93 
+FROM jeffersonlab/base:almalinux94 
 LABEL maintainer="Maurizio Ungaro <ungaro@jlab.org>"
 
 # run shell instead of sh
@@ -6,7 +6,7 @@ SHELL ["/bin/bash", "-c"]
 ENV AUTOBUILD 1
 
 RUN echo "module use /cvmfs/oasis.opensciencegrid.org/jlab/geant4/modules" >> /etc/profile.d/localSetup.sh 
-RUN echo "module load geant4/10.7.4" >> /etc/profile.d/localSetup.sh 
+RUN echo "module load geant4/10.6.2" >> /etc/profile.d/localSetup.sh 
 
 
 # ceInstall installation  
@@ -17,6 +17,6 @@ RUN mkdir -p /cvmfs/oasis.opensciencegrid.org/jlab \
 RUN source /etc/profile.d/localSetup.sh \
     && module use /cvmfs/oasis.opensciencegrid.org/jlab/geant4/modules \
     && module load sim_system \
-    && install_geant4 10.7.4 
+    && install_geant4 10.6.2 
 
 

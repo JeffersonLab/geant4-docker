@@ -82,15 +82,18 @@ def main():
 
 
 def packages_to_be_installed(platform):
-	if platform == 'fedora36':
+	# if platform contain fedora, return fedora
+	# if platform contain ubuntu, return ubuntu
+	# if platform contain almalinux, return almalinux
+	# else return error
+	if 'fedora' in platform:
 		return fedora
-	elif platform == 'almalinux93':
+	elif 'ubuntu' in platform:
+		return ubuntu
+	elif 'almalinux' in platform:
 		# remove fluxbox supervisor
 		almalinux = fedora.replace('fluxbox supervisor', '')
 		return almalinux
-		# return fedora
-	elif platform == 'ubuntu24':
-		return ubuntu
 	else:
 		return 'Error: platform not supported'
 		exit(1)

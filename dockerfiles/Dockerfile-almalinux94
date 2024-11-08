@@ -1,4 +1,4 @@
-FROM almalinux:9.3 
+FROM almalinux:9.4 
 LABEL maintainer="Maurizio Ungaro <ungaro@jlab.org>"
 
 # run shell instead of sh
@@ -19,9 +19,8 @@ RUN    dnf install -y  'dnf-command(config-manager)' \
     && dnf config-manager --set-enabled crb \
     && dnf install -y almalinux-release-synergy 
 
-RUN echo "module use /cvmfs/oasis.opensciencegrid.org/jlab/geant4/modules" >> /etc/profile.d/localSetup.sh 
 
-RUN dnf install -y --allowerasing  gcc-gfortran pcre-devel mesa-libGL-devel mesa-libGLU-devel glew-devel ftgl-devel mariadb-devel sqlite-devel fftw-devel cfitsio-devel graphviz-devel libuuid-devel avahi-compat-libdns_sd-devel openldap-devel python-devel python3-numpy libxml2-devel gsl-devel readline-devel qt5-qtwebengine-devel R-devel R-Rcpp-devel R-RInside-devel gcc binutils xrootd-client lsof liburing flexiblas-devel  bzip2 wget curl nano bash tcsh zsh hostname gedit environment-modules rsync patch which  \
+RUN dnf install -y --allowerasing  git make cmake gcc-c++ expat-devel mariadb-devel sqlite-devel python3-devel python3-scons ninja-build mesa-libGLU-devel libX11-devel libXpm-devel libXft-devel  libXt-devel libXmu-devel libXrender-devel  xorg-x11-server-Xvfb xrandr  bzip2 wget curl nano bash tcsh zsh hostname gedit environment-modules pv which psmisc procps mailcap net-tools rsync patch perl-CPAN glibc-langpack-en xterm x11vnc novnc  qt5-qtbase-devel qt5-linguist root liblsan  libasan  libubsan  libtsan  tbb doxygen \
  && dnf -y update \
  && dnf -y check-update \
  && dnf clean packages \

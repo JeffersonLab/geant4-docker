@@ -5,7 +5,7 @@ import argparse
 # Functions containing naming conventions for images, dockerfiles, tags
 
 def supported_osnames():
-	return ['fedora36', 'almalinux93', 'ubuntu24']
+	return ['fedora36', 'almalinux94', 'ubuntu24']
 
 
 def supported_cvmfs_osnames():
@@ -99,8 +99,8 @@ def from_image(requested_image):
 def os_base_image_from_imagename(requested_image):
 	if 'fedora36' in requested_image:
 		return 'fedora:36'
-	elif 'almalinux93' in requested_image:
-		return 'almalinux:9.3'
+	elif 'almalinux94' in requested_image:
+		return 'almalinux:9.4'
 	elif 'ubuntu24' in requested_image:
 		return 'ubuntu:24.04'
 	else:

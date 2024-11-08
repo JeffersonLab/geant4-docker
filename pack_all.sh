@@ -21,7 +21,7 @@ function do_the_deed {
 	osreleases=$1
 	osname=$(echo $osreleases | cut -d'-' -f1)
 	if [[ $osname = "almalinux9" ]]; then
-		osname="almalinux93"
+		osname="almalinux94"
 	fi
 	tag=$2
 

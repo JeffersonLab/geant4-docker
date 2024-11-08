@@ -1,6 +1,6 @@
 #!/bin/zsh
 
-osnames=(fedora36 almalinux93 ubuntu24)
+osnames=(fedora36 almalinux94 ubuntu24)
 g4_versions=(10.6.2 10.7.4 11.2.2)
 gemc_docker_tags=(prod1 dev)
 

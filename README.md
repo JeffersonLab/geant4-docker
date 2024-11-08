@@ -4,8 +4,8 @@ Docker files for geant4 installation
 
 ## Base images OS:
 
-- [Almalinux](https://hub.docker.com/_/almalinux)
-- [Fedora](https://hub.docker.com/_/fedora)
+- [Almalinux93](https://hub.docker.com/_/almalinux)
+- [Fedora36](https://hub.docker.com/_/fedora)
 - [Ubuntu](https://hub.docker.com/_/ubuntu)
 
 ## Naming and Tags Conventions
@@ -39,12 +39,11 @@ Docker files for geant4 installation
 Examples:
 
 - jeffersonlab/base:fedora36
-- jeffersonlab/base:cvmfs-fedora36
 - jeffersonlab/sim:g4v10.6.2-fedora36-local
 - jeffersonlab/sim:g4v10.7.4-ubuntu24-cvmfs
 - jeffersonlab/sim:g4v11.2.2-almalinux9-cvmfs
-- jeffersonlab/gemc:5.4-g4v10.6.2-fedora36-local
-- jeffersonlab/gemc:5.7-g4v10.7.4-ubuntu24-cvmfs
+- jeffersonlab/gemc:prod1-fedora36-local
+- jeffersonlab/gemc:dev-ubuntu24-cvmfs
 
 
 ## Automated builds from docker hub
