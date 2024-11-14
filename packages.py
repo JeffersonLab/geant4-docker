@@ -61,8 +61,12 @@ def packages_install_commands(image):
 		commands += f'    && module use {modules_path()} \\\n'
 		commands += f'    && module load sim_system \\\n'
 		for tag in gemc_tags:
-			commands += f'    && install_gemc {tag} \\\n'
-		commands += f'    && remove_ccdb_and_hipo \n'
+			commands += f'    && install_gemc {tag} '
+			# if not the last item in clas12_tags, add \n
+			if tag != gemc_tags[-1]:
+				commands += '\\\n'
+			else:
+				commands += '\n'
 
 	commands += '\n'
 	return commands

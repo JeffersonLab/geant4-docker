@@ -15,6 +15,5 @@ RUN cd /cvmfs/oasis.opensciencegrid.org/jlab/geant4/modules \
 RUN source /etc/profile.d/localSetup.sh \
     && module use /cvmfs/oasis.opensciencegrid.org/jlab/geant4/modules \
     && module load sim_system \
-    && install_gemc 4.4.2 \
-    && remove_ccdb_and_hipo 
+    && install_gemc 4.4.2 
 
