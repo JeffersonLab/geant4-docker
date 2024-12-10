@@ -87,7 +87,7 @@ def install_root_from_ubuntu_tarball(localSetupFile):
 	return commands
 
 def install_meson():
-	meson_version = '1.5.1'
+	meson_version = '1.6.0'
 	meson_location	= f'https://github.com/mesonbuild/meson/releases/download/{meson_version}'
 	meson_file	= f'meson-{meson_version}.tar.gz'
 	meson_remote_file = f'{meson_location}/{meson_file}'
