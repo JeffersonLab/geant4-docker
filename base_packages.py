@@ -58,9 +58,9 @@ ubuntu += ' fluxbox supervisor'
 fedora += ' qt5-qtbase-devel qt5-linguist'
 ubuntu += ' libqt5widgets5 libqt5opengl5-dev libqt5printsupport5'
 
-# meson and ninja
-fedora += ' meson ninja-build'
-ubuntu += ' meson ninja-build'
+# meson comes installed from source.  ninja
+fedora += ' ninja-build'
+ubuntu += ' ninja-build'
 
 # root not on ubuntu
 fedora += ' root'

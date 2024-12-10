@@ -24,10 +24,10 @@ RUN dnf install -y --allowerasing  gcc-gfortran pcre-devel mesa-libGL-devel mesa
 
 # meson installation using tarball
 RUN cd /usr/local \
-    && curl -S --location-trusted --progress-bar --retry 4 --cacert /etc/pki/ca-trust/source/anchors/JLabCA.crt {'https://github.com/mesonbuild/meson/releases/download/1.5.1/meson-1.5.1.tar.gz'} -k -O  \
-    && tar -xzvf meson-1.5.1.tar.gz \
-    && rm meson-1.5.1.tar.gz \
-    && ln -s /usr/local/meson-1.5.1/meson.py /usr/bin/meson
+    && curl -S --location-trusted --progress-bar --retry 4 --cacert /etc/pki/ca-trust/source/anchors/JLabCA.crt {'https://github.com/mesonbuild/meson/releases/download/1.6.0/meson-1.6.0.tar.gz'} -k -O  \
+    && tar -xzvf meson-1.6.0.tar.gz \
+    && rm meson-1.6.0.tar.gz \
+    && ln -s /usr/local/meson-1.6.0/meson.py /usr/bin/meson
 
 
 # Setup demo environment variables

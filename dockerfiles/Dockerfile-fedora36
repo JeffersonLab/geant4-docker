@@ -13,7 +13,7 @@ ADD https://pki.jlab.org/JLabCA.crt /etc/pki/ca-trust/source/anchors/JLabCA.crt
 RUN update-ca-trust 
 
 
-RUN dnf install -y --allowerasing  git make cmake gcc-c++ expat-devel mariadb-devel sqlite-devel python3-devel python3-scons ninja-build mesa-libGLU-devel libX11-devel libXpm-devel libXft-devel  libXt-devel libXmu-devel libXrender-devel  xorg-x11-server-Xvfb xrandr  bzip2 wget curl nano bash tcsh zsh hostname gedit environment-modules pv which psmisc procps mailcap net-tools rsync patch perl-CPAN glibc-langpack-en xterm x11vnc novnc fluxbox supervisor qt5-qtbase-devel qt5-linguist meson ninja-build root liblsan  libasan  libubsan  libtsan  tbb doxygen \
+RUN dnf install -y --allowerasing  git make cmake gcc-c++ expat-devel mariadb-devel sqlite-devel python3-devel python3-scons ninja-build mesa-libGLU-devel libX11-devel libXpm-devel libXft-devel  libXt-devel libXmu-devel libXrender-devel  xorg-x11-server-Xvfb xrandr  bzip2 wget curl nano bash tcsh zsh hostname gedit environment-modules pv which psmisc procps mailcap net-tools rsync patch perl-CPAN glibc-langpack-en xterm x11vnc novnc fluxbox supervisor qt5-qtbase-devel qt5-linguist ninja-build root liblsan  libasan  libubsan  libtsan  tbb doxygen \
  && dnf -y update \
  && dnf -y check-update \
  && dnf clean packages \
@@ -23,10 +23,10 @@ RUN dnf install -y --allowerasing  git make cmake gcc-c++ expat-devel mariadb-de
 
 # meson installation using tarball
 RUN cd /usr/local \
-    && curl -S --location-trusted --progress-bar --retry 4 --cacert /etc/pki/ca-trust/source/anchors/JLabCA.crt {'https://github.com/mesonbuild/meson/releases/download/1.5.1/meson-1.5.1.tar.gz'} -k -O  \
-    && tar -xzvf meson-1.5.1.tar.gz \
-    && rm meson-1.5.1.tar.gz \
-    && ln -s /usr/local/meson-1.5.1/meson.py /usr/bin/meson
+    && curl -S --location-trusted --progress-bar --retry 4 --cacert /etc/pki/ca-trust/source/anchors/JLabCA.crt {'https://github.com/mesonbuild/meson/releases/download/1.6.0/meson-1.6.0.tar.gz'} -k -O  \
+    && tar -xzvf meson-1.6.0.tar.gz \
+    && rm meson-1.6.0.tar.gz \
+    && ln -s /usr/local/meson-1.6.0/meson.py /usr/bin/meson
 
 
 # Setup demo environment variables
