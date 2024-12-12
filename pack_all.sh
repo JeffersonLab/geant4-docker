@@ -4,7 +4,7 @@ osreleases=(fedora36-gcc12  almalinux9-gcc11 ubuntu24-gcc13)
 osreleases=(fedora36-gcc12)
 tags=(prod1 dev)
 tags=(dev)
-remaining_g4=(11.2.2)
+remaining_g4=(11.3.0)
 
 local_install_dir=/Users/ungaro/mywork
 container_install_dir=/usr/local/mywork/

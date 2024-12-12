@@ -13,7 +13,7 @@ def supported_cvmfs_osnames():
 
 
 def supported_geant4_versions():
-	return ['10.6.2', '10.7.4', '11.2.2']
+	return ['10.6.2', '10.7.4', '11.3.0']
 
 
 def modules_path_base_dir():
