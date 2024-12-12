@@ -18,7 +18,7 @@ function dirs_to_tar {
 		echo $(find ./ -name clas12Tags | grep -v bin) $(find ./ -name gemc | grep -v modules | grep -v bin)
 		# echo $(find ./ -name clas12Tags) $(find ./ -name ccdb | grep -v bin | grep -v lib | grep -v ceInstall | grep -v python)
 	else
-		echo $osrelease
+		echo $(modules/util/osrelease.py)
 	fi
 }
 
@@ -30,7 +30,7 @@ echo
 echo " > osrelease: $osrelease"
 echo " > osname: $osname"
 echo " > Tar destination: $tar_file"
-echo " > To Tar: $to_tar"
+echo " > To Tar (from osrelease.py: $to_tar"
 echo " > Work dir: $work_dir"
 
 
@@ -44,6 +44,8 @@ find ./ -type d -name ".git" -exec rm -rf {} +
 SIZE=$(du -sk $=to_tar | cut -f 1)
 echo " > Done, now tarring with: tar cfz $tar_file $=to_tar from $(pwd), size: $SIZE k"
 tar cfz "$tar_file" "$=to_tar"
+echo
+echo " > done with osrelease: $osrelease"
 
 # once pv is installed:
 #tar cfz - "$=to_tar" | pv -p -s ${SIZE}k > $tar_file

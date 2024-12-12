@@ -1,58 +1,54 @@
 #!/bin/zsh
 
-osreleases=(fedora36-gcc12  almalinux9-gcc11 ubuntu24-gcc13)
-osreleases=(fedora36-gcc12)
+#osreleases=(fedora36-gcc12 almalinux94-gcc11 ubuntu24-gcc13)
+osreleases=(almalinux94-gcc11)
 tags=(prod1 dev)
 tags=(dev)
-remaining_g4=(11.3.0)
+g4versions=(11.3.0)
 
 local_install_dir=/Users/ungaro/mywork
 container_install_dir=/usr/local/mywork/
 
 remote_images_location=/work/clas12/ungaro/images
 
-what_to_pack="all"
-# flags for gemc only, this will only pack gemc or clas12Tags
-if [[ $1 = "gemc" ]]; then
-	what_to_pack="gemc"
-fi
+what_to_pack=$1
+
 
 function do_the_deed {
-	osreleases=$1
+	osrelease=$1
 	osname=$(echo $osreleases | cut -d'-' -f1)
-	if [[ $osname = "almalinux9" ]]; then
-		osname="almalinux94"
-	fi
-	tag=$2
+	what_to_pack=$2
+	tag=$3
 
 	# if it's gemc tag:
-	if [[ $tags[(r)$tag] != "" ]]; then
+	if [[ $what_to_pack = "gemc" ]]; then
 		image_tag="gemc-$tag-$osname"
 		remote_image_name="jeffersonlab/gemc:$image_tag"
-	elif [[ $remaining_g4[(r)$tag] != "" ]]; then
+	elif [[ $what_to_pack = "geant4" ]]; then
 		image_tag="g4v$tag-$osname"
 		remote_image_name="jeffersonlab/geant4:$image_tag"
 	fi
 
+	echo " > Osrelease: $osrelease"
 	echo " > Image tag: $image_tag"
 	echo " > Remote image: $remote_image_name"
 	docker pull "$remote_image_name"
 	cp ./pack_me.sh unpack_me.sh $local_install_dir
-	docker run --platform linux/amd64 -it --rm -v $local_install_dir:$container_install_dir "$remote_image_name" $container_install_dir/pack_me.sh "$osreleases" "$what_to_pack" "$remote_image_name"
+	docker run --platform linux/amd64 -it --rm -v $local_install_dir:$container_install_dir "$remote_image_name" $container_install_dir/pack_me.sh "$osrelease" "$what_to_pack" "$remote_image_name"
 }
 
 if [[ $what_to_pack = "gemc" ]]; then
-	echo  "\n gemc docker images:\n"
-	for osrelease in  $=osreleases; do
+	echo "\n gemc docker images:\n"
+	for osrelease in $=osreleases; do
 		for tag in $=tags; do
-			do_the_deed "$osrelease" "$tag"
+			do_the_deed "$osrelease" gemc "$tag"
 		done
 	done
-else
-	echo  "\n geant4 docker images:\n"
-	for osrelease in  $=osreleases; do
-		for g4version in $=remaining_g4; do
-			do_the_deed "$osrelease" "$what_to_pack"
+elif [[ $what_to_pack = "geant4" ]]; then
+	echo "\n geant4 docker images:\n"
+	for osrelease in $=osreleases; do
+		for g4version in $=g4versions; do
+			do_the_deed "$osrelease" geant4 "$g4version"
 		done
 	done
 fi
