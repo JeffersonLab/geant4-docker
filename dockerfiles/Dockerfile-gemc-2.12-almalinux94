@@ -1,0 +1,27 @@
+FROM jeffersonlab/geant4:g4v10.7.4-fedora36 
+LABEL maintainer="Maurizio Ungaro <ungaro@jlab.org>"
+
+# run shell instead of sh
+SHELL ["/bin/bash", "-c"]
+ENV AUTOBUILD 1
+
+rpm -i https://repo.osg-htc.org/osg/24-main/osg-24-main-el9-release-latest.rpm
+ 
+RUN dnf install -y pelican pelican-osdf-compat pelican-server htgettoken
+ && dnf -y update \
+ && dnf -y check-update \
+ && dnf clean packages \
+ && dnf clean all \
+ && rm -rf /var/cache/dnf
+
+# ceInstall update  
+RUN cd /cvmfs/oasis.opensciencegrid.org/jlab/geant4/modules \
+    &&  git pull  
+
+RUN echo "module load gemc/2.12" >> /etc/profile.d/localSetup.sh
+
+RUN source /etc/profile.d/localSetup.sh \
+    && module use /cvmfs/oasis.opensciencegrid.org/jlab/geant4/modules \
+    && module load sim_system \
+    && install_gemc 2.12
+
