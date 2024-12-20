@@ -14,9 +14,9 @@ RUN dnf install -y pelican pelican-osdf-compat pelican-server htgettoken \
  && dnf clean all \
  && rm -rf /var/cache/dnf
 
-# ceInstall update  
+# ceInstall checkout 05bd952 that was working with 2.12
 RUN cd /cvmfs/oasis.opensciencegrid.org/jlab/geant4/modules \
-    &&  git pull  
+    &&  git checkout 05bd952
 
 RUN echo "module load gemc/2.12" >> /etc/profile.d/localSetup.sh
 
