@@ -7,7 +7,7 @@ ENV AUTOBUILD 1
 
 RUN rpm -i https://repo.osg-htc.org/osg/24-main/osg-24-main-el9-release-latest.rpm
  
-RUN dnf install -y pelican pelican-osdf-compat pelican-server htgettoken
+RUN dnf install -y pelican pelican-osdf-compat pelican-server htgettoken \
  && dnf -y update \
  && dnf -y check-update \
  && dnf clean packages \
