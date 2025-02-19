@@ -17,6 +17,8 @@ RUN mkdir -p /cvmfs/oasis.opensciencegrid.org/jlab \
 RUN source /etc/profile.d/localSetup.sh \
     && module use /cvmfs/oasis.opensciencegrid.org/jlab/geant4/modules \
     && module load sim_system \
+    && dnf remove -y qt5-qtbase-devel qt5-linguist \
+    && dnf install -y qt6-qtbase-devel qt6-linguist \
     && install_geant4 11.3.0 
 
 

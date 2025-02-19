@@ -17,6 +17,8 @@ RUN mkdir -p /cvmfs/oasis.opensciencegrid.org/jlab \
 RUN source /etc/profile.d/localSetup.sh \
     && module use /cvmfs/oasis.opensciencegrid.org/jlab/geant4/modules \
     && module load sim_system \
+    && apt-get remove -y qt5-default qttools5-dev-tools \
+    && apt-get install -y qt6-default qttools6-dev-tools \
     && install_geant4 11.3.0 
 
 

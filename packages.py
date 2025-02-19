@@ -45,13 +45,22 @@ def packages_install_commands(image):
 		commands += '\n'
 		commands += install_meson()
 
-	# sim image
+	# geant4 image
 	elif is_geant4_image(image):
 		commands += install_ceInstall()
 		commands += f'RUN source {localSetupFile} \\\n'
 		commands += f'    && module use {modules_path()} \\\n'
 		commands += f'    && module load sim_system \\\n'
-		commands += f'    && install_geant4 {g4_version_from_image(image)} \n\n'
+		g4version = g4_version_from_image(image)
+		# if g4version is 11.*, uninstall qt5-qtbase-devel qt5-linguist and install the qt6 versions
+		if g4version.startswith('11.'):
+			if is_fedora_line(image):
+				commands += '    && dnf remove -y qt5-qtbase-devel qt5-linguist \\\n'
+				commands += '    && dnf install -y qt6-qtbase-devel qt6-linguist \\\n'
+			elif is_ubuntu_line(image):
+				commands += '    && apt-get remove -y qt5-default qttools5-dev-tools \\\n'
+				commands += '    && apt-get install -y qt6-default qttools6-dev-tools \\\n'
+		commands += f'    && install_geant4 {g4version} \n\n'
 
 	# gemc image
 	elif is_gemc_image(image):
