@@ -17,8 +17,8 @@ RUN mkdir -p /cvmfs/oasis.opensciencegrid.org/jlab \
 RUN source /etc/profile.d/localSetup.sh \
     && module use /cvmfs/oasis.opensciencegrid.org/jlab/geant4/modules \
     && module load sim_system \
-    && apt-get remove -y qt5-default qttools5-dev-tools \
-    && apt-get install -y qt6-default qttools6-dev-tools \
+    && apt-get remove -y libqt5widgets5 libqt5opengl5-dev libqt5printsupport5 \
+    && apt-get install -y qt6-base-dev libqt6opengl6t64 libqt6openglwidgets6t64 \
     && install_geant4 11.3.0 
 
 

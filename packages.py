@@ -58,8 +58,8 @@ def packages_install_commands(image):
 				commands += '    && dnf remove -y qt5-qtbase-devel qt5-linguist \\\n'
 				commands += '    && dnf install -y qt6-qtbase-devel qt6-linguist \\\n'
 			elif is_ubuntu_line(image):
-				commands += '    && apt-get remove -y qt5-default qttools5-dev-tools \\\n'
-				commands += '    && apt-get install -y qt6-default qttools6-dev-tools \\\n'
+				commands += '    && apt-get remove -y libqt5widgets5 libqt5opengl5-dev libqt5printsupport5 \\\n'
+				commands += '    && apt-get install -y qt6-base-dev libqt6opengl6t64 libqt6openglwidgets6t64 \\\n'
 		commands += f'    && install_geant4 {g4version} \n\n'
 
 	# gemc image
