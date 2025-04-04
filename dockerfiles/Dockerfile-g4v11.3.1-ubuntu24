@@ -1,0 +1,24 @@
+FROM jeffersonlab/base:ubuntu24 
+LABEL maintainer="Maurizio Ungaro <ungaro@jlab.org>"
+
+# run shell instead of sh
+SHELL ["/bin/bash", "-c"]
+ENV AUTOBUILD 1
+
+RUN echo "module use /cvmfs/oasis.opensciencegrid.org/jlab/geant4/modules" >> /etc/profile.d/localSetup.sh 
+RUN echo "module load geant4/11.3.1" >> /etc/profile.d/localSetup.sh 
+
+
+# ceInstall installation  
+RUN mkdir -p /cvmfs/oasis.opensciencegrid.org/jlab \
+    && cd /cvmfs/oasis.opensciencegrid.org/jlab \
+    && git clone https://github.com/JeffersonLab/ceInstall geant4  
+
+RUN source /etc/profile.d/localSetup.sh \
+    && module use /cvmfs/oasis.opensciencegrid.org/jlab/geant4/modules \
+    && module load sim_system \
+    && apt-get remove -y libqt5widgets5 libqt5opengl5-dev libqt5printsupport5 \
+    && apt-get install -y qt6-base-dev libqt6opengl6t64 libqt6openglwidgets6t64 \
+    && install_geant4 11.3.1 
+
+
