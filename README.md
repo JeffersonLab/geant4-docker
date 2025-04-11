@@ -1,49 +1,61 @@
-# geant4-docker
+## TODO:
 
-Docker files for geant4 installation
+- create repos for geant4 and clas12 containers, use hub autobuild on those
+- test file with reconstruction using osg container
 
-## Base images OS:
+## Base images OSes (ostype)
 
-- [Almalinux93](https://hub.docker.com/_/almalinux)
+- [almalinux94](https://hub.docker.com/_/almalinux)
 - [Fedora36](https://hub.docker.com/_/fedora)
-- [Ubuntu](https://hub.docker.com/_/ubuntu)
+- [Ubuntu24](https://hub.docker.com/_/ubuntu)
 
-## Naming and Tags Conventions
-
-- **ostype**: fedora36, ubuntu24, almalinux9
-- **geant4_version**: examples: 10.6.2, 10.7.4, 11.3.0
-- **gemc_version**: examples: 4.4.2, 5.7, dev
-- **install_dir**: software installation directory label. 
-  It corresponds to the following paths: 
-  - **local**: /usr/local
-  - **cvmfs**: /cvmfs/oasis.opensciencegrid.org/jlab/geant4
 
 <br/>
 
-### Base containers:
+## Base JLAB containers:
 
-**jeffersonlab/base:**[cvmfs-]'ostype'
+**jeffersonlab/base:[cvmfs-]-'ostype'**
 
+All base containers have the install directory `/cvmfs/oasis.opensciencegrid.org/jlab/geant4/`.
+The 'cvmfs' based container do not have root or other packages needed to compile software 
+in order to make them leaner.
 
-### Geant4 containers:
+TODO: rename the cvmfs container to 'osg'
 
-**jeffersonlab/sim:g4v**'geant4_version'**-**'ostype'**-**'install_dir' 
-
-
-### Gemc containers: 
-
-**jeffersonlab/gemc:**'gemc_version'**-g4v**'geant4_version'**-**'ostype'**-**'install_dir'
-
-<br/>
 
 Examples:
 
 - jeffersonlab/base:fedora36
-- jeffersonlab/sim:g4v10.6.2-fedora36-local
-- jeffersonlab/sim:g4v10.7.4-ubuntu24-cvmfs
-- jeffersonlab/sim:g4v11.3.0-almalinux9-cvmfs
-- jeffersonlab/gemc:prod1-fedora36-local
-- jeffersonlab/gemc:dev-ubuntu24-cvmfs
+- jeffersonlab/base:cvmfs-fedora36
+
+
+
+### Geant4 JLAB containers:
+
+**jeffersonlab/geant4:g4v'geant4_version'-'ostype'**
+
+where geant4 version is one of the following:
+
+- 10.6.2
+- 10.7.4
+- 11.3.0
+- 11.3.1
+
+Examples:
+
+- jeffersonlab/geant4:g4v10.7.4-ubuntu24
+- jeffersonlab/geant4:g4v11.3.1-fedora36
+
+### GEMC JLAB containers: 
+
+**jeffersonlab/gemc:'gemc_version'-'ostype'**
+
+where gemc version is one of the following:
+
+- prod1 (contains 4.4.2)
+- dev (contains 5.10, 5.11 and dev)
+
+TODO: once gemc uses meson / geant4, add prod2
 
 
 ## Automated builds from docker hub
@@ -58,18 +70,24 @@ Examples:
 
 ---
 
-## Copy images to cvmfs
+# Copy Software to cvmfs
 
 ## Linux OSes:
 
-Use the pack_all.sh script to copy the images to cvmfs. 
-The option 'gemc' will only pack the clas12Tag directory as opposed 
-to all the libraries.
-
-- **pack_all.sh**
-- **pack_all.sh gemc**
+Use the pack.sh script to create a gzipped tarfile with specific software to be copied to cvmfs. 
 
 
+```
+Usage: printUsage <package>
+
+Possible packages: geant4 clas12 clas12Tag gemc noarch
+
+ - geant4: latest geant4, clhep, xercesc, qt
+ - clas12: ccdb, hipo, clas12_cmag, mlibrary, clas12Tags
+ - clas12Tag: latest clas12Tags only (not dev)
+ - gemc: latest gemc tag only (not dev)
+ - noarch: noarch directory
+ ```
 
 
 ## MacOS:
@@ -86,8 +104,7 @@ scp *.tar.gz ifarm:/work/clas12/ungaro/images
 ## Container for clas12-validation and clas12Tags actions
 
 - Currently used: `jeffersonlab/gemc:dev-fedora36` which is an autobuild based on
-`jeffersonlab/gemc:dev-g4v10.7.4-fedora36-cvmfs`
-
+`jeffersonlab/gemc:dev-g4v10.7.4-fedora36`
 
 
 ---
@@ -106,10 +123,10 @@ Then make a new tag for the new version:
 Almalinux:
 
 ```
-docker pull jeffersonlab/base:cvmfs-almalinux93  
-docker tag jeffersonlab/base:cvmfs-almalinux93   jeffersonlab/clas12software:devel
+docker pull jeffersonlab/base:cvmfs-almalinux94  
+docker tag jeffersonlab/base:cvmfs-almalinux94   jeffersonlab/clas12software:devel
 docker push jeffersonlab/clas12software:devel
-docker tag jeffersonlab/base:cvmfs-almalinux93   jeffersonlab/clas12software:production
+docker tag jeffersonlab/base:cvmfs-almalinux94   jeffersonlab/clas12software:production
 docker push jeffersonlab/clas12software:production
 ```
 
