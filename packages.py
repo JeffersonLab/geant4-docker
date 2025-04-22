@@ -66,8 +66,9 @@ def packages_install_commands(image):
 	elif is_gemc_image(image):
 		#additional_packages='maven jq perl-DBI assimp-devel tetgen-devel'
 		additional_packages='maven jq perl-DBI'
-		#if 'ubuntu' in image:
-			#additional_packages = 'maven jq perl-DBI assimp-dev libtetgen-dev'
+		if 'ubuntu' in image:
+			additional_packages = 'maven jq libdbi-perl'
+		#additional_packages = 'maven jq perl-DBI assimp-dev libtetgen-dev'
 		gemc_tags = gemc_tags_from_docker_image(image)
 		commands += update_ceInstall()
 		if 'dev' in gemc_tags:
