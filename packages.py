@@ -64,8 +64,14 @@ def packages_install_commands(image):
 
 	# gemc image
 	elif is_gemc_image(image):
+		#additional_packages='maven jq perl-DBI assimp-devel tetgen-devel'
+		additional_packages='maven jq perl-DBI'
+		#if 'ubuntu' in image:
+			#additional_packages = 'maven jq perl-DBI assimp-dev libtetgen-dev'
 		gemc_tags = gemc_tags_from_docker_image(image)
 		commands += update_ceInstall()
+		if 'dev' in gemc_tags:
+			commands += install_coatjava_dependencies(additional_packages)
 		commands += f'RUN source {localSetupFile} \\\n'
 		commands += f'    && module use {modules_path()} \\\n'
 		commands += f'    && module load sim_system \\\n'
@@ -125,6 +131,23 @@ def update_ceInstall():
 	commands += f'RUN cd {modulepath} \\\n'
 	commands += f'    &&  git pull  \n\n'
 	return commands
+
+
+# install maven, jq, perl-DBI, and install groovy from
+# https://groovy.jfrog.io/artifactory/dist-release-local/groovy-zips/
+# Version 4.0.26
+# For example: https://groovy.jfrog.io/artifactory/dist-release-local/groovy-zips/apache-groovy-binary-4.0.26.zip
+def install_coatjava_dependencies(additional_packages):
+	commands = '\n'
+	commands += '# coatjava dependencies installation using tarball\n'
+	commands += f'RUN dnf install -y {additional_packages} \\\n'
+	commands += '    && curl -L -O https://groovy.jfrog.io/artifactory/dist-release-local/groovy-zips/apache-groovy-binary-4.0.26.zip \\\n'
+	commands += '    && unzip apache-groovy-binary-4.0.26.zip \\\n'
+	commands += '    && rm apache-groovy-binary-4.0.26.zip \\\n'
+	commands += '    && mv groovy-4.0.26 /usr/local/groovy \\\n'
+	commands += '    && ln -s /usr/local/groovy/bin/groovy /usr/bin/groovy \n\n'
+	return commands
+
 
 if __name__ == "__main__":
 	main()

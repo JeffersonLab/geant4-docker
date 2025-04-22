@@ -68,7 +68,12 @@ def create_dockerfile_header(image):
 	if is_geant4_image(image):
 		header += f'RUN echo "module load geant4/{g4_version_from_image(image)}" >> {localSetupFile} \n\n'
 	if is_gemc_image(image):
-		header += f'RUN echo "module load gemc/{gemc_tags_from_docker_image(image)[0]}" >> {localSetupFile} \n\n'
+		tags = gemc_tags_from_docker_image(image)
+		if len(tags) >= 2:
+			gemc_to_load = tags[-2]
+		else:
+			gemc_to_load = tags[0]  # or None, or handle differently depending on your logic
+		header += f'RUN echo "module load gemc/{gemc_to_load}" >> {localSetupFile} \n\n'
 	header += '\n'
 
 	return header

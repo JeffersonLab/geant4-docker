@@ -5,7 +5,7 @@
 
 ## Base images OSes (ostype)
 
-- [almalinux94](https://hub.docker.com/_/almalinux)
+- [Almalinux94](https://hub.docker.com/_/almalinux)
 - [Fedora36](https://hub.docker.com/_/fedora)
 - [Ubuntu24](https://hub.docker.com/_/ubuntu)
 
@@ -14,7 +14,7 @@
 
 ## Base JLAB containers:
 
-**jeffersonlab/base:[cvmfs-]-'ostype'**
+**jeffersonlab/base:**[cvmfs-]-**'ostype'**
 
 All base containers have the install directory `/cvmfs/oasis.opensciencegrid.org/jlab/geant4/`.
 The 'cvmfs' based container do not have root or other packages needed to compile software 
@@ -57,6 +57,7 @@ where gemc version is one of the following:
 
 TODO: once gemc uses meson / geant4, add prod2
 
+---
 
 ## Automated builds from docker hub
 
@@ -67,6 +68,14 @@ TODO: once gemc uses meson / geant4, add prod2
   relative to the root of the repository. 
   Enter the path to these files in the Build context field. 
   Enter / to set the build context as the root of the source code repository.
+
+---
+
+## Manual Local Build
+```
+docker buildx build --platform linux/amd64  --no-cache --progress=plain \
+-t jeffersonlab/base:cvmfs-almalinux94 -f dockerfiles/Dockerfile-gemc-dev-almalinux94 .
+```
 
 ---
 

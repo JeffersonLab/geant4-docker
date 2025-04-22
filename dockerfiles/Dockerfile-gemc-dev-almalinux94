@@ -5,12 +5,21 @@ LABEL maintainer="Maurizio Ungaro <ungaro@jlab.org>"
 SHELL ["/bin/bash", "-c"]
 ENV AUTOBUILD 1
 
-RUN echo "module load gemc/5.10" >> /etc/profile.d/localSetup.sh 
+RUN echo "module load gemc/5.11" >> /etc/profile.d/localSetup.sh 
 
 
 # ceInstall update  
 RUN cd /cvmfs/oasis.opensciencegrid.org/jlab/geant4/modules \
     &&  git pull  
+
+
+# coatjava dependencies installation using tarball
+RUN dnf install -y maven jq perl-DBI \
+    && curl -L -O https://groovy.jfrog.io/artifactory/dist-release-local/groovy-zips/apache-groovy-binary-4.0.26.zip \
+    && unzip apache-groovy-binary-4.0.26.zip \
+    && rm apache-groovy-binary-4.0.26.zip \
+    && mv groovy-4.0.26 /usr/local/groovy \
+    && ln -s /usr/local/groovy/bin/groovy /usr/bin/groovy 
 
 RUN source /etc/profile.d/localSetup.sh \
     && module use /cvmfs/oasis.opensciencegrid.org/jlab/geant4/modules \
