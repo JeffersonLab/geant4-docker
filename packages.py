@@ -65,9 +65,9 @@ def packages_install_commands(image):
 	# gemc image
 	elif is_gemc_image(image):
 		#additional_packages='maven jq perl-DBI assimp-devel tetgen-devel'
-		additional_packages='maven jq perl-DBI perl-DBD-SQLite'
+		additional_packages='maven jq perl-DBI perl-DBD-SQLite perl-XML-LibXML'
 		if is_ubuntu_line(image):
-			additional_packages = 'maven jq libdbi-perl unzip libdbd-sqlite3-perl'
+			additional_packages = 'maven jq libdbi-perl unzip libdbd-sqlite3-perl libxml-libxml-simple-perl'
 		#additional_packages = 'maven jq perl-DBI assimp-dev libtetgen-dev'
 		gemc_tags = gemc_tags_from_docker_image(image)
 		commands += update_ceInstall()
