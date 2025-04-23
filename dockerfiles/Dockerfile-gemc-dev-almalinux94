@@ -14,7 +14,7 @@ RUN cd /cvmfs/oasis.opensciencegrid.org/jlab/geant4/modules \
 
 
 # coatjava dependencies installation using tarball
-RUN dnf install -y maven jq perl-DBI \
+RUN dnf install -y --allowerasing maven jq perl-DBI \
     && curl -L -O https://groovy.jfrog.io/artifactory/dist-release-local/groovy-zips/apache-groovy-binary-4.0.26.zip \
     && unzip apache-groovy-binary-4.0.26.zip \
     && rm apache-groovy-binary-4.0.26.zip \

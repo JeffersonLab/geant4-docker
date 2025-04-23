@@ -66,13 +66,13 @@ def packages_install_commands(image):
 	elif is_gemc_image(image):
 		#additional_packages='maven jq perl-DBI assimp-devel tetgen-devel'
 		additional_packages='maven jq perl-DBI'
-		if 'ubuntu' in image:
+		if is_ubuntu_line(image):
 			additional_packages = 'maven jq libdbi-perl'
 		#additional_packages = 'maven jq perl-DBI assimp-dev libtetgen-dev'
 		gemc_tags = gemc_tags_from_docker_image(image)
 		commands += update_ceInstall()
 		if 'dev' in gemc_tags:
-			commands += install_coatjava_dependencies(additional_packages)
+			commands += install_coatjava_dependencies(additional_packages, image)
 		commands += f'RUN source {localSetupFile} \\\n'
 		commands += f'    && module use {modules_path()} \\\n'
 		commands += f'    && module load sim_system \\\n'
@@ -138,10 +138,15 @@ def update_ceInstall():
 # https://groovy.jfrog.io/artifactory/dist-release-local/groovy-zips/
 # Version 4.0.26
 # For example: https://groovy.jfrog.io/artifactory/dist-release-local/groovy-zips/apache-groovy-binary-4.0.26.zip
-def install_coatjava_dependencies(additional_packages):
+def install_coatjava_dependencies(additional_packages, image):
 	commands = '\n'
 	commands += '# coatjava dependencies installation using tarball\n'
-	commands += f'RUN dnf install -y {additional_packages} \\\n'
+	if is_fedora_line(image):
+		commands += f'RUN dnf install -y --allowerasing {additional_packages} \\\n'
+
+	elif is_ubuntu_line(image):
+		commands += 'RUN ln -fs /usr/share/zoneinfo/America/New_York /etc/localtime \\\n'
+		commands += f'    && DEBIAN_FRONTEND=noninteractive apt-get  install -y --no-install-recommends tzdata {additional_packages} \\\n'
 	commands += '    && curl -L -O https://groovy.jfrog.io/artifactory/dist-release-local/groovy-zips/apache-groovy-binary-4.0.26.zip \\\n'
 	commands += '    && unzip apache-groovy-binary-4.0.26.zip \\\n'
 	commands += '    && rm apache-groovy-binary-4.0.26.zip \\\n'
