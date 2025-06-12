@@ -21,7 +21,7 @@ printUsage() {
 	echo "Possible packages: $possible_packages"
 	echo
 	echo " - geant4: latest geant4, clhep, xercesc, qt"
-	echo " - clas12: ccdb, hipo, clas12_cmag, mlibrary, all clas12Tags"
+	echo " - clas12: ccdb, hipo, clas12_cmag, mlibrary, clas12Tags"
 	echo " - clas12Tag: latest clas12Tags only (not dev)"
 	echo " - gemc: latest gemc tag only (not dev)"
 	echo " - noarch: noarch directory"
@@ -99,7 +99,6 @@ if [[ $1 = "-h" || $1 == "--h" || $# -lt 1 ]]; then
 	printUsage
 	exit 0
 fi
-
 
 
 # if it's geant4, extract the geant4 version from the dockerfule name, after 'g4v' and before '-'
