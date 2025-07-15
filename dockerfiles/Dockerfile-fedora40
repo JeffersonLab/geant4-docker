@@ -1,0 +1,41 @@
+FROM fedora:40 
+LABEL maintainer="Maurizio Ungaro <ungaro@jlab.org>"
+
+# run shell instead of sh
+SHELL ["/bin/bash", "-c"]
+ENV AUTOBUILD 1
+
+COPY bgMerginFilename.sh /bin/bgMerginFilename.sh
+COPY localSetupBase.sh /etc/profile.d/localSetup.sh
+
+# JLab certificate
+ADD https://pki.jlab.org/JLabCA.crt /etc/pki/ca-trust/source/anchors/JLabCA.crt
+RUN update-ca-trust 
+
+
+RUN dnf install -y --allowerasing  git make cmake gcc-c++ expat-devel mariadb-devel sqlite-devel python3-devel python3-scons ninja-build mesa-libGLU-devel libX11-devel libXpm-devel libXft-devel  libXt-devel libXmu-devel libXrender-devel  xorg-x11-server-Xvfb xrandr  bzip2 wget curl nano bash tcsh zsh hostname gedit environment-modules pv which psmisc procps mailcap net-tools rsync patch perl-CPAN glibc-langpack-en xterm x11vnc novnc fluxbox supervisor qt5-qtbase-devel qt5-linguist ninja-build root liblsan  libasan  libubsan  libtsan  tbb doxygen \
+ && dnf -y update \
+ && dnf -y check-update \
+ && dnf clean packages \
+ && dnf clean all \
+ && rm -rf /var/cache/dnf 
+
+
+# meson installation using tarball
+RUN cd /usr/local \
+    && curl -S --location-trusted --progress-bar --retry 4 --cacert /etc/pki/ca-trust/source/anchors/JLabCA.crt {'https://github.com/mesonbuild/meson/releases/download/1.8.2/meson-1.8.2.tar.gz'} -k -O  \
+    && tar -xzvf meson-1.8.2.tar.gz \
+    && rm meson-1.8.2.tar.gz \
+    && ln -s /usr/local/meson-1.8.2/meson.py /usr/bin/meson
+
+
+# Setup demo environment variables
+ENV HOME=/root LANG=en_US.UTF-8 LANGUAGE=en_US.UTF-8  LC_ALL=C.UTF-8  DISPLAY=:0.0 DISPLAY_WIDTH=1400 DISPLAY_HEIGHT=1000 RUN_XTERM=yes RUN_FLUXBOX=yes
+
+COPY fluxbox/conf.d /app/conf.d
+COPY fluxbox/supervisord.conf fluxbox/entrypoint.sh  /app/
+
+CMD ["/app/entrypoint.sh"]
+EXPOSE 8080
+
+

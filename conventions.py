@@ -5,7 +5,7 @@ import argparse
 # Functions containing naming conventions for images, dockerfiles, tags
 
 def supported_osnames():
-	return ['fedora36', 'almalinux94', 'ubuntu24']
+	return ['fedora36', 'almalinux94', 'ubuntu24', 'fedora40']
 
 
 def supported_cvmfs_osnames():
@@ -99,21 +99,31 @@ def from_image(requested_image):
 def os_base_image_from_imagename(requested_image):
 	if 'fedora36' in requested_image:
 		return 'fedora:36'
+	elif 'fedora40' in requested_image:
+		return 'fedora:40'
 	elif 'almalinux94' in requested_image:
 		return 'almalinux:9.4'
 	elif 'ubuntu24' in requested_image:
 		return 'ubuntu:24.04'
 	else:
 		# not supported
-		print(f'Error: platform {requested_image} not supported')
+		print(f'Error: platform {requested_image} base image not supported')
 		exit(1)
 
 
+import logging
+
 def base_imagename_from_sim(requested_image):
+	logger = logging.getLogger(__name__)
+
 	for osname in supported_osnames():
 		if osname in requested_image:
 			from_image = 'jeffersonlab/base:' + osname
-	return from_image
+			return from_image
+
+	logger.debug(
+		f"No matching OS found in '{requested_image}'. Supported OS names: {supported_osnames()}")
+	return None  # or raise an exception, or return a default image
 
 
 def geant4_imagename_from_gemc(requested_image):

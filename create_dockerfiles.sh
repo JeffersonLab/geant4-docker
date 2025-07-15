@@ -1,8 +1,9 @@
 #!/bin/zsh
 
-osnames=(fedora36 almalinux94 ubuntu24)
-g4_versions=(10.6.2 10.7.4 11.3.1)
-gemc_docker_tags=(prod1 dev)
+osnames=(fedora36 almalinux94 ubuntu24 fedora40)
+g4_versions=(10.6.2 10.7.4 11.3.1 11.3.2)
+gemc_docker_tags=(dev)
+#gemc_docker_tags=(prod1 dev)
 
 # base images
 echo "\n > Base images:\n"
