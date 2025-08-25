@@ -16,7 +16,7 @@ latest_geant4_version="" # latest geant4 version
 
 printUsage() {
 	echo
-	echo "Usage: $0 <package>"
+	echo "Usage: pack.sh <package>"
 	echo
 	echo "Possible packages: $possible_packages"
 	echo

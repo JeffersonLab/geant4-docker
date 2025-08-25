@@ -9,8 +9,8 @@ fedora = ''
 ubuntu = ''
 
 # c++ essentials
-fedora += ' git make cmake gcc-c++'
-ubuntu += ' git make cmake g++'
+fedora += ' git make cmake gcc-c++ gdb valgrind'
+ubuntu += ' git make cmake g++ gdb valgrind'
 
 # expat
 fedora += ' expat-devel'

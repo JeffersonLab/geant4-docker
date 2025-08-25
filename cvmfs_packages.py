@@ -26,6 +26,9 @@ ubuntu += ' gcc binutils xrootd-client lsof liburing2 '
 fedora += ' bzip2 wget curl nano bash tcsh zsh hostname gedit environment-modules rsync patch which '
 ubuntu += ' bzip2 wget curl nano bash tcsh zsh hostname gedit environment-modules rsync patch '
 
+# pelican: only for almalinux
+pelican_for_alma = ' pelican pelican-osdf-compat pelican-server htgettoken '
+
 def main():
 	desc_str = 'Return list of packages for the requested platform'
 	example = 'Example: -p fedora36'
@@ -44,6 +47,7 @@ def packages_to_be_installed(platform):
 	elif 'almalinux' in platform:
 		# remove fluxbox supervisor
 		almalinux = fedora.replace('fluxbox supervisor', '')
+		almalinux += pelican_for_alma
 		return almalinux
 		# return fedora
 	elif 'ubuntu' in platform:

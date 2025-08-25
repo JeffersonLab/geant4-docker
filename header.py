@@ -63,6 +63,8 @@ def create_dockerfile_header(image):
 	header += 'ENV AUTOBUILD 1\n\n'
 	header += copy_files(image)
 	header += load_jlab_certificate(image)
+	if is_cvmfs_image(image):
+		header += install_pelican(image)
 	if is_cvmfs_image(image) or is_geant4_image(image):
 		header += f'RUN echo "module use { modules_path()}" >> {localSetupFile} \n'
 	if is_geant4_image(image):
@@ -77,6 +79,15 @@ def create_dockerfile_header(image):
 	header += '\n'
 
 	return header
+
+# install pelican
+def install_pelican(image):
+	commands = ''
+	if is_alma_line(image):
+		commands = '\n'
+		commands += '# pelican RPM repository\n'
+		commands += f'RUN rpm -i https://repo.osg-htc.org/osg/24-main/osg-24-main-el9-release-latest.rpm \n\n'
+	return commands
 
 
 if __name__ == "__main__":

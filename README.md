@@ -40,11 +40,13 @@ where geant4 version is one of the following:
 - 10.7.4
 - 11.3.0
 - 11.3.1
+- 11.3.2
 
 Examples:
 
 - jeffersonlab/geant4:g4v10.7.4-ubuntu24
-- jeffersonlab/geant4:g4v11.3.1-fedora36
+- jeffersonlab/geant4:g4v11.3.2-fedora40
+- jeffersonlab/geant4:g4v11.3.2-almalinux94
 
 ### GEMC JLAB containers: 
 
@@ -87,7 +89,7 @@ Use the pack.sh script to create a gzipped tarfile with specific software to be 
 
 
 ```
-Usage: printUsage <package>
+Usage: pack.sh <package>
 
 Possible packages: geant4 clas12 clas12Tag gemc noarch
 
