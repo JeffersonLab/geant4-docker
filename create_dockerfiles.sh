@@ -40,4 +40,6 @@ for osname in $osnames; do
 	done
 done
 
+cp -r /opt/projects/gemc/src/dockerfiles/* dockerfiles
+
 echo "\n\n"
