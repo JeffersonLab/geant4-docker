@@ -3,7 +3,7 @@ LABEL maintainer="Maurizio Ungaro <ungaro@jlab.org>"
 
 # run shell instead of sh
 SHELL ["/bin/bash", "-c"]
-ENV AUTOBUILD 1
+ENV AUTOBUILD=1
 
 RUN echo "module use /cvmfs/oasis.opensciencegrid.org/jlab/geant4/modules" >> /etc/profile.d/localSetup.sh 
 RUN echo "module load geant4/11.3.1" >> /etc/profile.d/localSetup.sh 

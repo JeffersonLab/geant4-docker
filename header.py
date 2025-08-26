@@ -60,7 +60,7 @@ def create_dockerfile_header(image):
 	header += 'LABEL maintainer="Maurizio Ungaro <ungaro@jlab.org>"\n\n'
 	header += '# run shell instead of sh\n'
 	header += 'SHELL ["/bin/bash", "-c"]\n'
-	header += 'ENV AUTOBUILD 1\n\n'
+	header += 'ENV AUTOBUILD=1\n\n'
 	header += copy_files(image)
 	header += load_jlab_certificate(image)
 	if is_cvmfs_image(image):
