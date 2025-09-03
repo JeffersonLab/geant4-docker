@@ -108,25 +108,19 @@ jobs:
           IMAGE: ${{ needs.discover.outputs.image }}
           TAG: ${{ matrix.geant4_tag }}-${{ matrix.docker_from }}
           PUSHED: ${{ github.event_name != 'pull_request' }}
+          IS_ARCH: ${{ startsWith(matrix.docker_from, 'archlinux:') }}
         run: |
           PLATFORM_HINT="--platform=linux/amd64"
           {
             echo "## Docker Image"
+            echo ""
+            echo "**Tag:** \`${IMAGE}:${TAG}\`"
+      
             if [ "$PUSHED" = "true" ]; then
-              echo ""
-              echo "**Tag:** \`$IMAGE:$TAG\`"
               echo ""
               echo "### Pull"
               echo '```bash'
-              echo "docker pull $IMAGE:$TAG"
-              echo '```'
-              echo "### Run"
-              echo '```bash'
-              echo "docker run --rm -it $IMAGE:$TAG bash"
-              echo '```'
-              echo "### Run (Apple Silicon Mac)"
-              echo '```bash'
-              echo "docker run --rm -it $PLATFORM_HINT $IMAGE:$TAG bash"
+              echo "docker pull ${IMAGE}:${TAG}"
               echo '```'
             else
               echo ""
@@ -135,4 +129,50 @@ jobs:
               printf '%s\n' "${{ steps.meta.outputs.tags }}"
               echo '```'
             fi
-          } >> "$GITHUB_STEP_SUMMARY"
+      
+            echo ""
+            echo "### Run (interactive shell)"
+            echo '```bash'
+            if [ "$IS_ARCH" = "true" ]; then
+              echo "docker run --rm -it ${PLATFORM_HINT} ${IMAGE}:${TAG} bash"
+            else
+              echo "docker run --rm -it ${IMAGE}:${TAG} bash"
+            fi
+            echo '```'
+      
+            echo ""
+            echo "### Run with browser (noVNC)"
+            echo "This container exposes a VNC-over-WebSocket UI on port **6080**. After starting, open **http://localhost:6080** in your browser."
+            echo ""
+            echo "**Default geometry:** \`1280x800\` (override with \`-e GEOMETRY=WIDTHxHEIGHT\`)."
+            echo ""
+            echo '**Start (Linux/Windows, same host arch):**'
+            echo '```bash'
+            if [ "$IS_ARCH" = "true" ]; then
+              echo "docker run --rm -p 6080:6080 ${PLATFORM_HINT} ${IMAGE}:${TAG}"
+            else
+              echo "docker run --rm -p 6080:6080 ${IMAGE}:${TAG}"
+            fi
+            echo '```'
+      
+            echo ""
+            echo '**Start with custom resolution:**'
+            echo '```bash'
+            if [ "$IS_ARCH" = "true" ]; then
+              echo "docker run --rm -p 6080:6080 -e GEOMETRY=1600x900 ${PLATFORM_HINT} ${IMAGE}:${TAG}"
+            else
+              echo "docker run --rm -p 6080:6080 -e GEOMETRY=1600x900 ${IMAGE}:${TAG}"
+            fi
+            echo '```'
+      
+            echo ""
+            echo '**Start on Apple Silicon (Mac, Arch image is amd64-only):**'
+            echo '```bash'
+            echo "docker run --rm -p 6080:6080 ${PLATFORM_HINT} ${IMAGE}:${TAG}"
+            echo '```'
+      
+            echo ""
+            echo "### Notes by distro"
+            echo "- **Ubuntu/Debian/Fedora/AlmaLinux**: container launches **Xvfb + x11vnc + noVNC**; browse to http://localhost:6080."
+            echo "- **Arch Linux**: container launches **Xvfb + x0vncserver (TigerVNC) + noVNC**; image is amd64-only → use \`${PLATFORM_HINT}\` on arm64 hosts."
+          } >> \"$GITHUB_STEP_SUMMARY\"
