@@ -1,0 +1,131 @@
+# Build & Publish GitHub Container Registry (GHCR) Images
+name: Build Geant4 Images
+
+on:
+  push:
+    branches: [ main ]   # publish on main updates
+    tags: [ 'v*' ]       # also publish on version tags
+  pull_request:          # PRs: build only (no push)
+
+concurrency:
+  group: ghcr-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  discover:
+    name: Discover Dockerfiles
+    runs-on: ubuntu-latest
+    outputs:
+      matrix: ${{ steps.scan.outputs.matrix }}
+      image: ${{ steps.scan.outputs.image }}
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      # ci/distros_tags.sh must echo a JSON matrix to $GITHUB_OUTPUT:
+      #   echo "matrix=<JSON>" >> $GITHUB_OUTPUT
+      # and the base image name (no tag) like "ghcr.io/<owner>/gemc":
+      #   echo "image=ghcr.io/<owner>/gemc" >> $GITHUB_OUTPUT
+      - id: scan
+        name: Build matrix
+        run: |
+          echo "matrix=$(ci/distros_tags.sh)" >> "$GITHUB_OUTPUT"
+          echo "image=ghcr.io/${{ github.repository_owner }}/gemc" >> "$GITHUB_OUTPUT"
+
+  build:
+    name: Build ${{ matrix.geant4_tag }} on ${{ matrix.docker_from }}
+    needs: discover
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      packages: write
+    strategy:
+      fail-fast: false
+      matrix: ${{ fromJSON(needs.discover.outputs.matrix) }}
+    env:
+      PLATS: linux/amd64,linux/arm64
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Enable QEMU
+        uses: docker/setup-qemu-action@v3
+
+      - name: Set up Buildx
+        uses: docker/setup-buildx-action@v3
+
+      - name: Log in to GHCR
+        uses: docker/login-action@v3
+        with:
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+
+      - id: meta
+        name: Generate tags & labels
+        uses: docker/metadata-action@v5
+        with:
+          images: ${{ needs.discover.outputs.image }}
+          tags: |
+            # Single canonical tag: geant4-<tag>-<base>
+            type=raw,value=${{ matrix.geant4_tag }}-${{ matrix.docker_from }}
+          labels: |
+            org.opencontainers.image.source=${{ github.repository }}
+            org.opencontainers.image.description=Geant4 image (${{ matrix.geant4_tag }} on ${{ matrix.docker_from }})
+
+      # Generate a Dockerfile using your python script, passing the FULL base image
+      - name: Generate Dockerfile
+        run: |
+          python3 ci/g4pkglist.py -p "${{ matrix.docker_from }}" --install > Dockerfile.generated
+          echo "Generated Dockerfile:"
+          sed -n '1,60p' Dockerfile.generated
+
+      # Multi-arch when pushing; single-arch and load locally on PRs
+      - name: Build and Push (release/merge)
+        if: ${{ github.event_name != 'pull_request' }}
+        uses: docker/build-push-action@v5
+        with:
+          context: .
+          file: ./Dockerfile.generated
+          platforms: ${{ env.PLATS }}
+          push: true
+          tags: ${{ steps.meta.outputs.tags }}
+          labels: ${{ steps.meta.outputs.labels }}
+          cache-from: type=registry,ref=${{ needs.discover.outputs.image }}:cache
+          cache-to: type=registry,ref=${{ needs.discover.outputs.image }}:cache,mode=max
+
+
+      - name: Summarize image reference
+        if: ${{ always() }}
+        env:
+          IMAGE: ${{ needs.discover.outputs.image }}
+          TAG: ${{ matrix.geant4_tag }}-${{ matrix.docker_from }}
+          PUSHED: ${{ github.event_name != 'pull_request' }}
+        run: |
+          PLATFORM_HINT="--platform=linux/amd64"
+          {
+            echo "## Docker Image"
+            if [ "$PUSHED" = "true" ]; then
+              echo ""
+              echo "**Tag:** \`$IMAGE:$TAG\`"
+              echo ""
+              echo "### Pull"
+              echo '```bash'
+              echo "docker pull $IMAGE:$TAG"
+              echo '```'
+              echo "### Run"
+              echo '```bash'
+              echo "docker run --rm -it $IMAGE:$TAG bash"
+              echo '```'
+              echo "### Run (Apple Silicon Mac)"
+              echo '```bash'
+              echo "docker run --rm -it $PLATFORM_HINT $IMAGE:$TAG bash"
+              echo '```'
+            else
+              echo ""
+              echo "_PR build (image not pushed). Loaded locally on the runner with tags:_"
+              echo '```'
+              printf '%s\n' "${{ steps.meta.outputs.tags }}"
+              echo '```'
+            fi
+          } >> "$GITHUB_STEP_SUMMARY"
