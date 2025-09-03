@@ -103,15 +103,6 @@ def unique_preserve_order(items):
 	return out
 
 
-def debian_adjustments(pkgs: list[str]) -> list[str]:
-	rep = {
-		"libqt6opengl6t64":        "libqt6opengl6",
-		"libqt6openglwidgets6t64": "libqt6openglwidgets6",
-		"libmysqlclient-dev":      "libmariadb-dev"
-	}
-	return [rep.get(p, p) for p in pkgs]
-
-
 cleanup_string_by_family = {
 	"fedora":    (
 		" \\\n && dnf -y update"
@@ -209,9 +200,9 @@ def packages_to_be_installed(distro: str) -> str:
 
 def install_root_tarball(base: str, local_setup_file: str) -> str:
 	root_version = "6.36.04"
-	if base == "ubuntu":
-		os_name = "ubuntu24.04-x86_64-gcc13.3"
-	elif base == "debian":
+	# ubuntu
+	os_name = "ubuntu24.04-x86_64-gcc13.3"
+	if base == "debian":
 		os_name = "debian12-x86_64-gcc12.2"  # adjust to an actual ROOT build name if available
 	root_file = f'root_v{root_version}.Linux-{os_name}.tar.gz'
 	root_remote_file = f'https://root.cern/download/{root_file}'
@@ -290,6 +281,7 @@ def packages_install_commands(image: str, base: str) -> str:
 				"    && dnf config-manager --set-enabled crb \\\n"
 				"    && dnf install -y almalinux-release-synergy \n\n"
 			)
+		commands += "# Install Packages\n"
 		commands += f"RUN dnf install -y --allowerasing {packages}{cleanup}"
 
 	elif family == "ubuntu":
@@ -297,6 +289,7 @@ def packages_install_commands(image: str, base: str) -> str:
 		commands += "# Install CA tools\n"
 		commands += "RUN apt-get install -y ca-certificates\n"
 		commands += "RUN update-ca-certificates\n\n"
+		commands += "# Install Packages\n"
 		commands += (
 				"RUN ln -fs /usr/share/zoneinfo/America/New_York /etc/localtime \\\n"
 				"    && DEBIAN_FRONTEND=noninteractive apt-get install -y --no-install-recommends tzdata "
@@ -305,13 +298,14 @@ def packages_install_commands(image: str, base: str) -> str:
 		commands += install_root_tarball(image, local_setup_file)
 
 	elif family == "archlinux":
-		commands += f"RUN pacman -Sy --noconfirm archlinux-keyring\n"
+		commands += f"RUN pacman -Sy --noconfirm archlinux-keyring\n\n"
+		commands += "# Install Packages\n"
 		commands += f"RUN pacman -Syu --noconfirm --needed {packages}{cleanup}"
 		# Install noVNC from upstream for Arch
 		commands += install_novnc_for_arch()
 
 	commands += install_meson()
-	commands += novnc_launch_commands(novnc_launch_commands)
+	commands += novnc_launch_commands(image)
 	return commands
 
 
