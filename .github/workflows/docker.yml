@@ -24,13 +24,11 @@ jobs:
 
       # ci/distros_tags.sh must echo a JSON matrix to $GITHUB_OUTPUT:
       #   echo "matrix=<JSON>" >> $GITHUB_OUTPUT
-      # and the base image name (no tag) like "ghcr.io/<owner>/gemc":
-      #   echo "image=ghcr.io/<owner>/gemc" >> $GITHUB_OUTPUT
+      # and the base image name (no tag) like "ghcr.io/<owner>/geant4":
+      #   echo "image=ghcr.io/<owner>/geant4" >> $GITHUB_OUTPUT
       - id: scan
         name: Build matrix
-        run: |
-          echo "matrix=$(ci/distros_tags.sh)" >> "$GITHUB_OUTPUT"
-          echo "image=ghcr.io/${{ github.repository_owner }}/gemc" >> "$GITHUB_OUTPUT"
+        run: ci/distros_tags.sh
 
   build:
     name: Build ${{ matrix.geant4_tag }} on ${{ matrix.docker_from }}

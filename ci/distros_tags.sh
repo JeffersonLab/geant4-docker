@@ -4,38 +4,17 @@
 # -o pipefail — Prevent errors in a pipeline from being masked
 set -euo pipefail
 
-get_ubuntu_lts() {
-  echo "24.04"
-}
+get_ubuntu_lts()      { echo "24.04"; }
+get_fedora_latest()   { echo "40"; }
+get_arch_latest()     { echo "latest"; }
+get_almalinux_latest(){ echo "9.4"; }
+get_debian_latest()   { echo "13"; }
+get_rhel_latest()     { echo "9.4"; }
+get_geant4_tag()      { echo "11.3.2"; }
 
-get_fedora_latest() {
-  echo "40"
-}
-
-get_arch_latest() {
-  echo "latest"
-}
-
-get_almalinux_latest() {
-  echo "9.4"
-}
-
-get_debian_latest() {
-  echo "13"
-}
-
-get_rhel_latest() {
-  echo "9.4"
-}
-
-get_geant4_tag() {
-  echo "11.3.2"
-}
-
-# --- Build JSON GitHub matrix ---
 build_matrix() {
   local geant4_tag
-  geant4_tag=$(get_geant4_tag)
+  geant4_tag="$(get_geant4_tag)"
 
   cat <<EOF
 {
@@ -75,5 +54,26 @@ build_matrix() {
 EOF
 }
 
-# --- Execute ---
-build_matrix
+main() {
+  # Compute image namespace (works on Actions; falls back locally)
+  local owner image
+  owner="${GITHUB_REPOSITORY_OWNER:-JeffersonLab}"
+  image="ghcr.io/${owner}/geant4"
+
+  # If GITHUB_OUTPUT is set (GitHub Actions), write multi-line outputs there.
+  if [[ -n "${GITHUB_OUTPUT:-}" ]]; then
+    # Use a unique delimiter to avoid accidental collisions
+    local DELIM="MATRIX_$(date +%s%N)"
+    {
+      echo "matrix<<${DELIM}"
+      build_matrix
+      echo "${DELIM}"
+      echo "image=${image}"
+    } >> "$GITHUB_OUTPUT"
+  else
+    # Local run: just print the JSON
+    build_matrix
+  fi
+}
+
+main "$@"
