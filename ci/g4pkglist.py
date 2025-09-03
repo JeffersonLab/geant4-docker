@@ -137,9 +137,9 @@ cleanup_string_by_family = {
 # Helpers
 
 def novnc_launch_commands(distro: str) -> str:
-    if distro.lower().strip() == "archlinux":
-        # Use Xvfb + tigervnc's x0vncserver + our /opt/novnc install
-        return """
+	if distro.lower().strip() == "archlinux":
+		# Use Xvfb + tigervnc's x0vncserver + our /opt/novnc install
+		return """
 # Setup environment and launch noVNC + x0vncserver + Xvfb (Arch)
 ENV DISPLAY=:1
 ENV GEOMETRY=1280x800
@@ -149,9 +149,9 @@ Xvfb :1 -screen 0 ${GEOMETRY}x24 & \\
 x0vncserver -display :1 -rfbport 5900 -SecurityTypes None -NeverShared=1 -AlwaysShared=0 -verbose=0 -localhost & \\
 novnc_proxy --vnc localhost:5900 --listen 6080"]
 """
-    else:
-        # Other distros keep x11vnc and packaged /usr/share/novnc
-        return """
+	else:
+		# Other distros keep x11vnc and packaged /usr/share/novnc
+		return """
 # Setup environment and launch noVNC + x11vnc + Xvfb
 ENV DISPLAY=:1
 ENV GEOMETRY=1280x800
@@ -161,7 +161,6 @@ Xvfb :1 -screen 0 ${GEOMETRY}x24 & \\
 x11vnc -display :1 -nopw -forever -bg -quiet && \\
 /usr/share/novnc/utils/novnc_proxy --vnc localhost:5900 --listen 6080"]
 """
-
 
 
 def local_setup_filename():
@@ -242,18 +241,19 @@ def install_meson() -> str:
 	commands += f'    && ln -s {meson_install_dir}/meson-{meson_version}/meson.py /usr/bin/meson\n'
 	return commands
 
+
 def install_novnc_for_arch() -> str:
-    novnc_ver = "v1.6.0"  # pick a known-good tag
-    url = f"https://github.com/novnc/noVNC/archive/refs/tags/{novnc_ver}.tar.gz"
-    return (
-        "\n# Install noVNC from upstream (Arch fallback)\n"
-        "RUN mkdir -p /opt && cd /opt \\\n"
-        f"    && {curl_command(url)} \\\n"
-        f"    && tar -xzf {novnc_ver}.tar.gz \\\n"
-        f"    && rm {novnc_ver}.tar.gz \\\n"
-        f"    && mv noVNC-{novnc_ver.lstrip('v')} /opt/novnc \\\n"
-        "    && ln -sf /opt/novnc/utils/novnc_proxy /usr/local/bin/novnc_proxy\n"
-    )
+	novnc_ver = "v1.6.0"  # pick a known-good tag
+	url = f"https://github.com/novnc/noVNC/archive/refs/tags/{novnc_ver}.tar.gz"
+	return (
+		"\n# Install noVNC from upstream (Arch fallback)\n"
+		"RUN mkdir -p /opt && cd /opt \\\n"
+		f"    && {curl_command(url)} \\\n"
+		f"    && tar -xzf {novnc_ver}.tar.gz \\\n"
+		f"    && rm {novnc_ver}.tar.gz \\\n"
+		f"    && mv noVNC-{novnc_ver.lstrip('v')} /opt/novnc \\\n"
+		"    && ln -sf /opt/novnc/utils/novnc_proxy /usr/local/bin/novnc_proxy\n"
+	)
 
 
 def jlab_certificate() -> str:
@@ -311,7 +311,7 @@ def packages_install_commands(image: str, base: str) -> str:
 		commands += install_novnc_for_arch()
 
 	commands += install_meson()
-	commands += novnc_launch_commands()
+	commands += novnc_launch_commands(novnc_launch_commands)
 	return commands
 
 
