@@ -40,8 +40,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix: ${{ fromJSON(needs.discover.outputs.matrix) }}
-    env:
-      PLATS: linux/amd64,linux/arm64
+
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
@@ -78,6 +77,16 @@ jobs:
           echo "Generated Dockerfile:"
           sed -n '1,60p' Dockerfile.generated
 
+      - name: Choose platforms for this item
+        id: plats
+        run: |
+          PLATS="linux/amd64,linux/arm64"
+          case "${{ matrix.docker_from }}" in
+            archlinux:*) PLATS="linux/amd64" ;;  # Arch has no arm64 base
+          esac
+          echo "plats=$PLATS" >> "$GITHUB_OUTPUT"
+
+
       # Multi-arch when pushing; single-arch and load locally on PRs
       - name: Build and Push (release/merge)
         if: ${{ github.event_name != 'pull_request' }}
@@ -85,7 +94,7 @@ jobs:
         with:
           context: .
           file: ./Dockerfile.generated
-          platforms: ${{ env.PLATS }}
+          platforms: ${{ steps.plats.outputs.plats }}
           push: true
           tags: ${{ steps.meta.outputs.tags }}
           labels: ${{ steps.meta.outputs.labels }}
