@@ -5,7 +5,7 @@ get_ubuntu_lts()       { echo "24.04"; }
 get_fedora_latest()    { echo "40"; }
 get_arch_latest()      { echo "latest"; }
 get_almalinux_latest() { echo "9.4"; }
-get_debian_latest()    { echo "13"; }
+get_debian_latest()    { echo "12"; }
 get_rhel_latest()      { echo "9.4"; }
 get_geant4_tag()       { echo "11.3.2"; }
 

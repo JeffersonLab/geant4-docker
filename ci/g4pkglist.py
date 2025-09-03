@@ -79,9 +79,38 @@ pkg_sections = {
     },
 }
 
-# ------------------------------------------------------------------------------
-# Cleanup strings per base distro family
-cleanup_string_by_distro = {
+
+def base_name(name: str) -> str:
+    """Normalize a distro string like 'ubuntu' or 'debian' (you said you pass plain distro)."""
+    return name.lower().strip()
+
+def map_family(platform: str) -> str:
+    p = base_name(platform)
+    if p in ("almalinux", "rhel", "centos", "rockylinux"):
+        return "fedora"
+    if p == "debian":
+        return "ubuntu"
+    return p
+
+def unique_preserve_order(items):
+    seen = set()
+    out = []
+    for it in items:
+        if it not in seen:
+            seen.add(it)
+            out.append(it)
+    return out
+
+def debian_adjustments(pkgs: list[str]) -> list[str]:
+    rep = {
+        "libqt6opengl6t64": "libqt6opengl6",
+        "libqt6openglwidgets6t64": "libqt6openglwidgets6",
+    }
+    return [rep.get(p, p) for p in pkgs]
+
+
+
+cleanup_string_by_family = {
     "fedora": (
         " \\\n && dnf -y update"
         " \\\n && dnf -y check-update"
@@ -116,12 +145,6 @@ x11vnc -display :1 -nopw -forever -bg -quiet && \\
 /usr/share/novnc/utils/novnc_proxy --vnc localhost:5900 --listen 6080"]
 """
 
-def distro_name_from_image(image: str) -> str:
-    image = image.lower()
-    for d in ["fedora", "almalinux", "rhel", "ubuntu", "debian", "arch"]:
-        if d in image:
-            return d
-    return "unknown"
 
 def local_setup_filename():
     return '/etc/profile.d/localSetup.sh'
@@ -135,26 +158,44 @@ SHELL ["/bin/bash", "-c"]
 ENV AUTOBUILD=1
 """
 
-def _map_family(platform: str) -> str:
-    p = platform.lower()
-    if "almalinux" in p or "rhel" in p or "centos" in p:  # treat RHEL family as fedora pkgs
-        return "fedora"
-    if "debian" in p:                                     # treat Debian like Ubuntu pkgs
-        return "ubuntu"
-    return p
 
-def packages_to_be_installed(platform: str) -> str:
-    plat = _map_family(platform)
+def debian_adjustments(pkgs: list[str]) -> list[str]:
+    # replace Ubuntu’s t64 Qt libs with Debian names
+    rep = {
+        "libqt6opengl6t64": "libqt6opengl6",
+        "libqt6openglwidgets6t64": "libqt6openglwidgets6",
+    }
+    out = []
+    for p in pkgs:
+        out.append(rep.get(p, p))
+    return out
+
+
+def packages_to_be_installed(distro: str) -> str:
+    base = base_name(distro)        # e.g., 'ubuntu', 'debian', 'fedora'
+    family = map_family(base)       # e.g., 'ubuntu' (for debian), 'fedora', 'arch'
+
     pkgs = []
     for section in pkg_sections.values():
-        pkgs.extend(section.get(plat, []))
-    # remove duplicates, keep stable output
-    return ' '.join(sorted(set(pkgs)))
+        pkgs.extend(section.get(family, []))
 
-def install_root_from_ubuntu_tarball(local_setup_file: str) -> str:
-    root_version = '6.32.02'
-    ubuntu_os_name = 'ubuntu24.04-x86_64-gcc13.2'
-    root_file = f'root_v{root_version}.Linux-{ubuntu_os_name}.tar.gz'
+    # Debian needs Qt6 name tweaks (only when the actual base is debian)
+    if base == "debian":
+        pkgs = debian_adjustments(pkgs)
+
+    # De-dupe but KEEP section order
+    pkgs = unique_preserve_order(pkgs)
+    return ' '.join(pkgs)
+
+
+
+def install_root_tarball(base: str, local_setup_file: str) -> str:
+    root_version = "6.36.04"
+    if base == "ubuntu":
+        os_name = "ubuntu24.04-x86_64-gcc13.3"
+    elif base == "debian":
+        os_name = "debian12-x86_64-gcc12.2"  # adjust to an actual ROOT build name if available
+    root_file = f'root_v{root_version}.Linux-{os_name}.tar.gz'
     root_remote_file = f'https://root.cern/download/{root_file}'
     root_install_dir = '/usr/local'
     commands = '\n\n'
@@ -194,10 +235,9 @@ def curl_command(url: str) -> str:
     return f"bash -lc 'CA=\"{ca}\"; EXTRA=\"\"; [ -f \"$CA\" ] && EXTRA=\"--cacert $CA\"; curl -S --location-trusted --progress-bar --retry 4 $EXTRA -k -O {url}'"
 
 def packages_install_commands(image: str) -> str:
-    distro = distro_name_from_image(image)
-    family = _map_family(distro)
+    family = map_family(image)
     packages = packages_to_be_installed(image)
-    cleanup = cleanup_string_by_distro.get(family, "")
+    cleanup = cleanup_string_by_family.get(family, "")
     local_setup_file = local_setup_filename()
     commands = ""
     commands += docker_header(image)
@@ -225,7 +265,7 @@ def packages_install_commands(image: str) -> str:
             "    && DEBIAN_FRONTEND=noninteractive apt-get install -y --no-install-recommends tzdata "
             + packages + cleanup
         )
-        commands += install_root_from_ubuntu_tarball(local_setup_file)
+        commands += install_root_tarball(image, local_setup_file)
 
     elif family == "arch":
         commands += f"RUN pacman -Syu --noconfirm {packages}{cleanup}"

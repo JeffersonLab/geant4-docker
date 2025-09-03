@@ -81,7 +81,7 @@ jobs:
         id: plats
         run: |
           PLATS="linux/amd64,linux/arm64"
-          case "${{ matrix.docker_from }}" in
+          case "${{ matrix.distro }}" in
             archlinux:*) PLATS="linux/amd64" ;;  # Arch has no arm64 base
           esac
           echo "plats=$PLATS" >> "$GITHUB_OUTPUT"
