@@ -168,6 +168,9 @@ def packages_install_commands(image: str) -> str:
 			)
 		commands += f"RUN dnf install -y --allowerasing {packages}{cleanup}"
 	elif distro == "ubuntu":
+		commands += "RUN apt update\n\n"
+		commands += "# Install ca-certificates tools\n"
+		commands += "RUN apt-get install -y ca-certificates\n"
 		commands += "RUN update-ca-certificates\n\n"
 		commands += (
 				"RUN ln -fs /usr/share/zoneinfo/America/New_York /etc/localtime \\\n"
@@ -195,7 +198,7 @@ def install_root_from_ubuntu_tarball(local_setup_file):
 	commands += '# root installation using tarball\n'
 	commands += f'RUN cd {root_install_dir} \\\n'
 	commands += f'    && {curl_command({root_remote_file})}  \\\n'
-	commands += f'    && tar -xzvf {root_file} \\\n'
+	commands += f'    && tar -xzf {root_file} \\\n'
 	commands += f'    && rm {root_file} \\\n'
 	commands += f'    && echo "cd {root_install_dir}/root/bin ; source thisroot.sh ; cd -" >> {local_setup_file}\n'
 	return commands
@@ -211,7 +214,7 @@ def install_meson():
 	commands += '# meson installation using tarball\n'
 	commands += f'RUN cd {meson_install_dir} \\\n'
 	commands += f'    && {curl_command({meson_remote_file})}  \\\n'
-	commands += f'    && tar -xzvf {meson_file} \\\n'
+	commands += f'    && tar -xzf {meson_file} \\\n'
 	commands += f'    && rm {meson_file} \\\n'
 	commands += f'    && ln -s {meson_install_dir}/meson-{meson_version}/meson.py /usr/bin/meson\n'
 	return commands
