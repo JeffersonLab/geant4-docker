@@ -20,7 +20,6 @@ pkg_sections = {
 	"sql":            {
 		"fedora":    ["mariadb-devel", "sqlite-devel"],
 		"ubuntu":    ["libmysqlclient-dev", "libsqlite3-dev"],
-		# On Arch, dev headers are included in the main pkgs; no -devel splits
 		"archlinux": ["mariadb", "mariadb-libs", "sqlite"],
 	},
 	"python_ninja":   {
@@ -34,23 +33,22 @@ pkg_sections = {
 		"archlinux": ["mesa", "glu", "libx11", "libxpm", "libxft"],
 	},
 	"x11_2":          {
-		"fedora":    ["libXt-devel", "libXmu-devel", "libXrender-devel",
-		              "xorg-x11-server-Xvfb", "xrandr"],
-		# Ubuntu/Debian: xrandr is in x11-xserver-utils (not a pkg called 'xrandr')
-		"ubuntu":    ["libxt-dev", "libxmu-dev", "libxrender-dev",
-		              "xvfb", "x11-xserver-utils"],
-		# Arch: xrandr is xorg-xrandr; xvfb via xorg-server-xvfb
-		"archlinux": ["libxt", "libxmu", "libxrender",
-		              "xorg-server-xvfb", "xorg-xrandr"],
+		"fedora":    ["libXt-devel", "libXmu-devel", "libXrender-devel", "xorg-x11-server-Xvfb",
+		              "xrandr"],
+		"ubuntu":    ["libxt-dev", "libxmu-dev", "libxrender-dev", "xvfb",
+		              "x11-xserver-utils"],
+		"archlinux": ["libxt", "libxmu", "libxrender", "xorg-server-xvfb",
+		              "xorg-xrandr"],
+
 	},
 	"utilities_1":    {
 		"fedora":    ["bzip2", "wget", "curl", "nano", "bash", "tcsh", "zsh",
 		              "hostname", "gedit", "environment-modules", "pv", "which"],
-		# Ubuntu/Debian: 'which' is 'which' (not gnu-which)
 		"ubuntu":    ["bzip2", "wget", "curl", "nano", "bash", "tcsh", "zsh",
 		              "hostname", "gedit", "environment-modules", "pv", "which", "ca-certificates"],
 		"archlinux": ["bzip2", "wget", "curl", "nano", "bash", "tcsh", "zsh",
-		              "hostname", "gedit", "environment-modules", "pv", "which"],
+		              "inetutils", "gedit", "environment-modules", "pv", "which"],
+
 	},
 	"utilities_2":    {
 		"fedora":    ["psmisc", "procps", "mailcap", "net-tools", "rsync", "patch"],
@@ -65,7 +63,7 @@ pkg_sections = {
 	"qt6":            {
 		"fedora":    ["qt6-qtbase-devel"],
 		"ubuntu":    ["qt6-base-dev", "libqt6opengl6t64", "libqt6openglwidgets6t64"],
-		"archlinux": ["qt6-base", "qt6-base-devel"],
+		"archlinux": ["qt6-base"],
 	},
 	"root":           {
 		"fedora":    ["root"],
@@ -252,6 +250,7 @@ def packages_install_commands(image: str, base: str) -> str:
 	commands += docker_header(base)
 
 	is_alma = "almalinux" in image.lower()
+	is_arch = "archlinux" in image.lower()
 
 	if family == "fedora":
 		commands += "RUN update-ca-trust\n\n"
@@ -277,6 +276,7 @@ def packages_install_commands(image: str, base: str) -> str:
 		commands += install_root_tarball(image, local_setup_file)
 
 	elif family == "archlinux":
+		commands += f"RUN pacman -Sy --noconfirm archlinux-keyring\n"
 		commands += f"RUN pacman -Syu --noconfirm {packages}{cleanup}"
 
 	commands += install_meson()
