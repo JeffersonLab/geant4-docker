@@ -73,7 +73,7 @@ jobs:
       # Generate a Dockerfile using your python script, passing the FULL base image
       - name: Generate Dockerfile
         run: |
-          python3 ci/g4pkglist.py -p "${{ matrix.distro }}" --install > Dockerfile.generated
+          python3 ci/g4pkglist.py -p "${{ matrix.distro }}" -f "${{ matrix.docker_from }}" --install > Dockerfile.generated
           echo "Generated Dockerfile:"
           sed -n '1,60p' Dockerfile.generated
 
@@ -82,7 +82,7 @@ jobs:
         run: |
           PLATS="linux/amd64,linux/arm64"
           case "${{ matrix.distro }}" in
-            arch:*) PLATS="linux/amd64" ;;  # Arch has no arm64 base
+            archlinux:*) PLATS="linux/amd64" ;;  # Arch has no arm64 base
           esac
           echo "plats=$PLATS" >> "$GITHUB_OUTPUT"
 

@@ -3,7 +3,7 @@ set -euo pipefail
 
 get_ubuntu_lts()       { echo "24.04"; }
 get_fedora_latest()    { echo "40"; }
-get_arch_latest()      { echo "latest"; }
+get_archlinux_latest() { echo "latest"; }
 get_almalinux_latest() { echo "9.4"; }
 get_debian_latest()    { echo "12"; }
 get_rhel_latest()      { echo "9.4"; }
@@ -13,11 +13,11 @@ get_geant4_tag()       { echo "11.3.2"; }
 build_matrix() {
 	local json
 	json=$(
-		cat      <<EOF
+		cat    <<EOF
 {"include":[
   {"distro":"ubuntu","docker_from":"ubuntu:$(get_ubuntu_lts)","geant4_tag":"$(get_geant4_tag)"},
   {"distro":"fedora","docker_from":"fedora:$(get_fedora_latest)","geant4_tag":"$(get_geant4_tag)"},
-  {"distro":"arch","docker_from":"archlinux:$(get_arch_latest)","geant4_tag":"$(get_geant4_tag)"},
+  {"distro":"archlinux","docker_from":"archlinux:$(get_archlinux_latest)","geant4_tag":"$(get_geant4_tag)"},
   {"distro":"almalinux","docker_from":"almalinux:$(get_almalinux_latest)","geant4_tag":"$(get_geant4_tag)"},
   {"distro":"debian","docker_from":"debian:$(get_debian_latest)","geant4_tag":"$(get_geant4_tag)"},
   {"distro":"rhel","docker_from":"redhat/ubi9:$(get_rhel_latest)","geant4_tag":"$(get_geant4_tag)"}
@@ -75,10 +75,10 @@ main() {
 	if [[ -n "${GITHUB_OUTPUT:-}" ]]; then
 		local DELIM="MATRIX_$(date +%s%N)"
 		{
-			echo  "matrix<<$DELIM"
+			echo "matrix<<$DELIM"
 			build_matrix
-			echo  "$DELIM"
-			echo  "image=$image"
+			echo "$DELIM"
+			echo "image=$image"
 		} >>"$GITHUB_OUTPUT"
 	else
 		build_matrix
