@@ -79,13 +79,13 @@ jobs:
 
       - name: Choose platforms for this item
         id: plats
+        shell: bash
         run: |
           PLATS="linux/amd64,linux/arm64"
-          case "${{ matrix.distro }}" in
-            archlinux:*) PLATS="linux/amd64" ;;  # Arch has no arm64 base
+          case "${{ matrix.docker_from }}" in
+            archlinux:*) PLATS="linux/amd64" ;;  # Arch image is amd64-only
           esac
           echo "plats=$PLATS" >> "$GITHUB_OUTPUT"
-
 
       # Multi-arch when pushing; single-arch and load locally on PRs
       - name: Build and Push (release/merge)

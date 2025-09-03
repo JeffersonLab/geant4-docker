@@ -6,7 +6,6 @@ get_fedora_latest()    { echo "40"; }
 get_archlinux_latest() { echo "latest"; }
 get_almalinux_latest() { echo "9.4"; }
 get_debian_latest()    { echo "12"; }
-get_rhel_latest()      { echo "9.4"; }
 get_geant4_tag()       { echo "11.3.2"; }
 
 # Pretty-print with jq if available, otherwise emit compact JSON
@@ -19,8 +18,7 @@ build_matrix() {
   {"distro":"fedora","docker_from":"fedora:$(get_fedora_latest)","geant4_tag":"$(get_geant4_tag)"},
   {"distro":"archlinux","docker_from":"archlinux:$(get_archlinux_latest)","geant4_tag":"$(get_geant4_tag)"},
   {"distro":"almalinux","docker_from":"almalinux:$(get_almalinux_latest)","geant4_tag":"$(get_geant4_tag)"},
-  {"distro":"debian","docker_from":"debian:$(get_debian_latest)","geant4_tag":"$(get_geant4_tag)"},
-  {"distro":"rhel","docker_from":"redhat/ubi9:$(get_rhel_latest)","geant4_tag":"$(get_geant4_tag)"}
+  {"distro":"debian","docker_from":"debian:$(get_debian_latest)","geant4_tag":"$(get_geant4_tag)"}
 ]}
 EOF
 	)

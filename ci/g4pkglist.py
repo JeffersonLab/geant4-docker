@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 import argparse
 
-DISTROS = ["fedora", "ubuntu", "archlinux", "almalinux", "debian", "rhel"]
+DISTROS = ["fedora", "ubuntu", "archlinux", "almalinux", "debian"]
 
 # ------------------------------------------------------------------------------
 # Package groups by purpose
@@ -87,7 +87,7 @@ def base_name(name: str) -> str:
 
 def map_family(platform: str) -> str:
 	p = base_name(platform)
-	if p in ("almalinux", "rhel", "centos"):
+	if p in ("almalinux", "centos"):
 		return "fedora"
 	if p == "debian":
 		return "ubuntu"
@@ -252,7 +252,6 @@ def packages_install_commands(image: str, base: str) -> str:
 	commands += docker_header(base)
 
 	is_alma = "almalinux" in image.lower()
-	is_rhel = "rhel" in image.lower()
 
 	if family == "fedora":
 		commands += "RUN update-ca-trust\n\n"
@@ -262,13 +261,6 @@ def packages_install_commands(image: str, base: str) -> str:
 				"RUN dnf install -y 'dnf-command(config-manager)' \\\n"
 				"    && dnf config-manager --set-enabled crb \\\n"
 				"    && dnf install -y almalinux-release-synergy \n\n"
-			)
-		if family == is_rhel:
-			commands += (
-				"# RedHat EPEL' \\\n"
-				"RUN dnf install -y 'dnf-command(config-manager)' \\\n"
-				"    && dnf config-manager --set-enabled ubi-9-appstream ubi-9-baseos && \\\n"
-				"    && dnf install -y epel-release \n\n"
 			)
 		commands += f"RUN dnf install -y --allowerasing {packages}{cleanup}"
 
@@ -300,11 +292,11 @@ def main():
 	)
 	parser.add_argument(
 		"-p", "--platform", required=True,
-		help="Target base os (e.g., fedora, almalinux, rhel, ubuntu, debian,  rchlinux"
+		help="Target base os (e.g., fedora, almalinux, ubuntu, debian,  rchlinux"
 	)
 	parser.add_argument(
 		"-f", "--base", required=True,
-		help="Target base image version (e.g., fedora:40 / almalinux:9 / rhel:9 / ubuntu:24.04 / debian:13 / archlinux:latest)"
+		help="Target base image version (e.g., fedora:40 / almalinux:9  / ubuntu:24.04 / debian:13 / archlinux:latest)"
 	)
 	parser.add_argument(
 		"--install", action="store_true",
