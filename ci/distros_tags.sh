@@ -7,12 +7,15 @@ get_archlinux_latest() { echo "latest"; }
 get_almalinux_latest() { echo "9.4"; }
 get_debian_latest()    { echo "12"; }
 get_geant4_tag()       { echo "11.3.2"; }
+get_root_tag()         { echo "6.36.04"; }
+get_meson_tag()        { echo "1.9.0"; }
+get_novnc_tag()        { echo "v1.6.0"; }
 
 # Pretty-print with jq if available, otherwise emit compact JSON
 build_matrix() {
 	local json
 	json=$(
-		cat    <<EOF
+		cat <<EOF
 {"include":[
   {"distro":"ubuntu","docker_from":"ubuntu:$(get_ubuntu_lts)","geant4_tag":"$(get_geant4_tag)"},
   {"distro":"fedora","docker_from":"fedora:$(get_fedora_latest)","geant4_tag":"$(get_geant4_tag)"},
