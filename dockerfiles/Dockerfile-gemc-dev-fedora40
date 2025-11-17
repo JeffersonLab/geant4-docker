@@ -26,5 +26,6 @@ RUN source /etc/profile.d/localSetup.sh \
     && module load sim_system \
     && install_gemc 5.10 \
     && install_gemc 5.11 \
-    && install_gemc dev 
+    && install_gemc 5.12 \
+    && install_gemc dev
 
