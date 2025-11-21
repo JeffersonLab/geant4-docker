@@ -10,7 +10,7 @@ def copy_files(image):
 	copy_string = ''
 	localSetupFile = localSetupFilename()
 	if is_base_container(image):
-		copy_string += 'COPY bgMerginFilename.sh /bin/bgMerginFilename.sh\n'
+		copy_string += 'COPY bg_merge_bk_file.sh /bin/bg_merge_bk_file.sh\n'
 		copy_string += f'COPY localSetupBase.sh {localSetupFile}\n\n'
 	return copy_string
 

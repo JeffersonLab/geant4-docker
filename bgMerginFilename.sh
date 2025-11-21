@@ -19,6 +19,7 @@ getit=$4
 # for onsite
 # server="xroot://sci-xrootd.ib" actually the below works on cue machines, not ib
 # for offsite:
+server="xroot://sci-xrootd.ib"
 server="xroot://sci-xrootd.jlab.org"
 xdir="/osgpool/hallb/clas12/backgroundfiles/"$configuration"/"$fields"/"$bkmerging"/10k"
 

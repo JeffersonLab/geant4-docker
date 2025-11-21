@@ -5,7 +5,7 @@ LABEL maintainer="Maurizio Ungaro <ungaro@jlab.org>"
 SHELL ["/bin/bash", "-c"]
 ENV AUTOBUILD=1
 
-COPY bgMerginFilename.sh /bin/bgMerginFilename.sh
+COPY bg_merge_bk_file.sh /bin/bg_merge_bk_file.sh
 COPY localSetupBase.sh /etc/profile.d/localSetup.sh
 
 # JLab certificate
