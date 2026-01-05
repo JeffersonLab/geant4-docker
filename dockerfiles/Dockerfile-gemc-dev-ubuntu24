@@ -5,7 +5,7 @@ LABEL maintainer="Maurizio Ungaro <ungaro@jlab.org>"
 SHELL ["/bin/bash", "-c"]
 ENV AUTOBUILD=1
 
-RUN echo "module load gemc/5.11" >> /etc/profile.d/localSetup.sh 
+RUN echo "module load gemc/5.12" >> /etc/profile.d/localSetup.sh 
 
 
 # ceInstall update  
@@ -25,7 +25,7 @@ RUN ln -fs /usr/share/zoneinfo/America/New_York /etc/localtime \
 RUN source /etc/profile.d/localSetup.sh \
     && module use /cvmfs/oasis.opensciencegrid.org/jlab/geant4/modules \
     && module load sim_system \
-    && install_gemc 5.10 \
     && install_gemc 5.11 \
+    && install_gemc 5.12 \
     && install_gemc dev 
 

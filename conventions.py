@@ -172,7 +172,7 @@ def gemc_tags_from_docker_image(image):
 	if gtag == 'prod1':
 		return ['4.4.2']
 	elif gtag == 'dev':
-		return ['5.10', '5.11', 'dev']
+		return ['5.11', '5.12', 'dev']
 	else:
 		print(f'gemc_tags_from_docker_image error: tag {gtag} not supported')
 		exit(1)
