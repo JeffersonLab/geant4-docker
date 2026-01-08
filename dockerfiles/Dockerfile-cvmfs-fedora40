@@ -14,7 +14,7 @@ RUN update-ca-trust
 
 RUN echo "module use /cvmfs/oasis.opensciencegrid.org/jlab/geant4/modules" >> /etc/profile.d/localSetup.sh 
 
-RUN dnf install -y --allowerasing  gcc-gfortran pcre-devel mesa-libGL-devel mesa-libGLU-devel glew-devel ftgl-devel mariadb-devel sqlite-devel fftw-devel cfitsio-devel graphviz-devel libuuid-devel avahi-compat-libdns_sd-devel openldap-devel python-devel python3-numpy libxml2-devel gsl-devel readline-devel qt5-qtwebengine-devel R-devel R-Rcpp-devel R-RInside-devel xxhash-devel gcc binutils xrootd-client lsof liburing flexiblas-devel  bzip2 wget curl nano bash tcsh zsh hostname gedit environment-modules rsync patch which  \
+RUN dnf install -y --allowerasing  gcc-gfortran pcre-devel mesa-libGL-devel mesa-libGLU-devel glew-devel ftgl-devel mariadb-devel sqlite-devel fftw-devel cfitsio-devel graphviz-devel libuuid-devel avahi-compat-libdns_sd-devel openldap-devel python-devel python3-numpy libxml2-devel gsl-devel readline-devel qt5-qtwebengine-devel R-devel R-Rcpp-devel R-RInside-devel xxhash-devel tbb-devel gcc binutils xrootd-client lsof liburing flexiblas-devel  bzip2 wget curl nano bash tcsh zsh hostname gedit environment-modules rsync patch which  \
  && dnf -y update \
  && dnf -y check-update \
  && dnf clean packages \
