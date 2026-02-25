@@ -25,6 +25,6 @@ RUN source /etc/profile.d/localSetup.sh \
     && module use /cvmfs/oasis.opensciencegrid.org/jlab/geant4/modules \
     && module load sim_system \
     && install_gemc 5.11 \
-    && install_gemc 5.12 \
+    && install_gemc 5.13 \
     && install_gemc dev 
 
