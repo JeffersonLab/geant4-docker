@@ -5,13 +5,9 @@ LABEL maintainer="Maurizio Ungaro <ungaro@jlab.org>"
 SHELL ["/bin/bash", "-c"]
 ENV AUTOBUILD=1
 
-RUN echo "module load gemc/5.12" >> /etc/profile.d/localSetup.sh 
-
-
 # ceInstall update  
 RUN cd /cvmfs/oasis.opensciencegrid.org/jlab/geant4/modules \
-    &&  git pull  
-
+    &&  git pull
 
 # coatjava dependencies installation using tarball
 RUN dnf install -y --allowerasing maven jq perl-DBI perl-DBD-SQLite perl-XML-LibXML \
@@ -23,7 +19,6 @@ RUN dnf install -y --allowerasing maven jq perl-DBI perl-DBD-SQLite perl-XML-Lib
 
 RUN source /etc/profile.d/localSetup.sh \
     && module use /cvmfs/oasis.opensciencegrid.org/jlab/geant4/modules \
-    && module load sim_system \
     && install_gemc 5.11 \
     && install_gemc 5.13 \
     && install_gemc dev 
