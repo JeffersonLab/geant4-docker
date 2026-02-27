@@ -9,6 +9,7 @@ ENV AUTOBUILD=1
 RUN cd /cvmfs/oasis.opensciencegrid.org/jlab/geant4/modules \
     &&  git pull  
 
+
 # coatjava dependencies installation using tarball
 RUN dnf install -y --allowerasing maven jq perl-DBI perl-DBD-SQLite perl-XML-LibXML \
     && curl -L -O https://groovy.jfrog.io/artifactory/dist-release-local/groovy-zips/apache-groovy-binary-4.0.26.zip \
@@ -23,3 +24,4 @@ RUN source /etc/profile.d/localSetup.sh \
     && install_gemc 5.13 \
     && install_gemc dev 
 
+RUN echo "module load gemc/5.13" >> /etc/profile.d/localSetup.sh
