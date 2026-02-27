@@ -24,4 +24,4 @@ RUN source /etc/profile.d/localSetup.sh \
     && install_gemc 5.13 \
     && install_gemc dev 
 
-RUN echo "module load gemc/5.13" >> /etc/profile.d/localSetup.sh
+RUN echo "module load gemc/dev" >> /etc/profile.d/localSetup.sh
