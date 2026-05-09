@@ -20,6 +20,7 @@ RUN dnf install -y --allowerasing maven jq perl-DBI perl-DBD-SQLite perl-XML-Lib
 RUN source /etc/profile.d/localSetup.sh \
     && module use /cvmfs/oasis.opensciencegrid.org/jlab/geant4/modules \
     && install_gemc 5.14 \
-    && install_gemc dev 
+    && install_gemc 6.0 \
+    && install_gemc dev
 
 RUN echo "module load gemc/dev" >> /etc/profile.d/localSetup.sh
